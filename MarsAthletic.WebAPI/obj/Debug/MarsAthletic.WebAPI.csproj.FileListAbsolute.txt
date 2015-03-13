@@ -1,0 +1,82 @@
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.csprojResolveAssemblyReference.cache
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\MarsAthletic.WebAPI.dll.config
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\MarsAthletic.WebAPI.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\MarsAthletic.WebAPI.pdb
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Antlr3.Runtime.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Web.Infrastructure.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Newtonsoft.Json.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Net.Http.Formatting.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Cors.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Helpers.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.Cors.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.WebHost.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Mvc.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Optimization.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Razor.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Deployment.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Razor.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\WebGrease.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Net.Http.Formatting.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.Cors.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Newtonsoft.Json.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Helpers.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.WebHost.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Mvc.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Optimization.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Razor.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Deployment.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Razor.xml
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Antlr3.Runtime.pdb
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.dll
+c:\users\gökay\documents\visual studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.pdb
+c:\Users\Gökay\Documents\Visual Studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.Configuration.dll
+c:\Users\Gökay\Documents\Visual Studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.dll
+c:\Users\Gökay\Documents\Visual Studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll
+c:\Users\Gökay\Documents\Visual Studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.xml
+c:\Users\Gökay\Documents\Visual Studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.Configuration.xml
+c:\Users\Gökay\Documents\Visual Studio 2013\Projects\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\MarsAthletic.WebAPI.dll.config
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\MarsAthletic.WebAPI.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\MarsAthletic.WebAPI.pdb
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Antlr3.Runtime.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.Configuration.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Newtonsoft.Json.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Net.Http.Formatting.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Cors.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Helpers.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.Cors.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.WebHost.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Mvc.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Optimization.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Razor.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Razor.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\WebGrease.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Antlr3.Runtime.pdb
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.Configuration.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\Newtonsoft.Json.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Net.Http.Formatting.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Helpers.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.Cors.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Http.WebHost.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Mvc.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Razor.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.WebPages.Razor.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\bin\System.Web.Optimization.xml
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.dll
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.pdb
+C:\Users\Gökay\Desktop\MarsAthletic.MFiles\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.csprojResolveAssemblyReference.cache
