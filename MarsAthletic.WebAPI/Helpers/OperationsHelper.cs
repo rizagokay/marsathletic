@@ -13,7 +13,6 @@ namespace MarsAthletic.WebAPI.Helpers
 {
     class OperationsHelper : IOperations
     {
-
         private readonly IConfigHelper _config;
 
         public OperationsHelper(IConfigHelper config)
@@ -45,7 +44,7 @@ namespace MarsAthletic.WebAPI.Helpers
             {
                 var departmentObject = response.Items[i];
 
-                var department = new Department() { Name = departmentObject.Name, ExternalID = departmentObject.ID, InternalID = departmentObject.DisplayID, WorkLocationID = departmentObject.OwnerID };
+                var department = new Department() { Name = departmentObject.Name, ExternalID = departmentObject.ID, InternalID = departmentObject.DisplayID };
 
                 objectTypeList.Add(department);
             }
@@ -89,7 +88,7 @@ namespace MarsAthletic.WebAPI.Helpers
 
         public IEnumerable<Models.Employee> GetEmployees()
         {
-            var objectTypeIdForWL = 101;
+            var objectTypeIdForEmp = 101;
 
             var client = new MfwsClient(_config.GetMFilesUrl() + "REST");
 
@@ -101,16 +100,17 @@ namespace MarsAthletic.WebAPI.Helpers
             //bind the token value
             client.Authentication = result.Value;
 
-            //make request
-            var response = client.Get<Results<ValueListItem>>(string.Format("/valuelists/{0}/items", objectTypeIdForWL.ToString()));
-
             var objectTypeList = new List<Employee>();
+
+            //make request
+            var response = client.Get<Results<ValueListItem>>(string.Format("/valuelists/{0}/items", objectTypeIdForEmp.ToString()));
+
 
             for (int i = 0; i < response.Items.Length; i++)
             {
                 var employeeObject = response.Items[i];
 
-                var employee = new Employee() { Name = employeeObject.Name, ExternalID = employeeObject.ID, InternalID = employeeObject.DisplayID, DepartmentID = employeeObject.OwnerID };
+                var employee = new Employee() { Name = employeeObject.Name, ExternalID = employeeObject.ID, InternalID = employeeObject.DisplayID };
 
                 objectTypeList.Add(employee);
             }
@@ -207,7 +207,7 @@ namespace MarsAthletic.WebAPI.Helpers
                     DataType = MFDataType.Lookup,
                     Lookup = new Lookup
                     {
-                        Item = GetDisplayIDWithExternalID(client, 101, data.EmployeeId),
+                        Item = data.EmployeeId,
                         Version = -1
                     },
 
@@ -215,16 +215,32 @@ namespace MarsAthletic.WebAPI.Helpers
 
             });
 
-            //İşyeri
+            //Departman
             propValues.Add(new PropertyValue
             {
-                PropertyDef = 1060,
+                PropertyDef = 1021,
                 TypedValue = new TypedValue
                 {
                     DataType = MFDataType.MultiSelectLookup,
                     Lookups = new Lookup[]
                                     {
-                                        new Lookup { Item = GetDisplayIDWithExternalID(client,106, data.LocationId), Version= -1}
+                                        new Lookup { Item = data.DepartmentId, Version= -1}
+                                    }
+
+                }
+            });
+
+            //İşyeri
+            propValues.Add(new PropertyValue
+            { 
+                PropertyDef = 1060,
+                TypedValue = new TypedValue
+                {
+                    
+                    DataType = MFDataType.MultiSelectLookup,
+                    Lookups = new Lookup[]
+                                    {
+                                        new Lookup { Item = data.LocationId, Version= -1}
                                     }
 
                 }
@@ -292,7 +308,7 @@ namespace MarsAthletic.WebAPI.Helpers
 
             for (int i = 0; i < response.Items.Length; i++)
             {
-                var valueListItem = response.Items[0];
+                var valueListItem = response.Items[i];
 
                 if (valueListItem.ID == objectId)
                 {

@@ -13,6 +13,7 @@ namespace MarsAthletic.WebAPI.Models
         public byte [] ByteData { get; set; }
         public int EmployeeId { get; set; }
         public int LocationId { get; set; }
+        public int DepartmentId { get; set; }
         public DateTime DateCreated { get; set; }
         public int Cost { get; set; }
     }

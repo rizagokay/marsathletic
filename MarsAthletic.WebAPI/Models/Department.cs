@@ -17,9 +17,6 @@ namespace MarsAthletic.WebAPI.Models
         public int ExternalID { get; set; }
 
         [DataMember]
-        public int WorkLocationID { get; set; }
-
-        [DataMember]
         public string Name { get; set; }
     }
 }
