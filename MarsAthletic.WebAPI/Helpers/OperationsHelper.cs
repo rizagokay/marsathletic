@@ -118,11 +118,14 @@ namespace MarsAthletic.WebAPI.Helpers
             return objectTypeList;
         }
 
-        public bool DocumentsProcessEnded(int id)
+        public int GetStatusOfDocument(int id)
         {
-
             var objectTypeForDocument = 0;
+
             var completedStateId = 120;
+
+            var waitingStatuses = new int[] { 101, 121, 105, 107, 102, 104, 130, 108, 110, 124, 125, 126, 127, 133, 134, 136, 129, 111, 133, 122, 114, 116, 131, 132, 137, 123, 117, 119 };
+            var rejectStatuses = new int[] { 106, 103, 109, 128, 135, 112, 115, 118 };
 
             var client = new MfwsClient(_config.GetMFilesUrl() + "REST");
 
@@ -143,17 +146,24 @@ namespace MarsAthletic.WebAPI.Helpers
 
                 if (property.TypedValue.Lookup.Item == completedStateId)
                 {
-                    return true;
+                    return 1;
+                }
+                else if (rejectStatuses.Contains(property.TypedValue.Lookup.Item))
+                {
+                    return 2;
+                }
+                else if (waitingStatuses.Contains(property.TypedValue.Lookup.Item))
+                {
+                    return 0;
                 }
                 else
                 {
-                    return false;
+                    return 0;
                 }
-
             }
             else
             {
-                return false;
+                return 4;
             }
 
         }
@@ -207,7 +217,41 @@ namespace MarsAthletic.WebAPI.Helpers
                     DataType = MFDataType.Lookup,
                     Lookup = new Lookup
                     {
-                        Item = data.EmployeeId,
+                        Item = GetExternalIDWithDisplayID(client, 101, data.EmployeeId),
+                        Version = -1
+                    },
+
+                },
+
+            });
+
+            //İş Akışı
+            propValues.Add(new PropertyValue
+            {
+                PropertyDef = 38,
+                TypedValue = new TypedValue
+                {
+                    DataType = MFDataType.Lookup,
+                    Lookup = new Lookup
+                    {
+                        Item = 101,
+                        Version = -1
+                    },
+
+                },
+
+            });
+
+            //Durum
+            propValues.Add(new PropertyValue
+            {
+                PropertyDef = 39,
+                TypedValue = new TypedValue
+                {
+                    DataType = MFDataType.Lookup,
+                    Lookup = new Lookup
+                    {
+                        Item = 101,
                         Version = -1
                     },
 
@@ -224,7 +268,7 @@ namespace MarsAthletic.WebAPI.Helpers
                     DataType = MFDataType.MultiSelectLookup,
                     Lookups = new Lookup[]
                                     {
-                                        new Lookup { Item = data.DepartmentId, Version= -1}
+                                        new Lookup { Item = GetExternalIDWithDisplayID(client,102, data.DepartmentId) , Version= -1}
                                     }
 
                 }
@@ -232,15 +276,15 @@ namespace MarsAthletic.WebAPI.Helpers
 
             //İşyeri
             propValues.Add(new PropertyValue
-            { 
+            {
                 PropertyDef = 1060,
                 TypedValue = new TypedValue
                 {
-                    
+
                     DataType = MFDataType.MultiSelectLookup,
                     Lookups = new Lookup[]
                                     {
-                                        new Lookup { Item = data.LocationId, Version= -1}
+                                        new Lookup { Item = GetExternalIDWithDisplayID(client,106,data.LocationId) , Version= -1}
                                     }
 
                 }
@@ -249,8 +293,8 @@ namespace MarsAthletic.WebAPI.Helpers
             //Cost
             propValues.Add(new PropertyValue
             {
-                PropertyDef = 1064,
-                TypedValue = new TypedValue { DataType = MFDataType.Integer, Value = data.Cost },
+                PropertyDef = 1072,
+                TypedValue = new TypedValue { DataType = MFDataType.Text, Value = data.Cost },
 
             });
 
@@ -299,7 +343,7 @@ namespace MarsAthletic.WebAPI.Helpers
 
         }
 
-        private int GetDisplayIDWithExternalID(MfwsClient client, int objectTypeId, int objectId)
+        private int GetExternalIDWithDisplayID(MfwsClient client, int objectTypeId, int objectId)
         {
             //make request
             var response = client.Get<Results<ValueListItem>>(string.Format("/valuelists/{0}/items", objectTypeId.ToString()));
@@ -310,9 +354,9 @@ namespace MarsAthletic.WebAPI.Helpers
             {
                 var valueListItem = response.Items[i];
 
-                if (valueListItem.ID == objectId)
+                if (valueListItem.DisplayID == objectId.ToString())
                 {
-                    displayId = Convert.ToInt32(valueListItem.DisplayID);
+                    displayId = valueListItem.ID;
                     break;
                 }
             }

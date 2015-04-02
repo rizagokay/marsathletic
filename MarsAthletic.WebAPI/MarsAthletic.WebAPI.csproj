@@ -177,6 +177,7 @@
     <Compile Include="Interfaces\IConfigHelper.cs" />
     <Compile Include="Interfaces\IOperations.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\Document.cs" />
     <Compile Include="Models\DocumentData.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\ErrorWrapper.cs" />
@@ -218,6 +219,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <None Include="Properties\PublishProfiles\FileSystemPublish.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

@@ -14,7 +14,7 @@ namespace MarsAthletic.WebAPI.Interfaces
         IEnumerable<WorkLocation> GetWorkLocations();
         IEnumerable<Employee> GetEmployees();
 
-        bool DocumentsProcessEnded(int id);
+        int GetStatusOfDocument(int id);
         int CreateDocument(DocumentData data);
     }
 }

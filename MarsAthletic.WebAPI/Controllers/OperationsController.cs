@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using MFiles.Mfws;
 
 namespace MarsAthletic.WebAPI.Controllers
 {
@@ -38,6 +39,14 @@ namespace MarsAthletic.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.GetType() == typeof(MfwsException))
+                {
+                    var mfEx = ex as MfwsException;
+
+                    return Request.CreateResponse(mfEx.StatusCode, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name, CompleteException = ex.ToString() });
+
+                }
+
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name });
             }
         }
@@ -51,6 +60,15 @@ namespace MarsAthletic.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+
+                if (ex.GetType() == typeof(MfwsException))
+                {
+                    var mfEx = ex as MfwsException;
+
+                    return Request.CreateResponse(mfEx.StatusCode, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name, CompleteException= ex.ToString() });
+
+                }
+
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name });
             }
         }
@@ -64,6 +82,14 @@ namespace MarsAthletic.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.GetType() == typeof(MfwsException))
+                {
+                    var mfEx = ex as MfwsException;
+
+                    return Request.CreateResponse(mfEx.StatusCode, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name, CompleteException = ex.ToString() });
+
+                }
+
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name });
             }
         }
@@ -74,25 +100,42 @@ namespace MarsAthletic.WebAPI.Controllers
 
             try
             {
-                var ended = new { WorkflowEnded = _operations.DocumentsProcessEnded(documentId) };
+                var ended = new Document { WorkflowStatus = _operations.GetStatusOfDocument(documentId), CreatedDocumentID = documentId };
                 return Request.CreateResponse(HttpStatusCode.OK, ended);
             }
             catch (Exception ex)
             {
+                if (ex.GetType() == typeof(MfwsException))
+                {
+                    var mfEx = ex as MfwsException;
+
+                    return Request.CreateResponse(mfEx.StatusCode, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name, CompleteException = ex.ToString() });
+
+                }
+
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name });
             }
         }
 
+        [HttpPost]
         public HttpResponseMessage Create(DocumentData data)
         {
             try
             {
                 var createdDocumentID = _operations.CreateDocument(data);
-                return Request.CreateResponse(HttpStatusCode.OK, new { CreatedDocumentID = createdDocumentID });
+                return Request.CreateResponse(HttpStatusCode.OK, new Document { CreatedDocumentID = createdDocumentID, WorkflowStatus = 0 });
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name });
+                if (ex.GetType() == typeof(MfwsException))
+                {
+                    var mfEx = ex as MfwsException;
+
+                    return Request.CreateResponse(mfEx.StatusCode, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name, CompleteException = ex.ToString() });
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name }); ;
             }
         }
 

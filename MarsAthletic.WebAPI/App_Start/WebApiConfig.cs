@@ -26,9 +26,7 @@ namespace MarsAthletic.WebAPI
             config.DependencyResolver = new UnityResolver(container);
 
             config.Formatters.XmlFormatter.AddUriPathExtensionMapping(".xml", "application/xml");
-            config.Formatters.JsonFormatter.AddUriPathExtensionMapping(".json", "application/json");
-
-           
+            config.Formatters.JsonFormatter.AddUriPathExtensionMapping(".json", "application/json");      
 
             // Web API routes
             config.MapHttpAttributeRoutes();

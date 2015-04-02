@@ -18,5 +18,8 @@ namespace MarsAthletic.WebAPI.Models
 
         [DataMember]
         public string ExceptionSource { get; set; }
+
+        [DataMember]
+        public string CompleteException { get; set; }
     }
 }

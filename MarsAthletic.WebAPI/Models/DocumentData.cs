@@ -15,6 +15,6 @@ namespace MarsAthletic.WebAPI.Models
         public int LocationId { get; set; }
         public int DepartmentId { get; set; }
         public DateTime DateCreated { get; set; }
-        public int Cost { get; set; }
+        public string Cost { get; set; }
     }
 }

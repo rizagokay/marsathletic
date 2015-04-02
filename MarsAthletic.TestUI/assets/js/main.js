@@ -10,7 +10,7 @@ $(document).ready(function() {
                     success: function(data)
                             {
                                  $.each(data, function (){
-                                     $("#workLocations").append($("<option     />").val(this.ExternalID).text(this.Name));
+                                     $("#workLocations").append($("<option     />").val(this.InternalID).text(this.Name));
                                 });
                             },
                     error: function () {
@@ -28,7 +28,7 @@ $(document).ready(function() {
                     success: function(data)
                             {
                                  $.each(data, function (){
-                                     $("#employees").append($("<option     />").val(this.ExternalID).text(this.Name));
+                                     $("#employees").append($("<option     />").val(this.InternalID).text(this.Name));
                                 });
                             },
                     error: function () {
@@ -47,7 +47,7 @@ $(document).ready(function() {
                     success: function(data)
                             {
                                  $.each(data, function (){
-                                     $("#departments").append($("<option     />").val(this.ExternalID).text(this.Name));
+                                     $("#departments").append($("<option     />").val(this.InternalID).text(this.Name));
                                 });
                             },
                     error: function () {

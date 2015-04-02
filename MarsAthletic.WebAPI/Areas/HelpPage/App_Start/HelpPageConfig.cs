@@ -2,6 +2,7 @@
 // package to your project.
 ////#define Handle_PageResultOfT
 
+using MarsAthletic.WebAPI.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -77,7 +78,14 @@ namespace MarsAthletic.WebAPI.Areas.HelpPage
 
             //// Uncomment the following to correct the sample response when the action returns an HttpResponseMessage with ObjectContent<string>.
             //// The sample will be generated as if the controller named "Values" and action named "Post" were returning a string.
-            //config.SetActualResponseType(typeof(string), "Values", "Post");
+
+            
+
+            config.SetActualResponseType(typeof(IEnumerable<WorkLocation>), "Operations", "GetWorkLocations");
+            config.SetActualResponseType(typeof(IEnumerable<Employee>), "Operations", "GetEmployees");
+            config.SetActualResponseType(typeof(IEnumerable<Department>), "Operations", "GetDepartments");
+            config.SetActualResponseType(typeof(Document), "Operations", "GetStatus");
+            config.SetActualResponseType(typeof(Document), "Operations", "Create");
         }
 
 #if Handle_PageResultOfT

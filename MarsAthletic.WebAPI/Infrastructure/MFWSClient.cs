@@ -29,13 +29,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using MFiles.Mfws.Structs;
 using System;
 using System.Globalization;
 using System.IO;
-
 // Requires System.Web;
 using System.Net;
-
 // Requires System.Runtime.Serialization reference.
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -170,7 +169,7 @@ namespace MFiles.Mfws
             var serializer = new DataContractJsonSerializer(typeof(Structs.WebServiceError));
             var error = (Structs.WebServiceError)serializer.ReadObject(stream);
 
-            throw new MfwsException(error.Exception);
+            throw new MfwsException(error);
         }
     }
 
@@ -212,15 +211,113 @@ namespace MFiles.Mfws
 
     public class MfwsException : Exception
     {
-        public MfwsException(Structs.ExceptionInfo error)
+
+        private readonly WebServiceError _error;
+
+        private HttpStatusCode _code;
+
+        public MfwsException(Structs.WebServiceError error)
             : base(
-                error.Message,
-                error.InnerException != null
-                ? new MfwsException(error.InnerException)
-                : null)
+                error.Exception.Message)
         {
+
+            _error = error;
+            SetStatucCode(error.Status);
         }
+
+        public string URL { get { return _error.URL; } }
+
+        public int Status { get { return _error.Status; } }
+
+        public string Method { get { return _error.Method; } }
+
+        public HttpStatusCode StatusCode { get { return _code; } }
+
+        public void SetStatucCode(int code) 
+        {
+            switch (code)
+            {
+                case 400:
+                    _code = HttpStatusCode.BadRequest;
+                    break;
+                case 401:
+                    _code = HttpStatusCode.Unauthorized;
+                    break;
+                case 402:
+                    _code = HttpStatusCode.PaymentRequired;
+                    break;
+                case 403:
+                    _code = HttpStatusCode.Forbidden;
+                    break;
+                case 404:
+                    _code = HttpStatusCode.NotFound;
+                    break;
+                case 405:
+                    _code = HttpStatusCode.MethodNotAllowed;
+                    break;
+                case 406:
+                    _code = HttpStatusCode.NotAcceptable;
+                    break;
+                case 407:
+                    _code = HttpStatusCode.ProxyAuthenticationRequired;
+                    break;
+                case 408:
+                    _code = HttpStatusCode.RequestTimeout;
+                    break;
+                case 409:
+                    _code = HttpStatusCode.Conflict;
+                    break;
+                case 410:
+                    _code = HttpStatusCode.Gone;
+                    break;
+                case 411:
+                    _code = HttpStatusCode.LengthRequired;
+                    break;
+                case 412:
+                    _code = HttpStatusCode.PreconditionFailed;
+                    break;
+                case 413:
+                    _code = HttpStatusCode.RequestEntityTooLarge;
+                    break;
+                case 414:
+                    _code = HttpStatusCode.RequestUriTooLong;
+                    break;
+                case 415:
+                    _code = HttpStatusCode.UnsupportedMediaType;
+                    break;
+                case 416:
+                    _code = HttpStatusCode.RequestedRangeNotSatisfiable;
+                    break;
+                case 417:
+                    _code = HttpStatusCode.ExpectationFailed;
+                    break;
+                case 426:
+                    _code = HttpStatusCode.UpgradeRequired;
+                    break;
+                case 502:
+                    _code = HttpStatusCode.BadGateway;
+                    break;
+                case 501:
+                    _code = HttpStatusCode.NotImplemented;
+                    break;
+                case 503:
+                    _code = HttpStatusCode.ServiceUnavailable;
+                    break;
+                case 504:
+                    _code = HttpStatusCode.GatewayTimeout;
+                    break;
+                case 505:
+                    _code = HttpStatusCode.HttpVersionNotSupported;
+                    break;
+                default:
+                    _code = HttpStatusCode.InternalServerError;
+                    break;
+            }
+        }
+
     }
+
+
 }
 
 namespace MFiles.Mfws.Structs
