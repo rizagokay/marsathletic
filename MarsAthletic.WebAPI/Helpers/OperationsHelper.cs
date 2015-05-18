@@ -122,10 +122,13 @@ namespace MarsAthletic.WebAPI.Helpers
         {
             var objectTypeForDocument = 0;
 
-            var completedStateId = 120;
+            var completedStateIds = new int[] { 120, 200 };
 
-            var waitingStatuses = new int[] { 101, 121, 105, 107, 102, 104, 130, 108, 110, 124, 125, 126, 127, 133, 134, 136, 129, 111, 133, 122, 114, 116, 131, 132, 137, 123, 117, 119 };
-            var rejectStatuses = new int[] { 106, 103, 109, 128, 135, 112, 115, 118 };
+            var waitingStatuses = new int[] { 101, 121, 105, 102, 108, 124, 125, 126, 133, 134, 136, 129, 111, 133, 122, 114, 137, 123, 117, 174, 175, 176, 179, 180, 183, 184, 188, 191, 192, 196, 198, 200 };
+
+            var rejectStatuses = new int[] { 106, 103, 109, 128, 135, 112, 115, 118, 177, 181, 185, 189, 193 };
+
+            var returnStatuses = new int[] { 178, 182, 186, 190, 201, 202, 203, 194, 197, 199, 107, 104, 130, 110, 127, 113, 116, 131, 132, 119 };
 
             var client = new MfwsClient(_config.GetMFilesUrl() + "REST");
 
@@ -144,25 +147,35 @@ namespace MarsAthletic.WebAPI.Helpers
             {
                 var property = response.Properties.AsQueryable().AsEnumerable().Where(x => x.PropertyDef == 39).FirstOrDefault();
 
-                if (property.TypedValue.Lookup.Item == completedStateId)
+                if (completedStateIds.Contains(property.TypedValue.Lookup.Item))
                 {
+                    //Complated
                     return 1;
                 }
                 else if (rejectStatuses.Contains(property.TypedValue.Lookup.Item))
                 {
+                    //Rejected
                     return 2;
                 }
                 else if (waitingStatuses.Contains(property.TypedValue.Lookup.Item))
                 {
+                    //Waiting
                     return 0;
+                }
+                else if (returnStatuses.Contains(property.TypedValue.Lookup.Item))
+                {
+                    //Returned Back
+                    return 3;
                 }
                 else
                 {
+                    //Unknown state return waiting..??
                     return 0;
                 }
             }
             else
             {
+                //No Workflow
                 return 4;
             }
 
@@ -208,6 +221,15 @@ namespace MarsAthletic.WebAPI.Helpers
 
             });
 
+            if (data.Description.Trim() != "" && data.Description != null)
+            {
+                propValues.Add(new PropertyValue
+                {
+                    PropertyDef = 1088,
+                    TypedValue = new TypedValue { DataType = MFDataType.MultiLineText, Value = data.Description }
+                });
+            }
+
             //Talep Eden Personel
             propValues.Add(new PropertyValue
             {
@@ -225,39 +247,78 @@ namespace MarsAthletic.WebAPI.Helpers
 
             });
 
-            //İş Akışı
-            propValues.Add(new PropertyValue
+            if (data.WithProductInfo)
             {
-                PropertyDef = 38,
-                TypedValue = new TypedValue
+                //İş Akışı
+                propValues.Add(new PropertyValue
                 {
-                    DataType = MFDataType.Lookup,
-                    Lookup = new Lookup
+                    PropertyDef = 38,
+                    TypedValue = new TypedValue
                     {
-                        Item = 101,
-                        Version = -1
+                        DataType = MFDataType.Lookup,
+                        Lookup = new Lookup
+                        {
+                            Item = 101,
+                            Version = -1
+                        },
+
                     },
 
-                },
+                });
 
-            });
-
-            //Durum
-            propValues.Add(new PropertyValue
-            {
-                PropertyDef = 39,
-                TypedValue = new TypedValue
+                //Durum
+                propValues.Add(new PropertyValue
                 {
-                    DataType = MFDataType.Lookup,
-                    Lookup = new Lookup
+                    PropertyDef = 39,
+                    TypedValue = new TypedValue
                     {
-                        Item = 101,
-                        Version = -1
+                        DataType = MFDataType.Lookup,
+                        Lookup = new Lookup
+                        {
+                            Item = 101,
+                            Version = -1
+                        },
+
                     },
 
-                },
+                });
+            }
+            else
+            {
+                //İş Akışı
+                propValues.Add(new PropertyValue
+                {
+                    PropertyDef = 38,
+                    TypedValue = new TypedValue
+                    {
+                        DataType = MFDataType.Lookup,
+                        Lookup = new Lookup
+                        {
+                            Item = 105,
+                            Version = -1
+                        },
 
-            });
+                    },
+
+                });
+
+                //Durum
+                propValues.Add(new PropertyValue
+                {
+                    PropertyDef = 39,
+                    TypedValue = new TypedValue
+                    {
+                        DataType = MFDataType.Lookup,
+                        Lookup = new Lookup
+                        {
+                            Item = 174,
+                            Version = -1
+                        },
+
+                    },
+
+                });
+            }
 
             //Departman
             propValues.Add(new PropertyValue

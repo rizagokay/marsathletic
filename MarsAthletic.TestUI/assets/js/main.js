@@ -128,6 +128,7 @@ $(document).ready(function() {
                                     dataObject.DateCreated= $("#datepicker").val();
                                     dataObject.DepartmentId = $("#departments").val();
                                     dataObject.Cost = $("#cost").val();
+                                    dataObject.WithProductInfo = $("#productInfo").attr('checked');
 
                                    alert(JSON.stringify(dataObject));
 
