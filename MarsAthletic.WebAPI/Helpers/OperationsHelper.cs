@@ -122,13 +122,13 @@ namespace MarsAthletic.WebAPI.Helpers
         {
             var objectTypeForDocument = 0;
 
-            var completedStateIds = new int[] { 120, 200 };
+            var completedStateIds = new int[] { 120, 200, 221, 225, 220, 226 };
 
-            var waitingStatuses = new int[] { 101, 121, 105, 102, 108, 124, 125, 126, 133, 134, 136, 129, 111, 133, 122, 114, 137, 123, 117, 174, 175, 176, 179, 180, 183, 184, 188, 191, 192, 196, 198, 200 };
+            var waitingStatuses = new int[] { 101, 121, 105, 102, 108, 124, 125, 126, 133, 134, 136, 129, 111, 133, 122, 114, 137, 123, 117, 174, 175, 176, 179, 180, 183, 184, 188, 191, 192, 196, 198, 200, 227, 228, 232, 233 };
 
-            var rejectStatuses = new int[] { 106, 103, 109, 128, 135, 112, 115, 118, 177, 181, 185, 189, 193 };
+            var rejectStatuses = new int[] { 106, 103, 109, 128, 135, 112, 115, 118, 177, 181, 185, 189, 193, 229, 234 };
 
-            var returnStatuses = new int[] { 178, 182, 186, 190, 201, 202, 203, 194, 197, 199, 107, 104, 130, 110, 127, 113, 116, 131, 132, 119 };
+            var returnStatuses = new int[] { 178, 182, 186, 190, 201, 202, 203, 194, 197, 199, 107, 104, 130, 110, 127, 113, 116, 131, 132, 119, 230, 231, 235, 236 };
 
             var client = new MfwsClient(_config.GetMFilesUrl() + "REST");
 
@@ -221,6 +221,7 @@ namespace MarsAthletic.WebAPI.Helpers
 
             });
 
+            //Satınalma Talep Nedeni
             if (data.Description.Trim() != "" && data.Description != null)
             {
                 propValues.Add(new PropertyValue
