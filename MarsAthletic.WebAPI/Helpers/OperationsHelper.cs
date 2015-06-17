@@ -405,6 +405,153 @@ namespace MarsAthletic.WebAPI.Helpers
 
         }
 
+        public AttachmentInfo AddDocument(AttachmentData data)
+        {
+
+            var oCheckOutInfo = new ObjectCheckOutInfo();
+
+            var fileStream = new MemoryStream();
+
+            var client = new MfwsClient(_config.GetMFilesUrl() + "REST");
+
+            var creationInfo = new AttachmentInfo();
+
+            creationInfo.CreationStatus = CreationStatus.NotCreated;
+
+            //Authenticate
+            var result = client.Post<PrimitiveType<string>>(
+                "/server/authenticationtokens",
+                new Authentication { Username = _config.GetAccountName(), Password = _config.GetPassword(), VaultGuid = _config.GetVaultGuid() });
+
+            //Bind the token value
+            client.Authentication = result.Value;
+
+            try
+            {
+                
+                //construct check out url
+                var checkOutUrl = String.Format("/objects/0/{0}/latest/checkedout", data.MainDocumentID);
+
+                //get documents status
+                var checkOutStatus = client.Get<PrimitiveType<MFCheckOutStatus>>(checkOutUrl);
+
+                //If Not Checked-Out
+                if (checkOutStatus.Value == MFCheckOutStatus.CheckedIn)
+                {
+
+                    // Perform a check out.
+                    var ov = client.Put<ObjectVersion>(checkOutUrl, new PrimitiveType<MFCheckOutStatus> { Value = MFCheckOutStatus.CheckedOutToMe });
+
+                    //Update the OC Info
+                    oCheckOutInfo.IsCheckedOut = true;
+                    oCheckOutInfo.ObjectVersion = ov.ObjVer.Version;
+                    oCheckOutInfo.ObjectID = ov.ObjVer.ID;
+
+
+                    //Construct the property value URL
+                    var singlefileUrl = String.Format("/objects/0/{0}/latest/properties/22", data.MainDocumentID);
+
+                    //Get single-file property value
+                    var singleFileValue = client.Get<PropertyValue>(singlefileUrl);
+
+                    //If it is single file first convert to multifile
+                    if ((bool)singleFileValue.TypedValue.Value)
+                    {
+                        var pv = new PropertyValue()
+                        {
+                            PropertyDef = 22,
+                            TypedValue = new TypedValue { DataType = MFDataType.Boolean, Value = false }
+                        };
+
+                        //Set single file property
+                        var extendedObjectVersion = client.Put<ExtendedObjectVersion>(singlefileUrl, pv);                   
+                    }
+
+
+                    //Construct add file URL
+                    var addfileUrl = String.Format("/objects/0/{0}/-1/files", data.MainDocumentID);
+
+                    fileStream = new MemoryStream(data.FileData);
+
+                    //Post file data
+                    var fileAddedVersion = client.Post<ObjectVersion>(addfileUrl, fileStream);
+
+                    //Update the OC Info
+                    oCheckOutInfo.ObjectVersion = fileAddedVersion.ObjVer.Version;
+
+                    var fileRenamedVersion = new ObjectVersion();
+
+                    //Set the file Info
+                    foreach (var item in fileAddedVersion.Files)
+                    {
+                        //Newly Added File
+                        if (item.Extension == "")
+                        {
+                            //Construct the file name change
+                            var fileRenameURL = String.Format("/objects/0/{0}/-1/files/{1}/title", data.MainDocumentID, item.ID);
+
+                            fileRenamedVersion = client.Put<ObjectVersion>(fileRenameURL, data.Filename + data.Extension);
+
+                            creationInfo.CreatedFileId = item.ID;
+
+                            //Update the OC Info
+                            oCheckOutInfo.ObjectVersion = fileRenamedVersion.ObjVer.Version;
+                        }
+                    }
+
+                    var checkInUrl = "";
+
+                    //Construct checkin url
+                    if (fileRenamedVersion.ObjVer != null)
+                    {
+                        checkInUrl = String.Format("/objects/0/{0}/{1}/checkedout", fileRenamedVersion.ObjVer.ID, fileRenamedVersion.ObjVer.Version);
+                    }
+                    else
+                    {
+                        checkInUrl = String.Format("/objects/0/{0}/{1}/checkedout", fileAddedVersion.ObjVer.ID, fileAddedVersion.ObjVer.Version);
+                    }
+
+                    //Perform check-in
+                    client.Put<ObjectVersion>(checkInUrl, new PrimitiveType<MFCheckOutStatus> { Value = MFCheckOutStatus.CheckedIn });
+
+                    creationInfo.CreationStatus = CreationStatus.Created;
+
+                    //Dispose stream
+                    fileStream.Dispose();
+
+
+                    return creationInfo;
+                    
+                }
+                else
+                {
+                    //Checked out no-files can be added
+                    return new AttachmentInfo() { CreationStatus = CreationStatus.NotCreated};
+                }
+
+                
+            }
+            catch (Exception)
+            {
+                //Exception Handle Operations
+
+                //1. Dispose stream
+                fileStream.Dispose();
+
+                //2. Check the object back to the server
+                if (oCheckOutInfo.IsCheckedOut)
+                {
+                    var checkInUrl = String.Format("/objects/0/{0}/{1}/checkedout", oCheckOutInfo.ObjectID, oCheckOutInfo.ObjectVersion);
+
+                    //Perform check-in
+                    client.Put<ObjectVersion>(checkInUrl, new PrimitiveType<MFCheckOutStatus> { Value = MFCheckOutStatus.CheckedIn });
+                }
+
+                throw;
+            }
+
+        }
+
         private int GetExternalIDWithDisplayID(MfwsClient client, int objectTypeId, int objectId)
         {
             //make request

@@ -16,5 +16,6 @@ namespace MarsAthletic.WebAPI.Interfaces
 
         int GetStatusOfDocument(int id);
         int CreateDocument(DocumentData data);
+        AttachmentInfo AddDocument(AttachmentData data);
     }
 }

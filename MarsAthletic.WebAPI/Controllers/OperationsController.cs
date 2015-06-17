@@ -139,6 +139,34 @@ namespace MarsAthletic.WebAPI.Controllers
             }
         }
 
+        [HttpPost]
+        public HttpResponseMessage AddFile(AttachmentData data)
+        {
+            try
+            {
+                var attachmentInfo = _operations.AddDocument(data);
 
+                if (attachmentInfo.CreationStatus == CreationStatus.Created)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new Attachment { AttachmentID = attachmentInfo.CreatedFileId });
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.ExpectationFailed, new  { Message = "Ek dosya eklenebilmesi için ana dosyanın check-in edilmiş olması gerekli." });
+                }      
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType() == typeof(MfwsException))
+                {
+                    var mfEx = ex as MfwsException;
+
+                    return Request.CreateResponse(mfEx.StatusCode, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name, CompleteException = ex.ToString() });
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name }); ;
+            }
+        }
     }
 }
