@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MarsAthletic.WebAPI.Helpers
 {
@@ -221,14 +222,17 @@ namespace MarsAthletic.WebAPI.Helpers
 
             });
 
-            //Satınalma Talep Nedeni
-            if (data.Description.Trim() != "" && data.Description != null)
+            if (data.Description != null)
             {
-                propValues.Add(new PropertyValue
+                //Satınalma Talep Nedeni
+                if (data.Description.Trim() != "" && data.Description != null)
                 {
-                    PropertyDef = 1088,
-                    TypedValue = new TypedValue { DataType = MFDataType.MultiLineText, Value = data.Description }
-                });
+                    propValues.Add(new PropertyValue
+                    {
+                        PropertyDef = 1088,
+                        TypedValue = new TypedValue { DataType = MFDataType.MultiLineText, Value = data.Description }
+                    });
+                }
             }
 
             //Talep Eden Personel
@@ -428,7 +432,7 @@ namespace MarsAthletic.WebAPI.Helpers
 
             try
             {
-                
+
                 //construct check out url
                 var checkOutUrl = String.Format("/objects/0/{0}/latest/checkedout", data.MainDocumentID);
 
@@ -464,7 +468,7 @@ namespace MarsAthletic.WebAPI.Helpers
                         };
 
                         //Set single file property
-                        var extendedObjectVersion = client.Put<ExtendedObjectVersion>(singlefileUrl, pv);                   
+                        var extendedObjectVersion = client.Put<ExtendedObjectVersion>(singlefileUrl, pv);
                     }
 
 
@@ -521,15 +525,15 @@ namespace MarsAthletic.WebAPI.Helpers
 
 
                     return creationInfo;
-                    
+
                 }
                 else
                 {
                     //Checked out no-files can be added
-                    return new AttachmentInfo() { CreationStatus = CreationStatus.NotCreated};
+                    return new AttachmentInfo() { CreationStatus = CreationStatus.NotCreated };
                 }
 
-                
+
             }
             catch (Exception)
             {
@@ -549,7 +553,154 @@ namespace MarsAthletic.WebAPI.Helpers
 
                 throw;
             }
+        }
 
+        public Task<AttachmentInfo> AddMultipleDocumentsAtOnce(HttpFileCollection Files, int FileID)
+        {
+            var task = new Task<AttachmentInfo>(() =>
+            {
+                var oCheckOutInfo = new ObjectCheckOutInfo();
+
+                var client = new MfwsClient(_config.GetMFilesUrl() + "REST");
+
+                var creationInfo = new AttachmentInfo();
+
+                creationInfo.CreationStatus = CreationStatus.NotCreated;
+
+                //Authenticate
+                var result = client.Post<PrimitiveType<string>>(
+                    "/server/authenticationtokens",
+                    new Authentication { Username = _config.GetAccountName(), Password = _config.GetPassword(), VaultGuid = _config.GetVaultGuid() });
+
+                //Bind the token value
+                client.Authentication = result.Value;
+
+                try
+                {
+
+                    //construct check out url
+                    var checkOutUrl = String.Format("/objects/0/{0}/latest/checkedout", FileID);
+
+                    //get documents status
+                    var checkOutStatus = client.Get<PrimitiveType<MFCheckOutStatus>>(checkOutUrl);
+
+                    //If Not Checked-Out
+                    if (checkOutStatus.Value == MFCheckOutStatus.CheckedIn)
+                    {
+
+                        // Perform a check out.
+                        var ov = client.Put<ObjectVersion>(checkOutUrl, new PrimitiveType<MFCheckOutStatus> { Value = MFCheckOutStatus.CheckedOutToMe });
+
+                        //Update the OC Info
+                        oCheckOutInfo.IsCheckedOut = true;
+                        oCheckOutInfo.ObjectVersion = ov.ObjVer.Version;
+                        oCheckOutInfo.ObjectID = ov.ObjVer.ID;
+
+
+                        //Construct the property value URL
+                        var singlefileUrl = String.Format("/objects/0/{0}/latest/properties/22", FileID);
+
+                        //Get single-file property value
+                        var singleFileValue = client.Get<PropertyValue>(singlefileUrl);
+
+                        //If it is single file first convert to multifile
+                        if ((bool)singleFileValue.TypedValue.Value)
+                        {
+                            var pv = new PropertyValue()
+                            {
+                                PropertyDef = 22,
+                                TypedValue = new TypedValue { DataType = MFDataType.Boolean, Value = false }
+                            };
+
+                            //Set single file property
+                            var extendedObjectVersion = client.Put<ExtendedObjectVersion>(singlefileUrl, pv);
+                        }
+
+
+                        //Construct add file URL
+                        var addfileUrl = String.Format("/objects/0/{0}/-1/files", FileID);
+
+                        var checkInUrl = "";
+
+
+                        for (int i = 0; i < Files.Count; i++)
+                        {
+                            //Post file data
+                            var fileAddedVersion = client.Post<ObjectVersion>(addfileUrl, Files[i].InputStream);
+
+                            //Update the OC Info
+                            oCheckOutInfo.ObjectVersion = fileAddedVersion.ObjVer.Version;
+
+                            var fileRenamedVersion = new ObjectVersion();
+
+                            //Set the file Info
+                            foreach (var item in fileAddedVersion.Files)
+                            {
+                                //Newly Added File
+                                if (item.Extension == "")
+                                {
+                                    //Construct the file name change
+                                    var fileRenameURL = String.Format("/objects/0/{0}/-1/files/{1}/title", FileID, item.ID);
+
+                                    fileRenamedVersion = client.Put<ObjectVersion>(fileRenameURL, Files[i].FileName);
+
+                                    creationInfo.CreatedFileId = item.ID;
+
+                                    //Update the OC Info
+                                    oCheckOutInfo.ObjectVersion = fileRenamedVersion.ObjVer.Version;
+                                }
+
+                                //Construct checkin url
+                                if (fileRenamedVersion.ObjVer != null)
+                                {
+                                    checkInUrl = String.Format("/objects/0/{0}/{1}/checkedout", fileRenamedVersion.ObjVer.ID, fileRenamedVersion.ObjVer.Version);
+                                }
+                                else
+                                {
+                                    checkInUrl = String.Format("/objects/0/{0}/{1}/checkedout", fileAddedVersion.ObjVer.ID, fileAddedVersion.ObjVer.Version);
+                                }
+                            }
+
+                        }
+
+
+                        //Perform check-in
+                        client.Put<ObjectVersion>(checkInUrl, new PrimitiveType<MFCheckOutStatus> { Value = MFCheckOutStatus.CheckedIn });
+
+                        creationInfo.CreationStatus = CreationStatus.Created;
+
+
+                        return creationInfo;
+
+                    }
+                    else
+                    {
+                        //Checked out no-files can be added
+                        return new AttachmentInfo() { CreationStatus = CreationStatus.NotCreated };
+                    }
+
+
+                }
+                catch (Exception Ex)
+                {
+                    //Exception Handle Operations
+                    //1. Check the object back to the server
+                    if (oCheckOutInfo.IsCheckedOut)
+                    {
+                        var checkInUrl = String.Format("/objects/0/{0}/{1}/checkedout", oCheckOutInfo.ObjectID, oCheckOutInfo.ObjectVersion);
+
+                        //Perform check-in
+                        client.Put<ObjectVersion>(checkInUrl, new PrimitiveType<MFCheckOutStatus> { Value = MFCheckOutStatus.CheckedIn });
+                    }
+
+
+                    throw;
+                }
+            });
+
+            task.Start();
+
+            return task;
         }
 
         private int GetExternalIDWithDisplayID(MfwsClient client, int objectTypeId, int objectId)

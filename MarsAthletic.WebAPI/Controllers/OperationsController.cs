@@ -140,11 +140,57 @@ namespace MarsAthletic.WebAPI.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage AddFile(AttachmentData data)
+        public async Task<HttpResponseMessage> AddFiles()
+        {   
+            try
+            {
+
+                var req = HttpContext.Current.Request;
+                var fileId = req.Form["FileID"];
+
+                if (req.Form.AllKeys.Count() == 0 || fileId == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, new  { Message = "Geçersiz istek lütfen tüm değerlerin mevcut olduğundan emin olunuz." });
+                }
+
+                if (req.Files.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Geçersiz istek gönderilen istek içerisinde doküman bulunamadı." });
+                }
+               
+
+                var info = await _operations.AddMultipleDocumentsAtOnce(req.Files, Convert.ToInt32(fileId));
+
+                //Save Files
+                if (info.CreationStatus == CreationStatus.Created)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Dokümanlar Başarıyla Eklendi" });
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.ExpectationFailed, new  { Message = "Ek dosya eklenebilmesi için ana dosyanın check-in edilmiş olması gerekli." });
+                }      
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType() == typeof(MfwsException))
+                {
+                    var mfEx = ex as MfwsException;
+
+                    return Request.CreateResponse(mfEx.StatusCode, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name, CompleteException = ex.ToString() });
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorWrapper() { ErrorMessage = ex.Message.ToString(), ExceptionType = ex.GetType().ToString(), ExceptionSource = ex.TargetSite.Name }); ;
+            }
+        }
+
+        [HttpPost]
+        public  HttpResponseMessage AddFile(AttachmentData data)
         {
             try
             {
-                var attachmentInfo = _operations.AddDocument(data);
+                var attachmentInfo =  _operations.AddDocument(data);
 
                 if (attachmentInfo.CreationStatus == CreationStatus.Created)
                 {
@@ -152,8 +198,8 @@ namespace MarsAthletic.WebAPI.Controllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.ExpectationFailed, new  { Message = "Ek dosya eklenebilmesi için ana dosyanın check-in edilmiş olması gerekli." });
-                }      
+                    return Request.CreateResponse(HttpStatusCode.ExpectationFailed, new { Message = "Ek dosya eklenebilmesi için ana dosyanın check-in edilmiş olması gerekli." });
+                }
             }
             catch (Exception ex)
             {
