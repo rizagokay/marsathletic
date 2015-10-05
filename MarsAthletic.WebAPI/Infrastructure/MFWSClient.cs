@@ -117,6 +117,7 @@ namespace MFiles.Mfws
             if (!string.IsNullOrEmpty(Authentication))
                 request.Headers["X-Authentication"] = Authentication;
 
+
             if (content == null)
             {
                 // Do nothing if there is no content.
