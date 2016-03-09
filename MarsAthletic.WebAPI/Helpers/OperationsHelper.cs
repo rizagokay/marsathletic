@@ -263,7 +263,7 @@ namespace MarsAthletic.WebAPI.Helpers
                         DataType = MFDataType.Lookup,
                         Lookup = new Lookup
                         {
-                            Item = 101,
+                            Item = 112,
                             Version = -1
                         },
 
@@ -280,7 +280,7 @@ namespace MarsAthletic.WebAPI.Helpers
                         DataType = MFDataType.Lookup,
                         Lookup = new Lookup
                         {
-                            Item = 101,
+                            Item = 306,
                             Version = -1
                         },
 
