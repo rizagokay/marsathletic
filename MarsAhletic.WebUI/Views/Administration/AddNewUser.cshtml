@@ -1,0 +1,138 @@
+﻿@using MarsAhletic.WebUI.Models
+@{
+    ViewBag.Title = "Yeni Kullanıcı Ekle";
+}
+@model ApplicationUserVM
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group pull-right m-t-15">
+            <button type="button" class="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Ayarlar <span class="m-l-5"><i class="fa fa-cog"></i></span></button>
+            <ul class="dropdown-menu drop-menu-right" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
+        </div>
+
+        <h4 class="page-title">Yeni Kullanıcı Ekleme</h4>
+        <p class="text-muted page-title-alt">Sisteme giriş yapabilecek kullanıcıları buradan ekleyebilirsiniz.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <form id="wizard-vertical" method="post" action="@Url.Action("AddNewUser")">
+                @Html.AntiForgeryToken()
+                <h3>Hesap Bilgileri</h3>
+                <section>
+                    <div class="form-group clearfix">
+                        <label class="col-lg-4 control-label " for="username">Kullanıcı Adı:</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control required", id = "username", data_msg = "Bu alan zorunludur." })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label id="passwordlabel" class="col-lg-4 control-label " for="username">Şifre:</label>
+                        <div class="col-lg-8">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control required", id = "password", data_msg = "Bu alan zorunludur." })
+                        </div>
+                    </div>
+                    <div class="form-group clearfix" style="padding-left:10px;">
+                        <div class="radio radio-info radio-inline">
+                            @Html.RadioButtonFor(m => m.AccountType, 1, new { @checked = "checked", id = "radio1" })
+                            <label for="radio1"> Dahili </label>
+                        </div>
+                        <div class="radio radio-inline">
+                            @Html.RadioButtonFor(m => m.AccountType, 2, new { id = "radio2" })
+                            <label for="radio2"> Harici</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix" id="hiddengroup" style="display:none;">
+                        <label class="col-lg-4 control-label " for="domain">Domain:</label>
+                        @Html.TextBoxFor(m => m.Domain, new { id = "domain", @class = "form-control required", data_msg = "Bu alan zorunludur.", hidden = "hidden" })
+                    </div>
+                </section>
+                <h3>Hesap Detayları</h3>
+                <section>
+                    <div class="form-group clearfix">
+
+                        <label class="col-lg-2 control-label" for="name1">Adı Soyadı:</label>
+                        <div class="col-lg-10">
+                            @Html.TextBoxFor(m => m.Name, new { @class = "required form-control", data_msg = "Bu alan zorunludur.", id = "firstname" })
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <label class="col-lg-2 control-label " for="email">Email:</label>
+                        <div class="col-lg-10">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "email form-control", data_msg = "Lütfen geçerli bir mail adresi giriniz.", id = "email" })
+                        </div>
+                    </div>
+
+
+                </section>
+                <h3>Roller</h3>
+                <section>
+                    <div class="form-group clearfix">
+                        <div class="col-lg-12">
+                            @Html.CheckBoxFor(m => m.IsAdministrator, new { id = "checkbox-v" })
+                            <label for="checkbox-v">Sistem Yöneticisi </label>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="col-lg-12">
+                            @Html.CheckBoxFor(m => m.IsManager, new { id = "checkbox-y" })
+                            <label for="checkbox-y">Departman Yöneticisi</label>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="card-box">
+        <div class="col-sm-6">
+            @Html.ValidationSummary()
+        </div>
+    </div>
+</div>
+
+@section pagecss {
+
+    <!--Form Wizard-->
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/assets/plugins/jquery.steps/css/jquery.steps.css")" />
+
+}
+
+@section finaljscodes{
+    <!--Form Wizard-->
+    <script src="@Url.Content("~/assets/plugins/jquery.steps/js/jquery.steps.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/assets/plugins/jquery-validation/js/jquery.validate.min.js")" type="text/javascript"></script>
+
+    <!--Wizard Init-->
+    <script src="@Url.Content("~/assets/pages/jquery.wizard-init.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#radio1, #radio2").change(function () {
+                if ($('#radio2').is(":checked")) {
+                    $('#hiddengroup').show();
+                    $('#password').hide();
+                    $('#password').val('');
+                    $('#passwordlabel').hide();
+                }
+                else {
+                    $('#hiddengroup').hide();
+                    $('#password').show();
+                    $('#passwordlabel').show();
+                }
+            });
+        });
+    </script>
+}

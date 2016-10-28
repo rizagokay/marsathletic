@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MarsAhletic.WebUI.Models;
+using Mechsoft.ADServices.Helpers;
 
 namespace MarsAhletic.WebUI.Controllers
 {
@@ -17,15 +18,25 @@ namespace MarsAhletic.WebUI.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IDirectoryOperations _directoryManager;
 
         public AccountController()
         {
+
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+        }
+
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IDirectoryOperations directoryOperations)
+        {
+            UserManager = userManager;
+            SignInManager = signInManager;
+            DirectoryManager = directoryOperations;
+
         }
 
         public ApplicationSignInManager SignInManager
@@ -52,6 +63,18 @@ namespace MarsAhletic.WebUI.Controllers
             }
         }
 
+        public IDirectoryOperations DirectoryManager
+        {
+            get
+            {
+                return _directoryManager ?? new DirectoryOperations();
+            }
+            set
+            {
+                _directoryManager = value;
+            }
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -73,15 +96,33 @@ namespace MarsAhletic.WebUI.Controllers
                 return View(model);
             }
 
-            var adManager = new Mechsoft.ADServices.Helpers.DirectoryOperations();
+            // Check if the user is available and isauthenticated.
+            var userFound = UserManager.FindByName(model.Username);
+            if (userFound != null)
+            {
+                if (userFound.ADDomain != null)
+                {
+                    var canAuthAD = DirectoryManager.IsAuthenticated(model.Username, model.Password, userFound.ADDomain);
 
-            var domains = adManager.GetDomainNames();
+                    if (canAuthAD)
+                    {
+                        var localLoginResult = await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, shouldLockout: false);
+
+                        if (localLoginResult == SignInStatus.Failure)
+                        {
+                            var token = UserManager.GeneratePasswordResetToken(userFound.Id);
+                            UserManager.ResetPassword(userFound.Id, token, model.Password);
+                        }
+                    }
+                }
+            }
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
+                
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -155,10 +196,8 @@ namespace MarsAhletic.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-
-
-
                 var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+                
                 var result = await UserManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)

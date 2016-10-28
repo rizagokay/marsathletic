@@ -1,27 +1,27 @@
-/**
+﻿/**
 * Theme: Ubold Admin Template
 * Author: Coderthemes
 * Form wizard page
 */
 
-!function($) {
+!function ($) {
     "use strict";
 
-    var FormWizard = function() {};
+    var FormWizard = function () { };
 
-    FormWizard.prototype.createBasic = function($form_container) {
+    FormWizard.prototype.createBasic = function ($form_container) {
         $form_container.children("div").steps({
             headerTag: "h3",
             bodyTag: "section",
             transitionEffect: "slideLeft",
-            onFinishing: function (event, currentIndex) { 
+            onFinishing: function (event, currentIndex) {
                 //NOTE: Here you can do form validation and return true or false based on your validation logic
                 console.log("Form has been validated!");
-                return true; 
-            }, 
+                return true;
+            },
             onFinished: function (event, currentIndex) {
-               //NOTE: Submit the form, if all validation passed.
-                console.log("Form can be submitted using submit method. E.g. $('#basic-form').submit()"); 
+                //NOTE: Submit the form, if all validation passed.
+                console.log("Form can be submitted using submit method. E.g. $('#basic-form').submit()");
                 $("#basic-form").submit();
 
             }
@@ -29,7 +29,7 @@
         return $form_container;
     },
     //creates form with validation
-    FormWizard.prototype.createValidatorForm = function($form_container) {
+    FormWizard.prototype.createValidatorForm = function ($form_container) {
         $form_container.validate({
             errorPlacement: function errorPlacement(error, element) {
                 element.after(error);
@@ -55,16 +55,48 @@
         return $form_container;
     },
     //creates vertical form
-    FormWizard.prototype.createVertical = function($form_container) {
+    FormWizard.prototype.createVertical = function ($form_container) {
+        $form_container.validate({
+            errorPlacement: function errorPlacement(error, element) {
+                element.after(error);
+            }
+        });
+
         $form_container.steps({
             headerTag: "h3",
             bodyTag: "section",
             transitionEffect: "fade",
-            stepsOrientation: "vertical"
+            stepsOrientation: "vertical",
+            onStepChanging: function (event, currentIndex, newIndex) {             
+                if (currentIndex < newIndex) {
+                    $form_container.validate().settings.ignore = ":disabled,:hidden";
+                    return $form_container.valid();
+                }
+                else {
+                    return true;
+                }
+            },
+            onFinishing: function (event, currentIndex) {
+                $form_container.validate().settings.ignore = ":disabled,:hidden";
+                return true;
+            },
+            onFinished: function (event, currentIndex) {
+                $('#wizard-vertical').submit();
+            },
+
+            labels: {
+                cancel: "İptal",
+                current: "Mevcut adım:",
+                pagination: "Sayfalama",
+                finish: "Bitir",
+                next: "İleri",
+                previous: "Geri",
+                loading: "Yükleniyor ..."
+            }
         });
         return $form_container;
     },
-    FormWizard.prototype.init = function() {
+    FormWizard.prototype.init = function () {
         //initialzing various forms
 
         //basic form
@@ -81,7 +113,7 @@
 }(window.jQuery),
 
 //initializing 
-function($) {
+function ($) {
     "use strict";
     $.FormWizard.init()
 }(window.jQuery);

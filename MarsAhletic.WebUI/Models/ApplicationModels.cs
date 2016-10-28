@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MarsAhletic.WebUI.Models
 {
+
+    #region Database Models
+
     public class Notification
     {
         [Key]
@@ -85,4 +88,34 @@ namespace MarsAhletic.WebUI.Models
         public string Name { get; set; }
         public string Budget { get; set; }
     }
+
+    #endregion
+    #region View Models 
+    public class ApplicationUserVM
+    {
+        [Required]
+        [MinLength(6, ErrorMessage = "Kullanıcı adı minimum 6 karakter olmalıdır.")]
+        public string Username { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public string Domain { get; set; }
+        public bool IsManager { get; set; }
+        public bool IsAdministrator { get; set; }
+        public int AccountType { get; set; }
+    }
+
+    public class TravelPlanViewModel
+    {
+        public string TravelId { get; set; }
+        public string NameSurname { get; set; }
+        public string ExpanseCenterId { get; set; }
+        public DateTime Date { get; set; }
+        public string TravelRoute { get; set; }
+    }
+    #endregion
 }
