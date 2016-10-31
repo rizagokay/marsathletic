@@ -106,6 +106,7 @@ namespace MarsAhletic.WebUI.Controllers
                 if (model.Domain != null)
                 {
                     appUser.ADDomain = model.Domain;
+                    appUser.UserName = model.Domain + "\\" + model.Username;
                     result = await UserManager.CreateAsync(appUser, "model@secret.pass");
 
                 }
