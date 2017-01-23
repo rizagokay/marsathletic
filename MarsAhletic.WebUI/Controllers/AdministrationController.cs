@@ -59,7 +59,7 @@ namespace MarsAhletic.WebUI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddNewUser(ApplicationUserVM model)
+        public async Task<ActionResult> AddNewUser(ApplicationUserViewModel model)
         {
 
             if (ModelState.IsValid)

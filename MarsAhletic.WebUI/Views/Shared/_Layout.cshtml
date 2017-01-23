@@ -4,11 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
-    <meta name="author" content="Coderthemes">
 
     <link rel="shortcut icon" href="assets/images/favicon_1.ico">
 
-    <title>Mechsoft Management Portal</title>
+    <title>@ViewBag.Title</title>
 
     <!--Morris Chart CSS -->
     <link href="@Url.Content("~/Assets/plugins/morris/morris.css")" rel="stylesheet">
@@ -228,15 +227,14 @@
                 <div id="sidebar-menu">
                     <ul>
 
-                        <li class="text-muted menu-title">Navigation</li>
+                        <li class="text-muted menu-title">Navigasyon</li>
 
                         <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="ti-home"></i> <span> Dashboards </span> <span class="menu-arrow"></span></a>
+                            <a href="javascript:void(0);" class="waves-effect"><i class="ti-money"></i> <span> Satınalma Talepleri </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="@Url.Action("Index", "Home")>Dashboard 1</a></li>
-                                <li><a href="dashboard_2.html">Dashboard 2</a></li>
-                                <li><a href="dashboard_3.html">Dashboard 3</a></li>
-                                <li><a href="dashboard_4.html">Dashboard 4</a></li>
+                                <li><a href="@Url.Action("CreateNewPurchaseOrder", "Dashboards")">Yeni Talep Oluştur</a></li>
+                                <li><a href="@Url.Action("Index", "Home")">Görünümler</a></li>
+                                <li><a href="@Url.Action("Index", "Home")">Raporlar</a></li>
                             </ul>
                         </li>
 
@@ -294,7 +292,8 @@
     </script>
 
     <!-- jQuery  -->
-    <script src="@Url.Content("~/Assets/js/jquery.min.js")"></script>
+    <script src="@Url.Content("https://code.jquery.com/jquery-2.2.4.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/parsleyjs/parsley.min.js")"></script>
     <script src="@Url.Content("~/Assets/js/bootstrap.min.js")"></script>
     <script src="@Url.Content("~/Assets/js/detect.js")"></script>
     <script src="@Url.Content("~/Assets/js/fastclick.js")"></script>

@@ -1,0 +1,964 @@
+﻿
+@{
+    ViewBag.Title = "M-Port | Yeni Satınalma Talebi";
+}
+@using MarsAhletic.WebUI.Models
+@model PurchaseOrderViewModel
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Satınalma Talep Formu</h4>
+        <p class="text-muted page-title-alt"></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <div class="row">
+                <form class="" method="post" action="@Url.Action("CreateNewPurchaseOrder")" id="finalform" data-parsley-validate novalidate enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.NameSurname, new { value = User.Identity.GetName() })
+                    @if (IsPost)
+                    {
+                        <input type="hidden" id="postbackdata" value="true" />
+                        <input type="hidden" id="postbackdate" value="@Model.Date" />
+                    }
+                    <div class="col-sm-6">
+                        <table class="table table-responsive">
+                            <tr>
+                                <td><label>Cari Hesap Kodu:</label></td>
+
+                                <td>
+                                    @Html.TextBoxFor(m => m.CompanyCode, new { id = "companycode", @class = "form-control", @readonly = "true", name = "companycode" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label>Cari Hesap Ünvanı:</label></td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.CompanyId, Model.Companies, "", new { id = "companies", @class = "form-control select2", required = true })
+                                    @Html.HiddenFor(m => m.CompanyId, new { id = "companyidhidden" })
+                                </td>
+
+                            </tr>
+
+
+                        </table>
+                        <div class="panel panel-border panel-warning" id="warningmain" style="display:none;">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Uyarı</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    Seçilen bir ürün yukarıdaki cari hesaba bağlı olduğundan alan kilitlenmiştir. Forma yalnızca bu hesaba ait ürünleri ekleyebilirsiniz. Bu kısıtı kaldırmak için listeyi boşaltabilirsiniz.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <table class="table table-responsive">
+                            <tr>
+                                <td><label>Talep No:</label></td>
+                                <td>
+                                    @Model.PurchaseOrderId
+                                    @Html.HiddenFor(m => m.PurchaseOrderId)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label>Talep Tarihi:</label></td>
+                                <td>
+                                    @Html.TextBoxFor(m => m.Date, new { @class = "form-control datepicker-autoclose-currentdate", placeholder = "dd/gg/yyyy", id = "purchaseorderdate" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label>Kulüp Adı:</label></td>
+                                <td><input type="text" class="form-control" id="clubname"></td>
+                            </tr>
+                            <tr>
+                                <td><label>Departman:</label></td>
+                                <td><input type="text" class="form-control" id="departmentid"></td>
+                            </tr>
+                            <tr>
+                                <td><label>Kulüp Adres Bilgisi:</label></td>
+                                <td><input type="text" class="form-control" id="clubaddress"></td>
+                            </tr>
+                        </table>
+                        @Html.TextBoxFor(m => m.Files, new { type = "file", name = "Files", @class = "filestyle", data_bdge = "true", data_size = "sm", multiple = "" })
+                    </div>
+                    <div class="col-sm-12">
+                        <div style="margin-bottom:10px;">
+                            <a href="javascript:void(0)" class="btn btn-success" id="addnewitem">Ürün Ekle</a>
+                            <a href="javascript:void(0)" class="btn btn-danger" id="clearall">Tümünü Temizle</a>
+
+                        </div>
+                        <div class="table-responsive">
+                            <table id="productitemstable" class="table m-0">
+                                <thead>
+                                    <tr>
+                                        <td><strong>Malzeme/Hizmet Kodu</strong></td>
+                                        <td><strong>Malzeme/Hizmet Adı</strong></td>
+                                        <td><strong>Malzeme/Hizmet Grup Kodu</strong></td>
+                                        <td><strong>Miktar</strong></td>
+                                        <td><strong>Birim Fiyat</strong></td>
+                                        <td><strong>KDV</strong></td>
+                                        <td><strong>Para Birimi</strong></td>
+                                        <td><strong>Tutar</strong></td>
+                                        <td><strong>TL Tutar</strong></td>
+                                        <td><strong>Bütçe Durumu</strong></td>
+                                        <td><strong>Bütçe Rakamı</strong></td>
+                                        <td><strong>Bütçe Türü</strong></td>
+                                        <td>
+                                            <strong>İşlem</strong>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.PurchaseDetails.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Code)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Code)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Name)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.GroupCode)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.GroupCode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Amount)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Amount)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.UnitPrice)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.UnitPrice)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.VATPercentage)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.VATPercentage)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Currency.Name)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Currency.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Value)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Value)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].ValueLocal)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].ValueLocal)
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><a href="javascript:void(0);" class="deleteitem">Kaldır</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                        </div>
+                        <button id="sendform" class="btn btn-success">Kaydet</button>
+                    </div>
+                    <div class="col-sm-3 pull-right">
+                        <table>
+                            <tr>
+                                <td><strong>KDV'SİZ TOPLAM:</strong></td>
+                                <td>
+                                    <span id="TotalValueWithoutVATspan">@Html.DisplayFor(m => m.TotalValueWithoutVAT)</span>
+                                    @Html.HiddenFor(m => m.TotalValueWithoutVAT)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>KDV TOPLAMI:</strong></td>
+                                <td>
+                                    <span id="TotalValueWithVATspan">@Html.DisplayFor(m => m.TotalValueWithVAT)</span>
+                                    @Html.HiddenFor(m => m.TotalValueWithVAT)
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td><strong>GENEL TOPLAM:</strong></td>
+                                <td>
+                                    <span id="TotalValuespan">@Html.DisplayFor(m => m.TotalValue)</span>
+                                    @Html.HiddenFor(m => m.TotalValue)
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="description">Açıklama Ekle:</label>
+                            @Html.TextAreaFor(m => m.AddedComment, 5, 5, new { @class = "form-control", id = "description" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="page-title">Açıklamalar</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="con-close-modal" class="modal-demo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="Custombox.close();" aria-hidden="true">×</button>
+                <h4 class="modal-title">Yeni Ürün</h4>
+            </div>
+            <form class="" id="addnewitemform" data-parsley-validate novalidate>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="productitem" class="control-label">Ürün</label>
+                                <span id="itemcountbadge" style="display:none;" class="badge badge-warning" data-toggle="tooltip" data-placement="right" title="" data-original-title="Ürün Listesi Seçilen Kuruma Göre Filtrelenmiştir."></span>
+                                @Html.DropDownList("Products", Model.Products, "", new { id = "productitem", @class = "form-control", required = true })
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="code" class="control-label">Kodu</label>
+                                <input type="text" disabled class="form-control" id="code" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="groupcode" class="control-label">Grup Kodu</label>
+                                <input type="text" disabled class="form-control" id="groupcode" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount" class="control-label">Miktar</label>
+                                <input type="text" class="form-control" onkeypress='validate(event)' id="amount" required="" />
+                            </div>
+                            <div class="form-group">
+                                <label for="unitprice" class="control-label">Birim Fiyat</label>
+                                <input type="text" disabled class="form-control" id="unitprice" />
+                            </div>
+                            <div class="form-group">
+                                <label for="vat" class="control-label">KDV Oranı</label>
+                                <input type="text" disabled class="form-control" id="vat" />
+                            </div>
+                            <div class="form-group">
+                                <label for="currency" class="control-label">Para Birimi</label>
+                                @Html.DropDownList("Currencies", Model.Currencies, "", new { id = "currencyitem", @class = "form-control", required = true, disabled = true })
+                            </div>
+                            <div class="form-group">
+                                <label for="currencyvalue" class="control-label">Kur Değeri</label>
+                                <input type="text" disabled class="form-control" id="currencyvalue" />
+                            </div>
+                            <div class="form-group">
+                                <label for="total" class="control-label">Tutar</label>
+                                <input type="text" disabled class="form-control" id="total" />
+                            </div>
+                            <div class="form-group">
+                                <label for="totallocal" class="control-label">Tutar TL</label>
+                                <input type="text" disabled class="form-control" id="totallocal" />
+                            </div>
+                            <div class="form-group">
+                                <div class="panel panel-border panel-danger" id="warningblock" style="display:none;">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Uyarı</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>
+                                            Seçtiğiniz ürün bir cari hesaba bağlıdır. Listenizde bu cari hesaba bağlı olmayan ürün(ler) bulunmaktadır. Bir satınalma talebinde yalnızca bir cari hesap bulunmalıdır. Lütfen bu ürünü ekleyebilmek için listenizden diğer ürün veya ürünleri kaldırınız.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancelButton" class="btn btn-default waves-effect" data-dismiss="modal" onclick="Custombox.close();">İptal</button>
+                    <a id="saveButton" class="ladda-button btn btn-success waves-effect waves-light" data-style="contract">Kaydet</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- /.modal -->
+
+
+@section pagecss{
+
+    <!--Datepicker css-->
+    <link href="@Url.Content("~/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css")" rel="stylesheet">
+    <!--Select css -->
+    <link href="@Url.Content("~/assets/plugins/select2/css/select2.min.css")" rel="stylesheet" type="text/css" />
+    <!-- Modal css -->
+    <link href="@Url.Content("~/assets/plugins/custombox/css/custombox.css")" rel="stylesheet">
+
+
+
+
+    <style>
+        .select2-selection__clear {
+            margin-right: 20px;
+        }
+
+        .bootstrap-filestyle {
+            float: right;
+            width: 250px;
+        }
+    </style>
+}
+
+@section midjslibs{
+    <script src="@Url.Content("~/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/select2/js/select2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/assets/plugins/notifyjs/js/notify.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/notifications/notify-metro.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js")" type="text/javascript"></script>
+
+
+}
+
+@section finaljscodes{
+
+
+    <script src="@Url.Content("~/assets/plugins/custombox/js/custombox.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/custombox/js/legacy.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/date.js")"></script>
+
+
+    <script type="text/javascript">
+
+
+        Number.prototype.formatMoney = function (c, d, t) {
+            var n = this,
+                c = isNaN(c = Math.abs(c)) ? 2 : c,
+                d = d == undefined ? "." : d,
+                t = t == undefined ? "," : t,
+                s = n < 0 ? "-" : "",
+                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+                j = (j = i.length) > 3 ? j % 3 : 0;
+            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+        };
+
+
+        function validate(evt) {
+            var theEvent = evt || window.event;
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+            var regex = /[0-9]|\./;
+            if (!regex.test(key)) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+            }
+        }
+
+        function showSuccess(message) {
+            $.Notification.notify('success', 'right bottom', 'İşlem Başarılı', message);
+        };
+
+        function showError(errorMessage) {
+            $.Notification.notify('error', 'right bottom', 'İşlem Başarısız', errorMessage);
+        }
+
+        function hasClass(elem, className) {
+            return elem.className.split(' ').indexOf(className) > -1;
+        }
+
+        document.addEventListener('click', function (e) {
+            var clickedDom = e.target;
+            if (hasClass(clickedDom, 'deleteitem')) {
+                clickedDom.closest('tr').remove();
+
+                var rowCount = $('#productitemstable tbody tr').length;
+
+
+                if (rowCount == 0) {
+                    if ($("#warningmain").is(":visible")) {
+                        $("#warningmain").hide();
+                        $("#companies").prop('disabled', false);
+                    }
+                }
+
+
+                $('#productitemstable').trigger('rowAddOrRemove');
+            }
+        }, false);
+
+        $(document).ready(function () {
+
+
+
+            $('#sendform').on('click', function (e) {
+                var tbl = $('#productitemstable > tbody tr:has(td)').map(function (i, v) {
+                    var $td = $('td', this);
+                    return {
+                        Code: $td.eq(0).text(),
+                        Name: $td.eq(1).text(),
+                        GroupCode: $td.eq(2).text(),
+                        Amount: $td.eq(3).text(),
+                        UnitPrice: $td.eq(4).text(),
+                        Vat: $td.eq(5).text(),
+                        Currency: $td.eq(6).text(),
+                        Total: $td.eq(7).text(),
+                        LocalTotal: $td.eq(8).text(),
+                        BudgetStatus: $td.eq(9).text(),
+                        BudgetValue: $td.eq(10).text(),
+                        BudgetType: $td.eq(11).text()
+                    }
+                }).get();
+
+                if (tbl.length == 0) {
+                    showError("Satınalma talebi ürün içermiyor. Lütfen en az 1 ürün ekleyiniz.");
+                    e.preventDefault();
+                    return;
+                }
+
+                for (var i = 0; i < tbl.length; i++) {
+                    var selectedItem = tbl[i];
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Product.Code' id='val_Product_Code_" + i + "' value='" + selectedItem.Code + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Product.Name' id='val_Product_Name_" + i + "' value='" + selectedItem.Name + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Product.GroupCode' id='val_Product_GroupCode_" + i + "' value='" + selectedItem.GroupCode + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Amount' id='val_Amount_" + i + "' value='" + selectedItem.Amount + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Product.UnitPrice' id='val_Product_UnitPrice_" + i + "' value='" + selectedItem.UnitPrice + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Product.VATPercentage' id='val_Product_VATPercentage_" + i + "' value='" + selectedItem.Vat + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Value' id='val_Value_" + i + "' value='" + selectedItem.Total + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].ValueLocal' id='val_Local_" + i + "' value='" + selectedItem.LocalTotal + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Currency.Name' id='val_Currency_Name_" + i + "' value='" + selectedItem.Currency + "' />");
+                }
+
+
+            });
+
+
+            $.fn.datepicker.dates['tr'] = {
+                days: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+                daysShort: ["Pzr", "Paz", "Sal", "Çar", "Per", "Cum", "Cms"],
+                daysMin: ["Pz", "Pa", "Sa", "Ça", "Pe", "Cm", "Cr"],
+                months: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+                monthsShort: ["Ock", "Şub", "Mrt", "Nis", "May", "Haz", "Tem", "Agt", "Eyl", "Ekm", "Kas", "Ara"],
+                today: "Bugün",
+                clear: "Temizle",
+                format: "dd/mm/yyyy",
+                titleFormat: "MM yyyy",
+                weekStart: 0
+            };
+
+            $('.datepicker-autoclose-currentdate')
+                .datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy',
+                    language: 'tr'
+                })
+                .datepicker("setDate", new Date());
+
+            $("#companies")
+                .select2({
+                    placeholder: 'Cari hesap seçiniz..',
+                    allowClear: true
+                });
+
+            $("#amount")
+                .on("change paste keyup", function (e) {
+                    var amount = $('#amount').val();
+                    var unitprice = $('#unitprice').val();
+                    var currency = $('#currencyvalue').val();
+
+                    var total = amount * unitprice;
+                    var totallocal = total * currency;
+
+                    $('#total').val(total);
+                    $('#totallocal').val(totallocal);
+
+                });
+
+            $("#unitprice")
+                .on("change paste keyup", function (e) {
+                    var amount = $('#amount').val();
+                    var unitprice = $('#unitprice').val();
+                    var currency = $('#currencyvalue').val();
+
+                    var total = amount * unitprice;
+                    var totallocal = total * currency;
+
+                    $('#total').val(total);
+                    $('#totallocal').val(totallocal);
+                });
+
+            $("#currencyitem").on('change', function (e) {
+
+                var currencyData = $("#currencyitem").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Dashboards/GetCurrencyValue",
+                    data: JSON.stringify({ CurrencyId: currencyData }),
+                    contentType: "application/json; charset=utf-8"
+                }).done(function (currency) {
+                    $('#currencyvalue').val(currency);
+                })
+                  .fail(function (jqXHR, textStatus, errorThrown) {
+                      alert("Kur değeri alınamadı.");
+                  });
+            });
+
+            $('#productitem')
+                .on('change', function (e) {
+                    var productData = $('#productitem').val();
+
+                    if (productData != "" && productData != null) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Dashboards/GetProduct",
+                            data: JSON.stringify({ ProductId: productData }),
+                            contentType: "application/json; charset=utf-8"
+                        }).done(function (product) {
+                            if (product != null) {
+                                $('#code').val(product.Code);
+                                $('#groupcode').val(product.GroupCode);
+                                $('#unitprice').val(product.UnitPrice);
+
+                                if (product.UnitPrice == "" || product.UnitPrice == 0) {
+                                    $("#unitprice").prop('disabled', false);
+                                }
+                                else {
+                                    $("#unitprice").prop('disabled', true);
+                                }
+
+                                $('#vat').val(product.VATPercantage);
+
+                                if (product.Currency != null) {
+                                    $('#currencyitem').val(product.Currency.Id).trigger('change');
+                                }
+                                else {
+                                    $("#currencyitem").prop('disabled', false);
+                                }
+
+
+                            }
+                            else {
+                                alert("Ürün bilgisi alınamadı.");
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            alert("Ürün bilgisi alınamadı.");
+                        });
+                    }
+                    else {
+
+                    }
+
+                });
+
+            $('#companies')
+                .on('change', function (e) {
+                    //Call Company Details
+                    var dataId = $('#companies').val();
+                    $("#companyidhidden").val(dataId);
+
+
+
+                    if (dataId != "") {
+
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Dashboards/GetCompanyCode",
+                            data: JSON.stringify({ CompanyId: dataId }),
+                            contentType: "application/json; charset=utf-8"
+                        }).done(function (data) {
+                            if (data != null) {
+                                $('#companycode').val(data);
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            //hide notification
+                            notifyObject.trigger('notify-hide');
+                            //Show notification
+                            showError(errorThrown);
+                        });
+                    }
+                    else {
+                        $('#companycode').val('');
+                    }
+                });
+
+            $("#productitem")
+                .select2({
+                    placeholder: 'Ürün seçiniz..',
+                    allowClear: true
+                });
+
+            $('#addnewitem')
+                .click(function (e) {
+                    Custombox.open({
+                        target: '#con-close-modal',
+                        effect: 'fade-in',
+                        overlayClose: false,
+                        open: function () {
+                            var companyId = $('#companies').val();
+
+                            $("#currencyitem").select2({
+                                dropdownParent: $("#con-close-modal"),
+                                placeholder: 'Para birimi seçiniz..',
+                                allowClear: true
+                            });
+
+                            if (companyId != "") {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Dashboards/GetProducts",
+                                    data: JSON.stringify({ CompanyId: companyId }),
+                                    contentType: "application/json; charset=utf-8"
+                                }).done(function (data) {
+
+                                    var options = $('#productitem');
+                                    options.empty();
+
+                                    options.append("<option />");
+                                    var itemCount = 0;
+                                    $.each(data, function () {
+                                        options.append($("<option />").val(this.Id).text(this.Name));
+                                        itemCount++;
+                                    });
+
+                                    $("#productitem").select2({
+                                        dropdownParent: $("#con-close-modal"),
+                                        placeholder: 'Ürün seçiniz..',
+                                        allowClear: true
+                                    });
+
+
+                                    $('#itemcountbadge').text(itemCount);
+                                    $('#itemcountbadge').show();
+
+
+
+                                }).fail(function (jqXHR, textStatus, errorThrown) {
+                                    //hide notification
+                                    notifyObject.trigger('notify-hide');
+                                    //Show notification
+                                    showError(errorThrown);
+                                });
+                            }
+                            else {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Dashboards/GetAllProducts",
+                                    data: JSON.stringify({}),
+                                    contentType: "application/json; charset=utf-8"
+                                }).done(function (data) {
+
+                                    var options = $('#productitem');
+                                    options.empty();
+                                    $.each(data, function () {
+                                        options.append($("<option selected='true' />").val(this.Id).text(this.Name));
+                                    });
+
+                                    options.prepend("<option value='' selected='selected'></option>");
+
+                                    $("#productitem").select2({
+                                        dropdownParent: $("#con-close-modal"),
+                                        placeholder: 'Ürün seçiniz..',
+                                        allowClear: true
+                                    });
+
+
+                                    $('#itemcountbadge').hide();
+
+                                }).fail(function (jqXHR, textStatus, errorThrown) {
+                                    //hide notification
+                                    notifyObject.trigger('notify-hide');
+                                    //Show notification
+                                    showError(errorThrown);
+                                });
+                            }
+                        },
+                        close: function () {
+                            //Clear Modal Fields
+                            $("#addnewitemform").trigger('reset');
+                            $("#warningblock").hide();
+                            $('#addnewitemform').parsley().reset();
+                            $("#productitem").select2({
+                                dropdownParent: $("#con-close-modal"),
+                                placeholder: 'Ürün seçiniz..',
+                                allowClear: true
+                            });
+
+                            $("#currencyitem").select2({
+                                dropdownParent: $("#con-close-modal"),
+                                placeholder: 'Para birimi seçiniz..',
+                                allowClear: true
+                            });
+                        }
+                    });
+
+                    //$("#productitem").select2({
+                    //    placeholder: 'Lütfen ürün seçiniz..'
+                    //});
+
+                    e.preventDefault();
+                });
+
+            $('#saveButton').click(function (e) {
+
+                var valid = $('#addnewitemform').parsley().validate();
+
+                if (valid) {
+
+                    //Get Product Values
+                    var productCode = $('#code').val();
+                    var groupCode = $('#groupcode').val();
+                    var productName = $("#productitem option:selected").text();
+                    var productId = $("#productitem").val();
+                    var amount = $("#amount").val();
+                    var unitprice = $("#unitprice").val();
+                    var vat = $('#vat').val();
+                    var total = $('#total').val();
+                    var currencyName = $('#currencyitem option:selected').text();
+                    var totalLocal = $('#totallocal').val();
+
+
+                    //BeforAdd
+                    //Get Values Available
+                    var tbl = $('#productitemstable > tbody tr:has(td)').map(function (i, v) {
+                        var $td = $('td', this);
+                        return {
+                            Name: $td.eq(1).text(),
+                            Code: $td.eq(0).text()
+                        }
+                    }).get();
+
+                    var currentCompanyCode = 0;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Dashboards/GetCompanyId",
+                        async: false,
+                        data: JSON.stringify({ ProductCode: productCode }),
+                        contentType: "application/json; charset=utf-8"
+                    }).done(function (data) {
+                        currentCompanyCode = data.CompanyId;
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        //hide notification
+                        notifyObject.trigger('notify-hide');
+                        //Show notification
+                        showError(errorThrown);
+                        return;
+                    });
+
+
+                    var allItemsOk = true;
+                    for (var i = 0; i < tbl.length; i++) {
+                        var selectedItem = tbl[i];
+
+                        var fetchedItemCode = 0;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Dashboards/GetCompanyId",
+                            async: false,
+                            data: JSON.stringify({ ProductCode: selectedItem.Code }),
+                            contentType: "application/json; charset=utf-8"
+                        }).done(function (data) {
+                            fetchedItemCode = data.CompanyId;
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            //hide notification
+                            notifyObject.trigger('notify-hide');
+                            //Show notification
+                            showError(errorThrown);
+                            return;
+                        });
+
+                        if (fetchedItemCode != currentCompanyCode) {
+                            allItemsOk = false;
+                            break;
+                        }
+                    }
+
+                    if (!allItemsOk) {
+                        $("#warningblock").show();
+                        return;
+                    }
+
+                    $("#warningblock").hide();
+
+                    if (currentCompanyCode != 0) {
+                        $("#companies").val(currentCompanyCode).trigger('change');
+                        $("#companies").prop('disabled', true);
+                        $("#warningmain").show();
+                    }
+
+
+
+                    $("#productitemstable > tbody")
+                        .append("<tr>" +
+                        "<td>" + productCode + "</td>" +
+                        "<td>" + productName + "</td>" +
+                        "<td>" + groupCode + "</td>" +
+                        "<td>" + amount + "</td>" +
+                        "<td>" + unitprice + "</td>" +
+                        "<td>" + vat + "</td>" +
+                        "<td>" + currencyName + "</td>" +
+                        "<td>" + total + "</td>" +
+                        "<td>" + totalLocal + "</td>" +
+                        "<td></td>" +
+                        "<td></td>" +
+                        "<td></td>" +
+                        "<td><a href='javascript:void(0);' class='deleteitem'>Kaldır</a></td>" +
+                        "</tr>");
+
+                    $('#productitemstable').trigger('rowAddOrRemove');
+
+                    $('#addnewitemform').parsley().reset();
+                    Custombox.close();
+                }
+
+            });
+
+
+            $('#clearall').click(function (e) {
+                $("#productitemstable tbody").empty();
+                $("#warningmain").hide();
+                $("#companies").prop('disabled', false);
+                $('#productitemstable').trigger('rowAddOrRemove');
+            });
+
+            $('#productitemstable').bind('rowAddOrRemove', function (event) {
+                var tbl = $('#productitemstable > tbody tr:has(td)').map(function (i, v) {
+                    var $td = $('td', this);
+                    return {
+                        Code: $td.eq(0).text(),
+                        Name: $td.eq(1).text(),
+                        GroupCode: $td.eq(2).text(),
+                        Amount: $td.eq(3).text(),
+                        UnitPrice: $td.eq(4).text(),
+                        Vat: $td.eq(5).text(),
+                        Currency: $td.eq(6).text(),
+                        Total: $td.eq(7).text(),
+                        LocalTotal: $td.eq(8).text(),
+                        BudgetStatus: $td.eq(9).text(),
+                        BudgetValue: $td.eq(10).text(),
+                        BudgetType: $td.eq(11).text()
+                    }
+                }).get();
+
+                var totalWithoutVat = 0;
+                var vatTotal = 0;
+
+
+                for (var i = 0; i < tbl.length; i++) {
+                    var selectedItem = tbl[i];
+                    totalWithoutVat = totalWithoutVat + parseFloat(selectedItem.LocalTotal);
+                    console.log("For' a girdi.");
+                    if (selectedItem.Vat != 0 && selectedItem.Vat != "") {
+                        console.log("If' e girdi.")
+                        var percantage = parseFloat(selectedItem.Vat / 100);
+                        console.log(percantage);
+                        var vatTotal = parseFloat(vatTotal + (parseFloat(selectedItem.LocalTotal) * percantage));
+                    }
+                }
+
+                console.log(totalWithoutVat);
+                console.log(vatTotal);
+
+                var generalAmount = parseFloat(totalWithoutVat + vatTotal).formatMoney(2, ',', '.');
+                totalWithoutVat = parseFloat(totalWithoutVat).formatMoney(2, ',', '.');
+                vatTotal = parseFloat(vatTotal).formatMoney(2, ',', '.');
+
+
+
+
+                $("#TotalValuespan").html(generalAmount);
+                $("#TotalValue").val(generalAmount.replace(".", ""));
+                $("#TotalValueWithVATspan").html(vatTotal);
+                $("#TotalValueWithVAT").val(vatTotal.replace(".", ""));
+                $("#TotalValueWithoutVATspan").html(totalWithoutVat);
+                $("#TotalValueWithoutVAT").val(totalWithoutVat.replace(".", ""));
+            });
+
+            if ($('#postbackdata').val() == "true") {
+                var companyId = $('#companies').val();
+                if (companyId != null && companyId != "") {
+                    var tbl = $('#productitemstable > tbody tr:has(td)').map(function (i, v) {
+                        var $td = $('td', this);
+                        return {
+                            Name: $td.eq(1).text(),
+                            Code: $td.eq(0).find('input:hidden').val()
+                        }
+                    }).get();
+
+
+                    var hasCompanyData = false;
+
+                    for (var i = 0; i < tbl.length; i++) {
+                        var rowItem = tbl[i];
+                        var fetchedItemCode = 0;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Dashboards/GetCompanyId",
+                            async: false,
+                            data: JSON.stringify({ ProductCode: rowItem.Code }),
+                            contentType: "application/json; charset=utf-8"
+                        }).done(function (data) {
+                            fetchedItemCode = data.CompanyId;
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            //hide notification
+                            notifyObject.trigger('notify-hide');
+                            //Show notification
+                            showError(errorThrown);
+                            return;
+                        });
+
+                        if (fetchedItemCode != 0) {
+                            hasCompanyData = true;
+                            break;
+                        }
+
+                    }
+
+                    if (hasCompanyData) {
+                        $("#warningmain").show();
+                        $("#companies").prop('disabled', true);
+                    }
+                }
+
+                $("#companies").trigger('change');
+
+                var purchaseOrderDate = $('#postbackdate').val();
+
+                $('.datepicker-autoclose-currentdate')
+                .datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy',
+                    language: 'tr'
+                })
+                .datepicker("setDate", Date.parse(purchaseOrderDate));
+
+                $('#productitemstable').trigger('rowAddOrRemove');
+            }
+
+        });
+    </script>
+
+    <script src="@Url.Content("~/assets/pages/datatables.editable.init.js")"></script>
+}

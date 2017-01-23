@@ -1,0 +1,26 @@
+import pypyodbc, psycopg2
+
+# Doing a simple SELECT query
+connStr = (
+    r'Driver={SQL Server};'
+    r'Server=.;'
+    #r'Server=127.0.0.1,52865;' +
+    #r'Server=(local)\SQLEXPRESS;'
+    r'Database=SampleData;'
+    #r'Trusted_Connection=Yes;'
+    r'UID=sa;'
+    r'PWD=1;'
+    )
+db = pypyodbc.connect(connStr)
+cursor = db.cursor()
+
+cursor.execute("select * from SiparisBobin")
+
+item_count = cursor.fetchall()
+
+print len(item_count)
+
+try:
+    conn = psycopg2.connect("dbname='SampleData' user='dbuser' host='localhost' password='dbpass'")
+except:
+    print "I am unable to connect to the database"

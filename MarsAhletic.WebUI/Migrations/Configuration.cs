@@ -9,23 +9,22 @@ namespace MarsAhletic.WebUI.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
+
         }
 
         protected override void Seed(MarsAhletic.WebUI.Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            if (!context.Roles.Any(r => r.Name == "Administrators"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole() { Name = "Administrators" };
+                var store = new Microsoft.AspNet.Identity.EntityFramework.RoleStore<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(context);
+                var manager = new ApplicationRoleManager(store);
+
+                var created = manager.CreateAsync(role).Result;
+            }
+
         }
     }
 }

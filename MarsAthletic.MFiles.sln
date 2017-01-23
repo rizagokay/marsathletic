@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarsAhletic.WebUI", "MarsAh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mechsoft.ADServices", "..\mechsoft-ad-services\Mechsoft.ADServices.Helpers\Mechsoft.ADServices.csproj", "{62D34F0E-CEEE-4AA2-99E8-A53C1AF9966F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E866A0C8-6079-44A4-A10E-FA0D9C7DC0BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{62D34F0E-CEEE-4AA2-99E8-A53C1AF9966F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62D34F0E-CEEE-4AA2-99E8-A53C1AF9966F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62D34F0E-CEEE-4AA2-99E8-A53C1AF9966F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E866A0C8-6079-44A4-A10E-FA0D9C7DC0BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E866A0C8-6079-44A4-A10E-FA0D9C7DC0BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E866A0C8-6079-44A4-A10E-FA0D9C7DC0BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E866A0C8-6079-44A4-A10E-FA0D9C7DC0BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

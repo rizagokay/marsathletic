@@ -4,22 +4,129 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace MarsAhletic.WebUI.Models
 {
-
     #region Database Models
+    public class Department
+    {
+        [Key]
+        public int Id { get; set; }
+        public string ExternalId { get; set; }
+        public string Name { get; set; }
+
+        public virtual ICollection<ApplicationUser> Users { get; set; }
+    }
 
     public class Notification
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string NotificationMessage { get; set; }
         public bool IsRead { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? ReadOn { get; set; }
 
         public virtual ApplicationUser User { get; set; }
+    }
+
+    public class PurchaseOrder
+    {
+        [Key]
+        public int Id { get; set; }
+        public DateTime OrderDate { get; set; }
+        public decimal TotalValue { get; set; }
+        public decimal TotalValueWithVAT { get; set; }
+        public decimal TotalValueWithoutVAT { get; set; }
+        public string ExtenalId { get; set; }
+
+        public string PurchaseOrderCode { get; set; }
+        public decimal USDValueOnDate { get; set; }
+        public decimal EURValueOnDate { get; set; }
+        public decimal GBPValueOnDate { get; set; }
+
+        public string MFilesId { get; set; }
+        public int MFilesProcessId { get; set; }
+        public int MFilesStateId { get; set; }
+        public bool MFilesProcessEnded { get; set; }
+
+        public virtual ICollection<PurchaseDetail> PurchaseDetails { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
+        public virtual Company Company { get; set; }
+        public virtual CostCenter CostCenter { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+    }
+
+    public class PurchaseDetail
+    {
+        [Key]
+        public int Id { get; set; }
+        public int Amount { get; set; }
+        public decimal Value { get; set; }
+        public decimal ValueLocal { get; set; }
+        public bool IncludedInBudget { get; set; }
+        public decimal BudgetCost { get; set; }
+
+        public virtual Currency Currency { get; set; }
+        public virtual BudgetType BudgetType { get; set; }
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
+        public virtual Product Product { get; set; }
+    }
+
+    public class Comment
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Message { get; set; }
+        public DateTime CommentDate { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
+    }
+
+    public class Company
+    {
+        [Key]
+        public int Id { get; set; }
+        public string ExternalId { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+
+        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+    }
+
+    public class Product
+    {
+        [Key]
+        public int Id { get; set; }
+        public string ExternalId { get; set; }
+        public string Code { get; set; }
+        public string GroupCode { get; set; }
+        public string Name { get; set; }
+        public decimal UnitPrice { get; set; }
+        public long VATPercentage { get; set; }
+
+        public virtual Currency Currency { get; set; }
+        public virtual Company Company { get; set; }
+
+        public ICollection<PurchaseDetail> PurchaseDetails { get; set; }
+
+    }
+
+    public class BudgetType
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Currency
+    {
+        [Key]
+        public int Id { get; set; }
+        public string ExternalId { get; set; }
+        public string Name { get; set; }
     }
 
     public class TravelPlan
@@ -30,18 +137,15 @@ namespace MarsAhletic.WebUI.Models
         }
 
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
+        public string TravelPlanNo { get; set; }
         public DateTime Date { get; set; }
         public string TravelRoute { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Description { get; set; }
         public float AdvancePaymentValue { get; set; }
-        public string CostCenterId { get; set; }
 
-
-
-        [ForeignKey("CostCenterId")]
         public virtual CostCenter CostCenter { get; set; }
         public virtual ApplicationUser User { get; set; }
         public virtual ICollection<TravelPlanDetail> PlanDetails { get; set; }
@@ -50,17 +154,15 @@ namespace MarsAhletic.WebUI.Models
     public class TravelPlanDetail
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
         public int Amount { get; set; }
         public string Description { get; set; }
-        public string ExpanseItemId { get; set; }
         public float Budget { get; set; }
         public float TotalBudget { get; set; }
         public float PlannedPrice { get; set; }
         public float PlannedTotalBudget { get; set; }
         public float BudgetDifference { get; set; }
 
-        [ForeignKey("ExpanseItemId")]
         public virtual ExpanseItem ExpanseItem { get; set; }
         public virtual TravelPlan TravelPlan { get; set; }
     }
@@ -73,49 +175,36 @@ namespace MarsAhletic.WebUI.Models
         }
 
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string ExternalId { get; set; }
         public string Name { get; set; }
+        public string Address { get; set; }
 
         public virtual ICollection<TravelPlan> Plans { get; set; }
+        public virtual ICollection<PurchaseOrder> Orders { get; set; }
     }
 
     public class ExpanseItem
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string ExternalId { get; set; }
         public string Name { get; set; }
         public string Budget { get; set; }
     }
 
-    #endregion
-    #region View Models 
-    public class ApplicationUserVM
+    public class Document
     {
-        [Required]
-        [MinLength(6, ErrorMessage = "Kullanıcı adı minimum 6 karakter olmalıdır.")]
-        public string Username { get; set; }
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-        [EmailAddress]
-        public string Email { get; set; }
-        [Required]
+        [Key]
+        public int Id { get; set; }
         public string Name { get; set; }
-        public string Domain { get; set; }
-        public bool IsManager { get; set; }
-        public bool IsAdministrator { get; set; }
-        public int AccountType { get; set; }
+        public string Extension { get; set; }
+        public string StoredName { get; set; }
+        public string FullName { get; set; }
+
+        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+
     }
 
-    public class TravelPlanViewModel
-    {
-        public string TravelId { get; set; }
-        public string NameSurname { get; set; }
-        public string ExpanseCenterId { get; set; }
-        public DateTime Date { get; set; }
-        public string TravelRoute { get; set; }
-    }
     #endregion
 }

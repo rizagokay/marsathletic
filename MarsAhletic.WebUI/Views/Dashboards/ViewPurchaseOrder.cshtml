@@ -1,0 +1,235 @@
+﻿
+@{
+    ViewBag.Title = "M-Port | Satınalma Talep Detayı";
+}
+
+@using MarsAhletic.WebUI.Models
+@model PurchaseOrderViewModel
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Satınalma Talep Formu</h4>
+        <p class="text-muted page-title-alt"></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <div class="row">
+                <div class="col-sm-6">
+                    <table class="table table-responsive">
+                        <tr>
+                            <td><label>Cari Hesap Kodu:</label></td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.CompanyCode, new { id = "companycode", @class = "form-control", @readonly = "true", name = "companycode" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Cari Hesap Ünvanı:</label></td>
+                            <td>
+                                @Html.DropDownListFor(m => m.CompanyId, Model.Companies, "", new { id = "companies", @class = "form-control select2", required = true, disabled = true })
+                                @Html.HiddenFor(m => m.CompanyId, new { id = "companyidhidden" })
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+                    <div class="panel panel-border panel-warning" id="warningmain" style="display:none;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Uyarı</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                Seçilen bir ürün yukarıdaki cari hesaba bağlı olduğundan alan kilitlenmiştir. Forma yalnızca bu hesaba ait ürünleri ekleyebilirsiniz. Bu kısıtı kaldırmak için listeyi boşaltabilirsiniz.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <table class="table table-responsive">
+                        <tr>
+                            <td><label>Talep No:</label></td>
+                            <td>
+                                @Model.PurchaseOrderId
+                                @Html.HiddenFor(m => m.PurchaseOrderId)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Talep Tarihi:</label></td>
+                            <td>
+                                @Html.TextBoxFor(m => m.Date, new { @class = "form-control datepicker-autoclose-currentdate", placeholder = "dd/gg/yyyy", id = "purchaseorderdate" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Kulüp Adı:</label></td>
+                            <td><input type="text" class="form-control" id="clubname"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Departman:</label></td>
+                            <td><input type="text" class="form-control" id="departmentid"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Kulüp Adres Bilgisi:</label></td>
+                            <td><input type="text" class="form-control" id="clubaddress"></td>
+                        </tr>
+                    </table>
+                    <table class="table table-responsive">
+                        <tr>
+                            <td> <strong> Ekler:</strong></td>
+                            <td>
+                                <ul>
+                                    @foreach (var item in Model.Documents)
+                                    {
+                                        <li>@(item.FullName.Length > 30 ? item.FullName.Substring(0, 29) + "..." : item.FullName ) <a href="javascript:void(0);">İndir</a></li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <table id="productitemstable" class="table m-0">
+                            <thead>
+                                <tr>
+                                    <td><strong>Malzeme/Hizmet Kodu</strong></td>
+                                    <td><strong>Malzeme/Hizmet Adı</strong></td>
+                                    <td><strong>Malzeme/Hizmet Grup Kodu</strong></td>
+                                    <td><strong>Miktar</strong></td>
+                                    <td><strong>Birim Fiyat</strong></td>
+                                    <td><strong>KDV</strong></td>
+                                    <td><strong>Para Birimi</strong></td>
+                                    <td><strong>Tutar</strong></td>
+                                    <td><strong>TL Tutar</strong></td>
+                                    <td><strong>Bütçe Durumu</strong></td>
+                                    <td><strong>Bütçe Rakamı</strong></td>
+                                    <td><strong>Bütçe Türü</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.PurchaseDetails.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Code)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Code)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Name)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Product.GroupCode)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Product.GroupCode)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Amount)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Amount)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Product.UnitPrice)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Product.UnitPrice)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Product.VATPercentage)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Product.VATPercentage)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Currency.Name)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Currency.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].Value)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].Value)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].ValueLocal)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].ValueLocal)
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-3 pull-right">
+                    <table>
+                        <tr>
+                            <td><strong>KDV'SİZ TOPLAM:</strong></td>
+                            <td>
+                                <span id="TotalValueWithoutVATspan">@Html.DisplayFor(m => m.TotalValueWithoutVAT)</span>
+                                @Html.HiddenFor(m => m.TotalValueWithoutVAT)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>KDV TOPLAMI:</strong></td>
+                            <td>
+                                <span id="TotalValueWithVATspan">@Html.DisplayFor(m => m.TotalValueWithVAT)</span>
+                                @Html.HiddenFor(m => m.TotalValueWithVAT)
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td><strong>GENEL TOPLAM:</strong></td>
+                            <td>
+                                <span id="TotalValuespan">@Html.DisplayFor(m => m.TotalValue)</span>
+                                @Html.HiddenFor(m => m.TotalValue)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="description">Açıklama Ekle:</label>
+                        @Html.TextAreaFor(m => m.AddedComment, 5, 5, new { @class = "form-control", id = "description" })
+                    </div>
+                    <button class="btn btn-primary pull-right" id="addComment">Ekle</button>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="page-title">Açıklamalar</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@foreach (var item in Model.Comments)
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <i class="glyphicon glyphicon-user"></i> @item.User.Name - @item.CommentDate:<br />
+                        <hr />
+                        @item.Message
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

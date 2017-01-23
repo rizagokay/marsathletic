@@ -16,6 +16,7 @@ C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\b
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Antlr3.Runtime.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\EntityFramework.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\EntityFramework.SqlServer.dll
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Mechsoft.ADServices.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Microsoft.AspNet.Identity.Core.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Microsoft.AspNet.Identity.EntityFramework.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Microsoft.AspNet.Identity.Owin.dll
@@ -40,6 +41,7 @@ C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\b
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\System.Web.WebPages.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\System.Web.WebPages.Razor.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\WebGrease.dll
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Mechsoft.ADServices.pdb
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\System.Web.Helpers.xml
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\System.Web.Mvc.xml
@@ -67,8 +69,13 @@ C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\b
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.csprojResolveAssemblyReference.cache
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.pdb
-C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.NotificationsAdded.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.firstCreate.resources
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.csproj.GenerateResource.Cache
-C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.AddedNewTables.resources
-C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Mechsoft.ADServices.dll
-C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\Mechsoft.ADServices.pdb
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.DocumentAdded.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.DocumentUpdated.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.CurrencyAddedPurchaseDetails.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.UpdatePurchaseOrders.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.BudgetTypeUpdate.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.PurchaseDetailCascade.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.PurchaseOrderUpdated.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.documentstorednameadded.resources

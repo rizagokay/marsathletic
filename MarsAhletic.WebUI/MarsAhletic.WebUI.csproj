@@ -175,18 +175,52 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610211221331_NotificationsAdded.cs" />
-    <Compile Include="Migrations\201610211221331_NotificationsAdded.Designer.cs">
-      <DependentUpon>201610211221331_NotificationsAdded.cs</DependentUpon>
+    <Compile Include="Helpers\ExternalSystemOperations.cs" />
+    <Compile Include="Helpers\SynchroniseData.cs" />
+    <Compile Include="Interfaces\IExternalSystemOperations.cs" />
+    <Compile Include="Interfaces\IExternalDataModels.cs" />
+    <Compile Include="Interfaces\ISynchronizeData.cs" />
+    <Compile Include="Migrations\201701041412319_firstCreate.cs" />
+    <Compile Include="Migrations\201701041412319_firstCreate.Designer.cs">
+      <DependentUpon>201701041412319_firstCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610241255188_AddedNewTables.cs" />
-    <Compile Include="Migrations\201610241255188_AddedNewTables.Designer.cs">
-      <DependentUpon>201610241255188_AddedNewTables.cs</DependentUpon>
+    <Compile Include="Migrations\201701131145598_DocumentAdded.cs" />
+    <Compile Include="Migrations\201701131145598_DocumentAdded.Designer.cs">
+      <DependentUpon>201701131145598_DocumentAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701131150401_DocumentUpdated.cs" />
+    <Compile Include="Migrations\201701131150401_DocumentUpdated.Designer.cs">
+      <DependentUpon>201701131150401_DocumentUpdated.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701131302505_CurrencyAddedPurchaseDetails.cs" />
+    <Compile Include="Migrations\201701131302505_CurrencyAddedPurchaseDetails.Designer.cs">
+      <DependentUpon>201701131302505_CurrencyAddedPurchaseDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701131444243_UpdatePurchaseOrders.cs" />
+    <Compile Include="Migrations\201701131444243_UpdatePurchaseOrders.Designer.cs">
+      <DependentUpon>201701131444243_UpdatePurchaseOrders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701200805371_BudgetTypeUpdate.cs" />
+    <Compile Include="Migrations\201701200805371_BudgetTypeUpdate.Designer.cs">
+      <DependentUpon>201701200805371_BudgetTypeUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701200819133_PurchaseDetailCascade.cs" />
+    <Compile Include="Migrations\201701200819133_PurchaseDetailCascade.Designer.cs">
+      <DependentUpon>201701200819133_PurchaseDetailCascade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701201107237_PurchaseOrderUpdated.cs" />
+    <Compile Include="Migrations\201701201107237_PurchaseOrderUpdated.Designer.cs">
+      <DependentUpon>201701201107237_PurchaseOrderUpdated.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701201316320_documentstorednameadded.cs" />
+    <Compile Include="Migrations\201701201316320_documentstorednameadded.Designer.cs">
+      <DependentUpon>201701201316320_documentstorednameadded.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels.cs" />
     <Compile Include="Models\ApplicationViewModels.cs" />
+    <Compile Include="Models\ExternalModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -285,6 +319,7 @@
     <Content Include="Assets\images\users\avatar-8.jpg" />
     <Content Include="Assets\images\users\avatar-9.jpg" />
     <Content Include="Assets\js\bootstrap.min.js" />
+    <Content Include="Assets\js\date.js" />
     <Content Include="Assets\js\detect.js" />
     <Content Include="Assets\js\fastclick.js" />
     <Content Include="Assets\js\jquery.app.js" />
@@ -3247,6 +3282,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Dashboards\CreateNewPlanning.cshtml" />
     <Content Include="Views\Administration\AddNewUser.cshtml" />
+    <Content Include="Views\Dashboards\CreateNewPurchaseOrder.cshtml" />
+    <Content Include="Views\Dashboards\ViewPurchaseOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3260,18 +3297,39 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610211221331_NotificationsAdded.resx">
-      <DependentUpon>201610211221331_NotificationsAdded.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610241255188_AddedNewTables.resx">
-      <DependentUpon>201610241255188_AddedNewTables.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\mechsoft-ad-services\Mechsoft.ADServices.Helpers\Mechsoft.ADServices.csproj">
       <Project>{62d34f0e-ceee-4aa2-99e8-a53c1af9966f}</Project>
       <Name>Mechsoft.ADServices</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201701041412319_firstCreate.resx">
+      <DependentUpon>201701041412319_firstCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701131145598_DocumentAdded.resx">
+      <DependentUpon>201701131145598_DocumentAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701131150401_DocumentUpdated.resx">
+      <DependentUpon>201701131150401_DocumentUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701131302505_CurrencyAddedPurchaseDetails.resx">
+      <DependentUpon>201701131302505_CurrencyAddedPurchaseDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701131444243_UpdatePurchaseOrders.resx">
+      <DependentUpon>201701131444243_UpdatePurchaseOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701200805371_BudgetTypeUpdate.resx">
+      <DependentUpon>201701200805371_BudgetTypeUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701200819133_PurchaseDetailCascade.resx">
+      <DependentUpon>201701200819133_PurchaseDetailCascade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701201107237_PurchaseOrderUpdated.resx">
+      <DependentUpon>201701201107237_PurchaseOrderUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701201316320_documentstorednameadded.resx">
+      <DependentUpon>201701201316320_documentstorednameadded.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
