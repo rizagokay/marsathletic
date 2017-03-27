@@ -175,46 +175,68 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ApplicationOperations.cs" />
+    <Compile Include="Helpers\EncryptionOperations.cs" />
     <Compile Include="Helpers\ExternalSystemOperations.cs" />
+    <Compile Include="Helpers\PermissionsHelper.cs" />
     <Compile Include="Helpers\SynchroniseData.cs" />
+    <Compile Include="Interfaces\IApplicationOperations.cs" />
+    <Compile Include="Interfaces\IEncryptionOperations.cs" />
     <Compile Include="Interfaces\IExternalSystemOperations.cs" />
     <Compile Include="Interfaces\IExternalDataModels.cs" />
+    <Compile Include="Interfaces\IMFilesOperations.cs" />
     <Compile Include="Interfaces\ISynchronizeData.cs" />
-    <Compile Include="Migrations\201701041412319_firstCreate.cs" />
-    <Compile Include="Migrations\201701041412319_firstCreate.Designer.cs">
-      <DependentUpon>201701041412319_firstCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201702031126279_FirstCreate.cs" />
+    <Compile Include="Migrations\201702031126279_FirstCreate.Designer.cs">
+      <DependentUpon>201702031126279_FirstCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701131145598_DocumentAdded.cs" />
-    <Compile Include="Migrations\201701131145598_DocumentAdded.Designer.cs">
-      <DependentUpon>201701131145598_DocumentAdded.cs</DependentUpon>
+    <Compile Include="Migrations\201702031148360_IsManagerUpdated.cs" />
+    <Compile Include="Migrations\201702031148360_IsManagerUpdated.Designer.cs">
+      <DependentUpon>201702031148360_IsManagerUpdated.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701131150401_DocumentUpdated.cs" />
-    <Compile Include="Migrations\201701131150401_DocumentUpdated.Designer.cs">
-      <DependentUpon>201701131150401_DocumentUpdated.cs</DependentUpon>
+    <Compile Include="Migrations\201702090728535_AppUserAddedForLoginAccount.cs" />
+    <Compile Include="Migrations\201702090728535_AppUserAddedForLoginAccount.Designer.cs">
+      <DependentUpon>201702090728535_AppUserAddedForLoginAccount.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701131302505_CurrencyAddedPurchaseDetails.cs" />
-    <Compile Include="Migrations\201701131302505_CurrencyAddedPurchaseDetails.Designer.cs">
-      <DependentUpon>201701131302505_CurrencyAddedPurchaseDetails.cs</DependentUpon>
+    <Compile Include="Migrations\201702100649387_AclEntryUpdated.cs" />
+    <Compile Include="Migrations\201702100649387_AclEntryUpdated.Designer.cs">
+      <DependentUpon>201702100649387_AclEntryUpdated.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701131444243_UpdatePurchaseOrders.cs" />
-    <Compile Include="Migrations\201701131444243_UpdatePurchaseOrders.Designer.cs">
-      <DependentUpon>201701131444243_UpdatePurchaseOrders.cs</DependentUpon>
+    <Compile Include="Migrations\201702100707058_deletedUser.cs" />
+    <Compile Include="Migrations\201702100707058_deletedUser.Designer.cs">
+      <DependentUpon>201702100707058_deletedUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701200805371_BudgetTypeUpdate.cs" />
-    <Compile Include="Migrations\201701200805371_BudgetTypeUpdate.Designer.cs">
-      <DependentUpon>201701200805371_BudgetTypeUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\201702100743575_LoginAccountIdAdded.cs" />
+    <Compile Include="Migrations\201702100743575_LoginAccountIdAdded.Designer.cs">
+      <DependentUpon>201702100743575_LoginAccountIdAdded.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701200819133_PurchaseDetailCascade.cs" />
-    <Compile Include="Migrations\201701200819133_PurchaseDetailCascade.Designer.cs">
-      <DependentUpon>201701200819133_PurchaseDetailCascade.cs</DependentUpon>
+    <Compile Include="Migrations\201702100825467_nullableloginAccountId.cs" />
+    <Compile Include="Migrations\201702100825467_nullableloginAccountId.Designer.cs">
+      <DependentUpon>201702100825467_nullableloginAccountId.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701201107237_PurchaseOrderUpdated.cs" />
-    <Compile Include="Migrations\201701201107237_PurchaseOrderUpdated.Designer.cs">
-      <DependentUpon>201701201107237_PurchaseOrderUpdated.cs</DependentUpon>
+    <Compile Include="Migrations\201702100855292_addedusername.cs" />
+    <Compile Include="Migrations\201702100855292_addedusername.Designer.cs">
+      <DependentUpon>201702100855292_addedusername.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701201316320_documentstorednameadded.cs" />
-    <Compile Include="Migrations\201701201316320_documentstorednameadded.Designer.cs">
-      <DependentUpon>201701201316320_documentstorednameadded.cs</DependentUpon>
+    <Compile Include="Migrations\201702170800106_configsadded.cs" />
+    <Compile Include="Migrations\201702170800106_configsadded.Designer.cs">
+      <DependentUpon>201702170800106_configsadded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702241302307_InUseColumnAdded.cs" />
+    <Compile Include="Migrations\201702241302307_InUseColumnAdded.Designer.cs">
+      <DependentUpon>201702241302307_InUseColumnAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703060701476_ModulePermissionsChanged.cs" />
+    <Compile Include="Migrations\201703060701476_ModulePermissionsChanged.Designer.cs">
+      <DependentUpon>201703060701476_ModulePermissionsChanged.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703100738346_ModuleId.cs" />
+    <Compile Include="Migrations\201703100738346_ModuleId.Designer.cs">
+      <DependentUpon>201703100738346_ModuleId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703100744189_AddedACLInfoOnModule.cs" />
+    <Compile Include="Migrations\201703100744189_AddedACLInfoOnModule.Designer.cs">
+      <DependentUpon>201703100744189_AddedACLInfoOnModule.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -3281,9 +3303,20 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Dashboards\CreateNewPlanning.cshtml" />
-    <Content Include="Views\Administration\AddNewUser.cshtml" />
+    <Content Include="Views\Administration\AddNewAccount.cshtml" />
     <Content Include="Views\Dashboards\CreateNewPurchaseOrder.cshtml" />
     <Content Include="Views\Dashboards\ViewPurchaseOrder.cshtml" />
+    <Content Include="Views\Administration\ListAccounts.cshtml" />
+    <Content Include="Views\Administration\DeleteAccountConfirmation.cshtml" />
+    <Content Include="Views\Administration\EditAccount.cshtml" />
+    <Content Include="Views\Administration\Index.cshtml" />
+    <Content Include="Views\Administration\AddNewUser.cshtml" />
+    <Content Include="Views\Administration\ListUsers.cshtml" />
+    <Content Include="Views\Administration\EditUser.cshtml" />
+    <Content Include="Views\Administration\DeleteUserConfirmation.cshtml" />
+    <Content Include="Views\Administration\DomainIntegration.cshtml" />
+    <Content Include="Views\Administration\ModulePermissions.cshtml" />
+    <Content Include="Views\Administration\CreateNewAccessControlList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3303,32 +3336,44 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701041412319_firstCreate.resx">
-      <DependentUpon>201701041412319_firstCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702031126279_FirstCreate.resx">
+      <DependentUpon>201702031126279_FirstCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701131145598_DocumentAdded.resx">
-      <DependentUpon>201701131145598_DocumentAdded.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702031148360_IsManagerUpdated.resx">
+      <DependentUpon>201702031148360_IsManagerUpdated.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701131150401_DocumentUpdated.resx">
-      <DependentUpon>201701131150401_DocumentUpdated.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702090728535_AppUserAddedForLoginAccount.resx">
+      <DependentUpon>201702090728535_AppUserAddedForLoginAccount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701131302505_CurrencyAddedPurchaseDetails.resx">
-      <DependentUpon>201701131302505_CurrencyAddedPurchaseDetails.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702100649387_AclEntryUpdated.resx">
+      <DependentUpon>201702100649387_AclEntryUpdated.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701131444243_UpdatePurchaseOrders.resx">
-      <DependentUpon>201701131444243_UpdatePurchaseOrders.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702100707058_deletedUser.resx">
+      <DependentUpon>201702100707058_deletedUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701200805371_BudgetTypeUpdate.resx">
-      <DependentUpon>201701200805371_BudgetTypeUpdate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702100743575_LoginAccountIdAdded.resx">
+      <DependentUpon>201702100743575_LoginAccountIdAdded.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701200819133_PurchaseDetailCascade.resx">
-      <DependentUpon>201701200819133_PurchaseDetailCascade.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702100825467_nullableloginAccountId.resx">
+      <DependentUpon>201702100825467_nullableloginAccountId.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701201107237_PurchaseOrderUpdated.resx">
-      <DependentUpon>201701201107237_PurchaseOrderUpdated.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702100855292_addedusername.resx">
+      <DependentUpon>201702100855292_addedusername.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701201316320_documentstorednameadded.resx">
-      <DependentUpon>201701201316320_documentstorednameadded.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702170800106_configsadded.resx">
+      <DependentUpon>201702170800106_configsadded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702241302307_InUseColumnAdded.resx">
+      <DependentUpon>201702241302307_InUseColumnAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703060701476_ModulePermissionsChanged.resx">
+      <DependentUpon>201703060701476_ModulePermissionsChanged.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703100738346_ModuleId.resx">
+      <DependentUpon>201703100738346_ModuleId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703100744189_AddedACLInfoOnModule.resx">
+      <DependentUpon>201703100744189_AddedACLInfoOnModule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

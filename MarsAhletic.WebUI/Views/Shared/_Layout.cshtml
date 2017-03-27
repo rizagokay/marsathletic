@@ -49,8 +49,8 @@
                     @*<a href="index.html" class="logo"><i class="icon-magnet icon-c-logo"></i><span>Ub<i class="md md-album"></i>ld</span></a>*@
                     <!-- Image Logo here -->
                     <a href="index.html" class="logo">
-                    <i class="icon-c-logo">M</i>
-                    <span>MECHSOFT</span>
+                        <i class="icon-c-logo">M</i>
+                        <span>M-PORT</span>
                     </a>
                 </div>
             </div>
@@ -89,110 +89,6 @@
 
 
                         <ul class="nav navbar-nav navbar-right pull-right">
-                            <li class="dropdown top-menu-item-xs">
-                                <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
-                                    <i class="icon-bell"></i> <span class="badge badge-xs badge-danger">3</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-lg">
-                                    <li class="notifi-title"><span class="label label-default pull-right">New 3</span>Notification</li>
-                                    <li class="list-group slimscroll-noti notification-list">
-                                        <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                            <div class="media">
-                                                <div class="pull-left p-r-10">
-                                                    <em class="fa fa-diamond noti-primary"></em>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h5 class="media-heading">A new order has been placed A new order has been placed</h5>
-                                                    <p class="m-0">
-                                                        <small>There are new settings available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-
-                                        <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                            <div class="media">
-                                                <div class="pull-left p-r-10">
-                                                    <em class="fa fa-cog noti-warning"></em>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h5 class="media-heading">New settings</h5>
-                                                    <p class="m-0">
-                                                        <small>There are new settings available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-
-                                        <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                            <div class="media">
-                                                <div class="pull-left p-r-10">
-                                                    <em class="fa fa-bell-o noti-custom"></em>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h5 class="media-heading">Updates</h5>
-                                                    <p class="m-0">
-                                                        <small>There are <span class="text-primary font-600">2</span> new updates available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-
-                                        <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                            <div class="media">
-                                                <div class="pull-left p-r-10">
-                                                    <em class="fa fa-user-plus noti-pink"></em>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h5 class="media-heading">New user registered</h5>
-                                                    <p class="m-0">
-                                                        <small>You have 10 unread messages</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-
-                                        <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                            <div class="media">
-                                                <div class="pull-left p-r-10">
-                                                    <em class="fa fa-diamond noti-primary"></em>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h5 class="media-heading">A new order has been placed A new order has been placed</h5>
-                                                    <p class="m-0">
-                                                        <small>There are new settings available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-
-                                        <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                            <div class="media">
-                                                <div class="pull-left p-r-10">
-                                                    <em class="fa fa-cog noti-warning"></em>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h5 class="media-heading">New settings</h5>
-                                                    <p class="m-0">
-                                                        <small>There are new settings available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="list-group-item text-right">
-                                            <small class="font-600">See all notifications</small>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
                             <li class="hidden-xs">
                                 <a href="#" id="btn-fullscreen" class="waves-effect waves-light"><i class="icon-size-fullscreen"></i></a>
                             </li>
@@ -227,26 +123,29 @@
                 <div id="sidebar-menu">
                     <ul>
 
-                        <li class="text-muted menu-title">Navigasyon</li>
+                        <li class="text-muted menu-title">Menü</li>
+
+                        @if (MarsAhletic.WebUI.Helpers.PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+                        {
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-money"></i> <span> Satınalma Talepleri </span> <span class="menu-arrow"></span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="@Url.Action("CreateNewPurchaseOrder", "Dashboards")">Yeni Talep Oluştur</a></li>
+
+                                    <li><a href="@Url.Action("ListPurchaseOrders", "Home")">Satınalma Talepleri</a></li>
+                                    <li><a href="@Url.Action("Index", "Home")">Raporlar</a></li>
+                                </ul>
+                            </li>
+                        }
 
                         <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="ti-money"></i> <span> Satınalma Talepleri </span> <span class="menu-arrow"></span></a>
+                            <a href="javascript:void(0);" class="waves-effect"><i class="ti-settings"></i> <span>Ayarlar</span> <span class="menu-arrow"></span> </a>
                             <ul class="list-unstyled">
-                                <li><a href="@Url.Action("CreateNewPurchaseOrder", "Dashboards")">Yeni Talep Oluştur</a></li>
-                                <li><a href="@Url.Action("Index", "Home")">Görünümler</a></li>
-                                <li><a href="@Url.Action("Index", "Home")">Raporlar</a></li>
-                            </ul>
-                        </li>
 
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="ti-paint-bucket"></i> <span>Ayarlar</span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                @if (User.IsInRole("Administrators"))
-                                {
-                                    <li><a href="javascript:void(0);">Kullanıcılar</a></li>
-                                    <li><a href="javascript:void(0);">Kullanıcı Grupları</a></li>
-                                    <li><a href="javascript:void(0);">Mail / Bildirim Ayarları</a></li>
-                                }
+                                <li><a href="@Url.Action("ListUsers", "Administration")"><i class="ti-user"></i>Kullanıcılar</a></li>
+                                <li><a href="@Url.Action("ListAccounts", "Administration")"><i class="ti-user"></i>Giriş Hesapları</a></li>
+                                <li><a href="@Url.Action("DomainIntegration", "Administration")"><i class="ti-plug"></i>Domain Entegrasyonu</a></li>
+
                             </ul>
                         </li>
 

@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MarsAhletic.WebUI.Models;
 using Mechsoft.ADServices.Helpers;
+using MarsAhletic.WebUI.Helpers;
 
 namespace MarsAhletic.WebUI.Controllers
 {
@@ -91,6 +92,7 @@ namespace MarsAhletic.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -102,6 +104,9 @@ namespace MarsAhletic.WebUI.Controllers
             {
                 if (userFound.ADDomain != null)
                 {
+
+                   
+
                     var canAuthAD = DirectoryManager.IsAuthenticated(model.Username, model.Password, userFound.ADDomain);
 
                     if (canAuthAD)
@@ -196,7 +201,7 @@ namespace MarsAhletic.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+                var user = new LoginAccount { UserName = model.Username, Email = model.Email };
                 
                 var result = await UserManager.CreateAsync(user, model.Password);
 
@@ -414,7 +419,7 @@ namespace MarsAhletic.WebUI.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new LoginAccount { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

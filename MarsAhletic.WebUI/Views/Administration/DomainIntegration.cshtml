@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewBag.Title = "M-Port | Domain Entegrasyonu";
+}
+@using MarsAhletic.WebUI.Models
+@model DomainIntegrationViewModel
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Domain Entegrasyonu</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0);">Ayarlar</a>
+            </li>
+            <li class="active">
+                Domain Entegrasyonu
+            </li>
+        </ol>
+        <p class="text-muted page-title-alt">Sisteme domain'den kullanıcı çekebilmek ve domain kullanıcı girişini aktif etmek için konfigürasyonun yapılması gereklidir.</p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            @using (Html.BeginForm("DomainIntegration", "Administration", FormMethod.Post))
+            {
+
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input id="IsActive" name="IsActive" type="checkbox" value="true" @(Model.IsActive ? "checked=\"checked\"" : "")>
+                        <label for="IsActive">
+                            Aktif
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(m => m.DomainName):</label>
+                    @Html.TextBoxFor(m => m.DomainName, new { @class = "form-control", id = "DomainName" })
+                </div>
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(m => m.DomainAdministratorAccount):</label>
+                    @Html.TextBoxFor(m => m.DomainAdministratorAccount, new { @class = "form-control", id = "DomainAccountName" })
+                </div>
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(m => m.DomainAdministratorPassword):</label>
+                    @Html.PasswordFor(m => m.DomainAdministratorPassword, new { @class = "form-control", id = "DomainPassword" })
+                </div>
+
+                <div class="form-group text-right m-b-0">
+                    <p id="resultmessage" class="text"></p>
+                    <button id="testbutton" class="btn btn-success waves-effect waves-light" type="submit">
+                        Test Et
+                    </button>
+                    <button class="btn btn-primary waves-effect waves-light" type="submit">
+                        Kaydet
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box" style="height:100px;">
+            @Html.ValidationSummary()
+        </div>
+    </div>
+</div>
+
+
+@section finaljscodes{
+
+}
+
+@section midjslibs{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            if ($('#IsActive').attr('checked')) {
+                $("#DomainName").prop('disabled', false);
+                $("#DomainAccountName").prop('disabled', false);
+                $("#DomainPassword").prop('disabled', false);
+            } else {
+                $("#DomainName").prop('disabled', true);
+                $("#DomainAccountName").prop('disabled', true);
+                $("#DomainPassword").prop('disabled', true);
+            }
+
+            $("#IsActive").change(function () {
+                if (this.checked) {
+                    $("#DomainName").prop('disabled', false);
+                    $("#DomainAccountName").prop('disabled', false);
+                    $("#DomainPassword").prop('disabled', false);
+                }
+                else {
+                    $("#DomainName").prop('disabled', true);
+                    $("#DomainAccountName").prop('disabled', true);
+                    $("#DomainPassword").prop('disabled', true);
+                }
+            });
+
+            $('#testbutton').click(function (e) {
+                e.preventDefault();
+
+                var usernameval = $('#DomainAccountName').val();
+                var passwordval = $('#DomainPassword').val();
+                var domainval = $('#DomainName').val();
+
+                passwordval = $.trim(passwordval);
+
+                var jsonString = "";
+
+                if (passwordval != "") {
+                    jsonString = JSON.stringify({ username: usernameval, password: passwordval, domain: domainval })
+                }
+                else {
+                    jsonString = JSON.stringify({ username: usernameval, domain: domainval })
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Administration/TestActiveDirectory",
+                    data: jsonString,
+                    contentType: "application/json; charset=utf-8"
+                }).done(function (data) {
+
+                    if ($("#resultmessage").hasClass("text-danger")) {
+                        $('#resultmessage').removeClass("text-danger");
+                    }
+
+                    $('#resultmessage').addClass("text-success");
+                    $('#resultmessage').html("Test bağlantısı başarılı");
+
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    if ($("#resultmessage").hasClass("text-success")) {
+                        $('#resultmessage').removeClass("text-success");
+                    }
+
+                    $('#resultmessage').addClass("text-danger");
+                    $('#resultmessage').html("Test bağlantısı başarısız.");
+                });
+
+            });
+
+        });
+    </script>
+}

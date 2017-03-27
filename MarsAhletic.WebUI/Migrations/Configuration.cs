@@ -1,5 +1,6 @@
 namespace MarsAhletic.WebUI.Migrations
 {
+    using Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -23,6 +24,13 @@ namespace MarsAhletic.WebUI.Migrations
                 var manager = new ApplicationRoleManager(store);
 
                 var created = manager.CreateAsync(role).Result;
+            }
+
+            if (!context.Modules.Any(r => r.Name == "PurchaseOrders"))
+            {
+                var module = new Module() { Name = "PurchaseOrders" };
+                context.Modules.Add(module);
+                context.SaveChanges();
             }
 
         }

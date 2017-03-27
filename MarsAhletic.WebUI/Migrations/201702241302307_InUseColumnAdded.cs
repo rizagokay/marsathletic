@@ -1,0 +1,18 @@
+namespace MarsAhletic.WebUI.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class InUseColumnAdded : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn("dbo.AccessControlLists", "IsInUse", c => c.Boolean(nullable: false));
+        }
+        
+        public override void Down()
+        {
+            DropColumn("dbo.AccessControlLists", "IsInUse");
+        }
+    }
+}

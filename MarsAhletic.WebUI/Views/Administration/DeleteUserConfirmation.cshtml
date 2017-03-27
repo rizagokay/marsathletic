@@ -1,0 +1,52 @@
+﻿@using MarsAhletic.WebUI.Models
+@{
+    ViewBag.Title = "M-Port | Hesap Silme Onayı";
+}
+@model ApplicationUser
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Kullanıcı Silme Onayı</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0);">Ayarlar</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListUsers", "Administration")">Kullanıcılar</a>
+            </li>
+            <li>
+                Kullanıcı Silme Onayı
+            </li>
+            <li class="active">
+                @Model.Username
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <div class="panel panel-color panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Uyarı!</h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <b>@Model.Username</b> kullanıcısı sistemden tamamen kaldırılacaktır. Bu işlemi geri almak mümkün olmayacaktır. Bu hesaba bağlı yorum, talep, uyarıların tümü sistemde (silindi) ibaresi ile saklanmaya devam edilektir. İşlemi onaylıyor musunuz?
+                    </p>
+                </div>
+                <div class="panel-footer text-right">
+                    <form action="@Url.Action("DeleteUserConfirmation")" method="post">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        <button class="btn btn-default">Evet</button>
+                        <a href="@Url.Action("ListUsers", "Administration")" class="btn btn-danger">İptal</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

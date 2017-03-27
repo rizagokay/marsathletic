@@ -8,7 +8,36 @@ using System.Web.Mvc;
 
 namespace MarsAhletic.WebUI.Models
 {
-    #region Database Models
+
+    public class ApplicationUser
+    {
+        [Key]
+        public int Id { get; set; }
+        public bool IsDisabled { get; set; }
+        public bool IsManager { get; set; }
+        public bool IsDeleted { get; set; }
+        public string Username { get; set; }
+
+        public string LoginAccountId { get; set; }
+
+        [ForeignKey("LoginAccountId")]
+        public virtual LoginAccount LoginAccount { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual ICollection<Department> Departments { get; set; }
+        public virtual ICollection<TravelPlan> TravelPlans { get; set; }
+    }
+
+
+
+    public class Configuration
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+    }
+
     public class Department
     {
         [Key]
@@ -164,7 +193,7 @@ namespace MarsAhletic.WebUI.Models
         public float BudgetDifference { get; set; }
 
         public virtual ExpanseItem ExpanseItem { get; set; }
-        public virtual TravelPlan TravelPlan { get; set; }
+        public virtual ApplicationUser TravelPlan { get; set; }
     }
 
     public class CostCenter
@@ -206,5 +235,39 @@ namespace MarsAhletic.WebUI.Models
 
     }
 
-    #endregion
+    public class AccessControlList
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public bool IsInUse { get { return this.ModuleId != null ? true : false; } }
+
+        public int? ModuleId { get; set; }
+        public virtual ICollection<ACLEntry> ACLEntries { get; set; }
+
+        [ForeignKey("ModuleId")]
+        public virtual Module Module { get; set; }
+    }
+
+    public class ACLEntry
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public bool CanAccessModule { get; set; }
+
+        public virtual AccessControlList ACL { get; set; }
+        public virtual ApplicationUser User { get; set; }
+
+    }
+
+    public class Module
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+
 }

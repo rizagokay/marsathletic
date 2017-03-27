@@ -1350,7 +1350,7 @@ body.fixed-left .side-menu.left {
 #sidebar-menu ul ul a {
   color: #75798B;
   display: block;
-  padding: 10px 20px 10px 65px;
+  padding: 10px 20px 10px 35px;
 }
 #sidebar-menu ul ul a:hover {
   color: #5fbeaa;
@@ -1359,7 +1359,7 @@ body.fixed-left .side-menu.left {
   margin-right: 5px;
 }
 #sidebar-menu ul ul ul a {
-  padding-left: 80px;
+  padding-left: 50px;
 }
 #sidebar-menu .label {
   margin-top: 2px;

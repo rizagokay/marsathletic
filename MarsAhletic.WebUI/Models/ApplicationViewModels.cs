@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace MarsAhletic.WebUI.Models
 {
-    public class ApplicationUserViewModel
+    public class LoginAccountViewModel
     {
         [Required]
         [MinLength(6, ErrorMessage = "Kullanıcı adı minimum 6 karakter olmalıdır.")]
@@ -20,9 +20,26 @@ namespace MarsAhletic.WebUI.Models
         [Required]
         public string Name { get; set; }
         public string Domain { get; set; }
-        public bool IsManager { get; set; }
+
         public bool IsAdministrator { get; set; }
+        public bool CreateUser { get; set; }
         public int AccountType { get; set; }
+
+        public int[] SelectedDepartments { get; set; }
+        public MultiSelectList Departments { get; set; }
+
+    }
+
+    public class DomainIntegrationViewModel
+    {
+        [Display(Name ="Domain Adı")]
+        public string DomainName { get; set; }
+        [Display(Name = "Kullanıcı Adı")]
+        public string DomainAdministratorAccount { get; set; }
+        [Display(Name = "Şifre")]
+        public string DomainAdministratorPassword { get; set; }
+
+        public bool IsActive { get; set; }
     }
 
     public class TravelPlanViewModel
@@ -43,7 +60,6 @@ namespace MarsAhletic.WebUI.Models
         public MultiSelectList ExpanseCenters { get; set; }
         public MultiSelectList ExpanseItems { get; set; }
     }
-
 
     public class PurchaseOrderViewModel
     {
@@ -92,7 +108,37 @@ namespace MarsAhletic.WebUI.Models
     }
 
 
+    public class AccessControlListViewModel
+    {
+        [Display(Name = "Adı")]
+        public string Name { get; set; }
 
+        public MultiSelectList Users { get; set; }
+    }
 
+    public class AddNewUserViewModel
+    {
+        public string LoginAccountId { get; set; }
+        public int[] SelectedDepartments { get; set; }
+        public bool IsDeactive { get; set; }
+        public bool IsManager { get; set; }
+
+        public MultiSelectList LoginAccounts { get; set; }
+        public MultiSelectList Departments { get; set; }
+    }
+
+    public class EditUserViewModel
+    {
+        public int UserId { get; set; }
+        public string Username { get; set; }
+        public string OldLoginAccountId { get; set; }
+        public string LoginAccountId { get; set; }
+        public int[] SelectedDepartments { get; set; }
+        public bool IsDeactive { get; set; }
+        public bool IsManager { get; set; }
+
+        public MultiSelectList LoginAccounts { get; set; }
+        public MultiSelectList Departments { get; set; }
+    }
 
 }

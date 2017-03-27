@@ -1,0 +1,85 @@
+﻿
+@using MarsAhletic.WebUI.Models
+@{
+    ViewBag.Title = "M-Port | Kullanıcı Düzenle";
+}
+@model EditUserViewModel
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Kullanıcı Düzenle</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0);">Ayarlar</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListUsers", "Administration")">Kullanıcılar</a>
+            </li>
+            <li class="active">
+                @Model.Username
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <form method="post" id="addnewuser" action="@Url.Action("EditUser", "Administration")">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m=>m.UserId)
+                @Html.HiddenFor(m=>m.OldLoginAccountId)
+                <div class="form-group">
+                    <label>Giriş Hesabı:</label>
+                    @Html.DropDownList("LoginAccountId", Model.LoginAccounts, new { id = "LoginAccountId", @class = "form-control select2", required = true })
+                </div>
+                <div class="form-group">
+                    <label>Departman:</label>
+                    @Html.ListBoxFor(m => m.SelectedDepartments, Model.Departments, new { @class="form-control select2" })
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input id="IsManager" name="IsManager" type="checkbox" value="true" @(Model.IsManager ? "checked=\"checked\"" : "")>
+
+                        <label for="IsManager">
+                            Departman Yöneticisi
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input id="IsDeactive" name="IsDeactive" type="checkbox" value="true" @(Model.IsDeactive ? "checked=\"checked\"" : "")>
+                        <label for="IsDeactive">
+                            Deaktif
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group text-right m-b-0">
+                    <button class="btn btn-primary waves-effect waves-light" type="submit">
+                        Kaydet
+                    </button>
+                    <a href="@Url.Action("ListUsers", "Administration")" class="btn btn-default waves-effect waves-light m-l-5">
+                        İptal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section pagecss{
+    <!--Select css -->
+    <link href="@Url.Content("~/assets/plugins/select2/css/select2.min.css")" rel="stylesheet" type="text/css" />
+}
+
+@section midjslibs{
+    <script src="@Url.Content("~/assets/plugins/select2/js/select2.min.js")" type="text/javascript"></script>
+}
+
+@section finaljscodes{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".select2").select2();
+        });
+    </script>
+}
