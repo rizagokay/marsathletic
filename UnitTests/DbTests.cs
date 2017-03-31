@@ -25,7 +25,7 @@ namespace UnitTests
 
                 if (db.TravelPlans.ToList().Count == 0)
                 {
-                    var travelPlan = new TravelPlan() { CostCenter = db.CostCenters.FirstOrDefault(), User = db.Users.FirstOrDefault(), StartDate = DateTime.Now, Description = "Test", Date = DateTime.Now, EndDate = DateTime.Now };
+                    var travelPlan = new TravelPlan() { CostCenter = db.CostCenters.FirstOrDefault(), User = db.AppUsers.FirstOrDefault(), StartDate = DateTime.Now, Description = "Test", Date = DateTime.Now, EndDate = DateTime.Now };
 
                     db.TravelPlans.Add(travelPlan);
                 }

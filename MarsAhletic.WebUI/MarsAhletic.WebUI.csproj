@@ -3330,12 +3330,6 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\mechsoft-ad-services\Mechsoft.ADServices.Helpers\Mechsoft.ADServices.csproj">
-      <Project>{62d34f0e-ceee-4aa2-99e8-a53c1af9966f}</Project>
-      <Name>Mechsoft.ADServices</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\201702031126279_FirstCreate.resx">
       <DependentUpon>201702031126279_FirstCreate.cs</DependentUpon>
     </EmbeddedResource>
@@ -3375,6 +3369,12 @@
     <EmbeddedResource Include="Migrations\201703100744189_AddedACLInfoOnModule.resx">
       <DependentUpon>201703100744189_AddedACLInfoOnModule.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mechsoft.ADServices\Mechsoft.ADServices.csproj">
+      <Project>{62d34f0e-ceee-4aa2-99e8-a53c1af9966f}</Project>
+      <Name>Mechsoft.ADServices</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

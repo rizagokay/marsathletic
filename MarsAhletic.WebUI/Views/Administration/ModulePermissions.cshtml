@@ -35,7 +35,7 @@
                     @{
                         using (var appDb = new ApplicationDbContext())
                         {
-                            var aclInUse = appDb.AccessControlLists.Where(m => m.Module.Id == item.Id && m.IsInUse).FirstOrDefault();
+                            var aclInUse = appDb.AccessControlLists.Where(m => m.Module.Id == item.Id).FirstOrDefault();
 
                             if (aclInUse != null)
                             {
