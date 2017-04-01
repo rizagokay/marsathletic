@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewBag.Title = "M-Port | Reddedilen Talepler";
+}
+@using MarsAhletic.WebUI.Models
+@model PurchaseListViewModel
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Satınalma Taleplerim</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0);">Satınalma Talepleri</a>
+            </li>
+            <li>
+                Talep Listesi
+            </li>
+            <li class="active">
+                Reddedilen Taleplerim
+            </li>
+        </ol>
+        <p class="text-muted page-title-alt">Tüm reddedilen satınalma taleplerinizi görüntüleyebilirsiniz.</p>
+    </div>
+</div>
+
+@Html.Partial("PurchaseOrderCountView")
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box table-responsive">
+
+            <table id="datatable-buttons" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Talep Numarası</th>
+                        <th>Talep Tarihi</th>
+                        <th>Detay</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (PurchaseOrder item in Model.PurchaseOrders)
+                    {
+                        <tr>
+                            <td>@item.PurchaseOrderCode</td>
+                            <td>@item.OrderDate.ToShortDateString()</td>
+                            <td>
+                                <a href="@Url.Action("ViewPurchaseOrder", "Dashboards", new {id = @item.Id })" class="btn btn-icon waves-effect waves-light btn-default"> <i class="fa fa-search"></i> </a>
+                            </td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section midjslibs {
+    <script src="@Url.Content("~/assets/plugins/datatables/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.bootstrap.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.buttons.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/buttons.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/jszip.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/pdfmake.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/vfs_fonts.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/buttons.html5.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/buttons.print.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.fixedHeader.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.keyTable.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/responsive.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.scroller.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.colVis.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/datatables/dataTables.fixedColumns.min.js")"></script>
+    <script src="@Url.Content("~/assets/pages/datatables.init.js")"></script>
+
+    <script src="@Url.Content("~/assets/plugins/notifyjs/js/notify.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/notifications/notify-metro.js")"></script>
+
+    <script src="@Url.Content("~/assets/plugins/parsleyjs/parsley.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/parsleyjs/parsley.tr.js")"></script>
+
+}
+
+@section pagecss {
+
+    <!-- Datatables css -->
+    <link href="@Url.Content("~/assets/plugins/datatables/jquery.dataTables.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/plugins/datatables/buttons.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/plugins/datatables/fixedHeader.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/plugins/datatables/responsive.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/plugins/datatables/scroller.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/plugins/datatables/dataTables.colVis.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/plugins/datatables/dataTables.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/plugins/datatables/fixedColumns.dataTables.min.css")" rel="stylesheet" type="text/css" />
+
+
+}
+
+@section finaljscodes{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //Create datatable
+            var table = $("#datatable-buttons").DataTable({
+                dom: "Bfrtip",
+                buttons: [{
+                    extend: "copy",
+                    className: "btn-sm",
+                    text: "Kopyala"
+                }, {
+                    extend: "csv",
+                    className: "btn-sm"
+                }, {
+                    extend: "excel",
+                    className: "btn-sm"
+                }, {
+                    extend: "pdf",
+                    className: "btn-sm"
+                }, {
+                    extend: "print",
+                    className: "btn-sm",
+                    text: "Yazdır"
+                }],
+                responsive: !0,
+                "language": {
+                    "sDecimal": ",",
+                    "sEmptyTable": "Tabloda herhangi bir veri mevcut degil",
+                    "sInfo": "_TOTAL_ kayittan _START_ - _END_ arasındaki kayitlar gosteriliyor",
+                    "sInfoEmpty": "Kayit yok",
+                    "sInfoFiltered": "(_MAX_ kayit icerisinden bulunan)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "Sayfada _MENU_ kayit goster",
+                    "sLoadingRecords": "Yukleniyor...",
+                    "sProcessing": "Isleniyor...",
+                    "sSearch": "Ara:",
+                    "sZeroRecords": "Eslesen kayit bulunamadi",
+                    "oPaginate": {
+                        "sFirst": "Ilk",
+                        "sLast": "Son",
+                        "sNext": "Ileri",
+                        "sPrevious": "Geri"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": artan sutun siralamasini aktiflestir",
+                        "sSortDescending": ": azalan sutun soralamasini aktiflestir"
+                    }
+                }
+            });
+
+        });
+    </script>
+    }

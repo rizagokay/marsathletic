@@ -30,6 +30,22 @@ namespace MarsAhletic.WebUI.Models
 
     }
 
+    public class PurchaseListViewModel
+    {
+
+        public PurchaseListViewModel()
+        {
+            PurchaseOrders = new List<PurchaseOrder>();
+        }
+
+        public int AllPurchaseCount { get; set; }
+        public int ApprovedPurchaseCount { get; set; }
+        public int RejectedPurchaseCount { get; set; }
+        public IEnumerable<PurchaseOrder> PurchaseOrders { get; set; }
+
+
+    }
+
     public class DomainIntegrationViewModel
     {
         [Display(Name ="Domain Adı")]

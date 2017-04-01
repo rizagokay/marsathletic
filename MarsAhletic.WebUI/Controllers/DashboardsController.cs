@@ -239,6 +239,53 @@ namespace MarsAhletic.WebUI.Controllers
 
         }
 
+        [HttpPost]
+        public  ActionResult ViewPurchaseOrder(PurchaseOrderViewModel model)
+        {
+            var user = appDb.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+
+            ApplicationUser appUser;
+
+            if (user == null)
+            {
+                return HttpNotFound("Mevcut kullanıcının giriş hesabı bulunamadı");
+            }
+            else
+            {
+                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
+                if (appUser == null)
+                {
+                    return HttpNotFound("Mevcut kullanıcının kullanıcı hesabı bulunamadı.");
+                }
+            }
+
+            var purchaseOrder = appDb.PurchaseOrders
+                .Where(po => po.PurchaseOrderCode == model.PurchaseOrderId)
+                .FirstOrDefault();
+
+
+            if (model.AddedComment != null)
+            {
+                if (model.AddedComment.Trim() != "")
+                {
+                    var comment = new Comment();
+                    comment.User = appUser;
+                    comment.CommentDate = DateTime.Now;
+                    comment.Message = model.AddedComment;
+
+                    purchaseOrder.Comments = new List<Comment>() { comment };
+                }
+            }
+
+            appDb.Entry(purchaseOrder).State = System.Data.Entity.EntityState.Modified;
+            appDb.SaveChanges();
+
+
+            return RedirectToAction("ViewPurchaseOrder", new { id = purchaseOrder.Id });
+
+
+        }
+
         public ActionResult ViewPurchaseOrder(int id)
         {
 
@@ -270,19 +317,112 @@ namespace MarsAhletic.WebUI.Controllers
 
         }
 
-        public ActionResult ListPurchaseOrders()
+        public ActionResult AllPurchaseOrders()
         {
 
+            var model = new PurchaseListViewModel();
+
             var appuserId = User.Identity.GetUserId();
-            var appUser = appDb.Users.Find(appuserId);
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
+            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
 
-            if (appUser == null)
+            if (loginAccount != null)
             {
+                model.PurchaseOrders = purchaseOrders;
+                model.AllPurchaseCount = purchaseOrders.Count;
+                model.ApprovedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEndedWithApproval).Count();
+                model.RejectedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
 
+                return View(model);
+            }
+            else
+            {
+                return View();
             }
 
 
-            return View();
+
+        }
+
+        public ActionResult OnGoingPurchaseOrders()
+        {
+
+            var model = new PurchaseListViewModel();
+
+            var appuserId = User.Identity.GetUserId();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
+            var purchaseOrdersCount = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
+            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id && !x.MFilesProcessEnded).ToList();
+
+            if (loginAccount != null)
+            {
+                model.PurchaseOrders = purchaseOrders;
+                model.AllPurchaseCount = purchaseOrdersCount.Count;
+                model.ApprovedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEndedWithApproval).Count();
+                model.RejectedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
+
+
+
+        }
+
+        public ActionResult ApprovedPurchaseOrders()
+        {
+
+            var model = new PurchaseListViewModel();
+
+            var appuserId = User.Identity.GetUserId();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
+            var purchaseOrdersCount = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
+
+            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id && x.MFilesProcessEndedWithApproval).ToList();
+
+            if (loginAccount != null)
+            {
+                model.PurchaseOrders = purchaseOrders;
+                model.AllPurchaseCount = purchaseOrdersCount.Count;
+                model.ApprovedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEndedWithApproval).Count();
+                model.RejectedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
+
+        }
+
+        public ActionResult RejectedPurchaseOrders()
+        {
+
+            var model = new PurchaseListViewModel();
+
+            var appuserId = User.Identity.GetUserId();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
+            var purchaseOrdersCount = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
+
+            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id && x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).ToList();
+
+            if (loginAccount != null)
+            {
+                model.PurchaseOrders = purchaseOrders;
+                model.AllPurchaseCount = purchaseOrdersCount.Count;
+                model.ApprovedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEndedWithApproval).Count();
+                model.RejectedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult CreateNewGuestApproval()
@@ -397,6 +537,22 @@ namespace MarsAhletic.WebUI.Controllers
         {
             var products = appDb.Products.Select(c => new ProductEx { Name = c.Name, Id = c.Id.ToString() }).ToList();
             return Json(products);
+        }
+
+        public FileResult Download(int Id)
+        {
+
+            var document = appDb.Documents.Find(Id);
+
+            if (document == null)
+            {
+                throw new HttpException(404, "Doküman bulunamadı");
+            }
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/uploads/attachments/purchaseorders/"+ document.StoredName));
+            string fileName = document.FullName;
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+
         }
     }
 }

@@ -87,17 +87,17 @@
                     </div>
                     <div class="col-sm-12">
                         <div style="margin-bottom:10px;">
-                            <a href="javascript:void(0)" class="btn btn-success" id="addnewitem">Ürün Ekle</a>
-                            <a href="javascript:void(0)" class="btn btn-danger" id="clearall">Tümünü Temizle</a>
+                            <a href="javascript:void(0)" class="btn btn-default " id="addnewitem">Ürün Ekle</a>
+                            <a href="javascript:void(0)" class="btn btn-default" id="clearall">Tümünü Sil</a>
 
                         </div>
                         <div class="table-responsive">
-                            <table id="productitemstable" class="table m-0">
+                            <table id="productitemstable" class="table-bordered table table-hover">
                                 <thead>
                                     <tr>
-                                        <td><strong>Malzeme/Hizmet Kodu</strong></td>
-                                        <td><strong>Malzeme/Hizmet Adı</strong></td>
-                                        <td><strong>Malzeme/Hizmet Grup Kodu</strong></td>
+                                        <td><strong>Kodu</strong></td>
+                                        <td><strong>Malzeme Adı</strong></td>
+                                        <td><strong>Grup Kodu</strong></td>
                                         <td><strong>Miktar</strong></td>
                                         <td><strong>Birim Fiyat</strong></td>
                                         <td><strong>KDV</strong></td>
@@ -155,7 +155,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td><a href="javascript:void(0);" class="deleteitem">Kaldır</a></td>
+                                            <td><a href="javascript:void(0);" class="deleteitem">Sil</a></td>
                                         </tr>
                                     }
                                 </tbody>
@@ -164,19 +164,21 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <button id="sendform" class="btn btn-success">Kaydet</button>
+                        <button id="sendform" class="btn btn-default">Kaydet</button>
                     </div>
                     <div class="col-sm-3 pull-right">
                         <table>
                             <tr>
-                                <td><strong>KDV'SİZ TOPLAM:</strong></td>
+                                <td><strong>KDV'SİZ TOPLAM</strong></td>
+                                <td>:</td>
                                 <td>
                                     <span id="TotalValueWithoutVATspan">@Html.DisplayFor(m => m.TotalValueWithoutVAT)</span>
                                     @Html.HiddenFor(m => m.TotalValueWithoutVAT)
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>KDV TOPLAMI:</strong></td>
+                                <td><strong>KDV TOPLAMI</strong></td>
+                                <td>:</td>
                                 <td>
                                     <span id="TotalValueWithVATspan">@Html.DisplayFor(m => m.TotalValueWithVAT)</span>
                                     @Html.HiddenFor(m => m.TotalValueWithVAT)
@@ -184,7 +186,8 @@
 
                             </tr>
                             <tr>
-                                <td><strong>GENEL TOPLAM:</strong></td>
+                                <td><strong>GENEL TOPLAM</strong></td>
+                                <td>:</td>
                                 <td>
                                     <span id="TotalValuespan">@Html.DisplayFor(m => m.TotalValue)</span>
                                     @Html.HiddenFor(m => m.TotalValue)
@@ -822,7 +825,7 @@
                         "<td></td>" +
                         "<td></td>" +
                         "<td></td>" +
-                        "<td><a href='javascript:void(0);' class='deleteitem'>Kaldır</a></td>" +
+                        "<td><a href='javascript:void(0);' class='deleteitem'>Sil</a></td>" +
                         "</tr>");
 
                     $('#productitemstable').trigger('rowAddOrRemove');

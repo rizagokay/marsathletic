@@ -61,7 +61,7 @@
                         <tr>
                             <td><label>Talep Tarihi:</label></td>
                             <td>
-                                @Html.TextBoxFor(m => m.Date, new { @class = "form-control datepicker-autoclose-currentdate", placeholder = "dd/gg/yyyy", id = "purchaseorderdate" })
+                                @Model.Date.ToShortDateString()
                             </td>
                         </tr>
                         <tr>
@@ -84,7 +84,7 @@
                                 <ul>
                                     @foreach (var item in Model.Documents)
                                     {
-                                        <li>@(item.FullName.Length > 30 ? item.FullName.Substring(0, 29) + "..." : item.FullName ) <a href="javascript:void(0);">İndir</a></li>
+                                        <li>@(item.FullName.Length > 30 ? item.FullName.Substring(0, 29) + "..." : item.FullName ) <a href="@Url.Action("Download",new { Id = item.Id})">İndir</a></li>
                                     }
                                 </ul>
                             </td>
@@ -93,12 +93,12 @@
                 </div>
                 <div class="col-sm-12">
                     <div class="table-responsive">
-                        <table id="productitemstable" class="table m-0">
+                        <table id="productitemstable" class="table-bordered table table-hover">
                             <thead>
                                 <tr>
-                                    <td><strong>Malzeme/Hizmet Kodu</strong></td>
-                                    <td><strong>Malzeme/Hizmet Adı</strong></td>
-                                    <td><strong>Malzeme/Hizmet Grup Kodu</strong></td>
+                                    <td><strong>Kodu</strong></td>
+                                    <td><strong>Malzeme Adı</strong></td>
+                                    <td><strong>Grup Kodu</strong></td>
                                     <td><strong>Miktar</strong></td>
                                     <td><strong>Birim Fiyat</strong></td>
                                     <td><strong>KDV</strong></td>
@@ -163,16 +163,18 @@
                     </div>
                 </div>
                 <div class="col-sm-3 pull-right">
-                    <table>
+                    <table >
                         <tr>
-                            <td><strong>KDV'SİZ TOPLAM:</strong></td>
+                            <td><strong>KDV'SİZ TOPLAM</strong></td>
+                            <td>:</td>
                             <td>
                                 <span id="TotalValueWithoutVATspan">@Html.DisplayFor(m => m.TotalValueWithoutVAT)</span>
                                 @Html.HiddenFor(m => m.TotalValueWithoutVAT)
                             </td>
                         </tr>
                         <tr>
-                            <td><strong>KDV TOPLAMI:</strong></td>
+                            <td><strong>KDV TOPLAMI</strong></td>
+                            <td>:</td>
                             <td>
                                 <span id="TotalValueWithVATspan">@Html.DisplayFor(m => m.TotalValueWithVAT)</span>
                                 @Html.HiddenFor(m => m.TotalValueWithVAT)
@@ -180,7 +182,8 @@
 
                         </tr>
                         <tr>
-                            <td><strong>GENEL TOPLAM:</strong></td>
+                            <td><strong>GENEL TOPLAM</strong></td>
+                            <td>:</td>
                             <td>
                                 <span id="TotalValuespan">@Html.DisplayFor(m => m.TotalValue)</span>
                                 @Html.HiddenFor(m => m.TotalValue)
@@ -189,11 +192,14 @@
                     </table>
                 </div>
                 <div class="col-sm-12">
-                    <div class="form-group">
-                        <label for="description">Açıklama Ekle:</label>
-                        @Html.TextAreaFor(m => m.AddedComment, 5, 5, new { @class = "form-control", id = "description" })
-                    </div>
-                    <button class="btn btn-primary pull-right" id="addComment">Ekle</button>
+                    <form method="post" action="@Url.Action("ViewPurchaseOrder")">
+                        @Html.HiddenFor(m => m.PurchaseOrderId)
+                        <div class="form-group">
+                            <label for="description">Açıklama Ekle:</label>
+                            @Html.TextAreaFor(m => m.AddedComment, 5, 5, new { @class = "form-control", id = "description" })
+                        </div>
+                        <button class="btn btn-default pull-right" id="addComment">Ekle</button>
+                    </form>
                 </div>
 
 
@@ -215,21 +221,36 @@
     </div>
 </div>
 
-@foreach (var item in Model.Comments)
-{
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card-box">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <i class="glyphicon glyphicon-user"></i> @item.User.Username - @item.CommentDate:<br />
-                        <hr />
-                        @item.Message
+
+<div class="card-box">
+    @foreach (var item in Model.Comments)
+    {
+        @*<div class="row">
+                <div class="col-sm-12">
+                    <div class="card-box">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <i class="glyphicon glyphicon-user"></i> @item.User.Username - @item.CommentDate:<br />
+                                <hr />
+                                @item.Message
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>*@
+
+        <div class="comment">
+            <img class="comment-avatar" alt="" src="@Url.Content("~/assets/images/user.jpg")">
+            <div class="comment-body">
+                <div class="comment-text">
+                    <div class="comment-header">
+                        <a title="" href="#">@item.User.Username</a><span>@item.CommentDate</span>
+                    </div>
+                    @item.Message
                 </div>
             </div>
         </div>
-    </div>
-}
 
+    }
 
+</div>

@@ -1,0 +1,98 @@
+﻿
+<div class="row">
+    <div class="col-lg-3">
+        <div class="card-box">
+            <div class="bar-widget">
+                <div class="table-box">
+                    <div class="table-detail">
+                        <div class="iconbox bg-info">
+                            <i class="icon-layers"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-detail">
+                        <h4 class="m-t-0 m-b-5"><b>@Model.AllPurchaseCount</b></h4>
+                        <a href="@Url.Action("AllPurchaseOrders", "Dashboards")">Tüm Taleplerim</a>
+                        @*<p class="text-muted m-b-0 m-t-0">Tüm Taleplerim</p>*@
+                    </div>
+                    <div class="table-detail text-right">
+                        <span data-plugin="peity-bar" data-colors="#34d3eb,#ebeff2" data-width="90" data-height="45">5,3,9,6,5,9,7,3,5,6,2,5</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card-box">
+            <div class="bar-widget">
+                <div class="table-box">
+                    <div class="table-detail">
+                        <div class="iconbox bg-warning">
+                            <i class="icon-layers"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-detail">
+                        <h4 class="m-t-0 m-b-5"><b>@(Model.AllPurchaseCount - Model.ApprovedPurchaseCount - Model.RejectedPurchaseCount)</b></h4>
+                        <a href="@Url.Action("OnGoingPurchaseOrders", "Dashboards")">Onay Bekleyen Taleplerim</a>
+                    </div>
+                    <div class="table-detail text-right">
+                        <span style="display: none;" data-plugin="peity-donut-alt" data-peity='{ "fill": ["#ffbd4a", "#ebeff2"], "innerRadius": 20, "radius": 24 }'>5/7</span>
+                        @*<span data-plugin="peity-donut-alt" data-colors="#f05050,#ebeff2" data-width="50" data-height="45">1/5</span>*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-3">
+        <div class="card-box">
+            <div class="bar-widget">
+                <div class="table-box">
+                    <div class="table-detail">
+                        <div class="iconbox bg-custom">
+                            <i class="icon-layers"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-detail">
+                        <h4 class="m-t-0 m-b-5"><b>@Model.ApprovedPurchaseCount</b></h4>
+                        <a href="@Url.Action("ApprovedPurchaseOrders", "Dashboards")">Onaylanan Taleplerim</a>
+                    </div>
+                    <div class="table-detail text-right">
+                        <span data-plugin="peity-pie" data-colors="#5fbeaa,#ebeff2" data-width="50" data-height="45">1/5</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card-box">
+            <div class="bar-widget">
+                <div class="table-box">
+                    <div class="table-detail">
+                        <div class="iconbox bg-danger">
+                            <i class="icon-layers"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-detail">
+                        <h4 class="m-t-0 m-b-5"><b>@Model.RejectedPurchaseCount</b></h4>
+                        <a href="@Url.Action("RejectedPurchaseOrders", "Dashboards")">Reddedilen Taleplerim</a>
+                    </div>
+                    <div class="table-detail text-right">
+                        <span data-plugin="peity-donut" data-colors="#f05050,#ebeff2" data-width="50" data-height="45">1/5</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
