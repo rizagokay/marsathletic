@@ -28,8 +28,9 @@
     <div class="col-sm-12">
         <div class="card-box">
 
-            @using (Html.BeginForm("CreateNewAccessControlList", "Administration", FormMethod.Post, new { data_parsley_validate = "" }))
+            @using (Html.BeginForm("CreateNewAccessControlList", "Administration", FormMethod.Post, new { data_parsley_validate = "", id="finalform" }))
             {
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label for="Name">@Html.DisplayNameFor(m => m.Name):</label>
                     @Html.TextBoxFor(m => m.Name, new { id = "Name", @class = "form-control", required = "" })
@@ -72,6 +73,7 @@
 
             <div class="modal-body">
                 <form id="adduserform" data-parsley-validate novalidate>
+                   
                     <div class="form-group">
                         <label>Kullanıcı Seçiniz: </label>
                         @Html.DropDownList("Users", Model.Users, "", new { id = "users", @class = "form-control", required = true })
@@ -141,6 +143,11 @@
         function showError(errorMessage) {
             $.Notification.notify('error', 'right bottom', 'İşlem Başarısız', errorMessage);
         }
+
+        function hasClass(elem, className) {
+            return elem.className.split(' ').indexOf(className) > -1;
+        }
+
 
         $(document).ready(function () {
 
@@ -238,6 +245,16 @@
                     e.preventDefault();
                     return;
                 }
+
+                for (var i = 0; i < tbl.length; i++) {
+                    var selectedItem = tbl[i];
+                    $('#finalform').append("<input type='hidden' name='ApplicationUsers[" + i.toString() + "].Username' id='val_Username_" + i + "' value='" + selectedItem.Username + "' />");
+                }
+            });
+
+            $("#datatable-users").on("click", ".deleteitem", function (e) {
+                $(this).closest('tr').addClass('remove');
+                table.row('.remove').remove().draw(false);
             });
 
         });

@@ -38,7 +38,7 @@ namespace MarsAhletic.WebUI.Helpers
 
                     if (module != null)
                     {
-                        var aclInUse = db.AccessControlLists.Where(acl => acl.Module.Id == module.Id && acl.IsInUse).FirstOrDefault();
+                        var aclInUse = db.AccessControlLists.Where(acl => acl.Module.Id == module.Id).FirstOrDefault();
 
                         if (aclInUse != null)
                         {

@@ -241,8 +241,6 @@ namespace MarsAhletic.WebUI.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public bool IsInUse { get { return this.ModuleId != null ? true : false; } }
-
         public int? ModuleId { get; set; }
         public virtual ICollection<ACLEntry> ACLEntries { get; set; }
 

@@ -110,10 +110,17 @@ namespace MarsAhletic.WebUI.Models
 
     public class AccessControlListViewModel
     {
+        public AccessControlListViewModel()
+        {
+            ApplicationUsers = new List<ApplicationUser>();
+        }
+
         [Display(Name = "Adı")]
         public string Name { get; set; }
 
         public MultiSelectList Users { get; set; }
+
+        public List<ApplicationUser> ApplicationUsers { get; set; }
     }
 
     public class AddNewUserViewModel

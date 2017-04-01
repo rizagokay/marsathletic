@@ -83,3 +83,6 @@ C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\o
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.ModulePermissionsChanged.resources
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.ModuleId.resources
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.AddedACLInfoOnModule.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\log4net.dll
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\bin\log4net.xml
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.removeisinuse.resources
