@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{69F2C2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarsAhletic.WebUI", "MarsAhletic.WebUI\MarsAhletic.WebUI.csproj", "{E1F0114C-C849-4250-A9C7-64773CFEA538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mechsoft.ADServices", "Mechsoft.ADServices\Mechsoft.ADServices.csproj", "{62D34F0E-CEEE-4AA2-99E8-A53C1AF9966F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mechsoft.ADServices", "..\mechsoft-ad-services\Mechsoft.ADServices\Mechsoft.ADServices.csproj", "{62D34F0E-CEEE-4AA2-99E8-A53C1AF9966F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

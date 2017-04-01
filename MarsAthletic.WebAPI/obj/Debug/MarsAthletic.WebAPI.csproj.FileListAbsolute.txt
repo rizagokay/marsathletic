@@ -161,3 +161,4 @@ C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAthletic.WebAPI
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAthletic.WebAPI\bin\System.Web.WebPages.Razor.xml
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.pdb
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAthletic.WebAPI\obj\Debug\MarsAthletic.WebAPI.csprojResolveAssemblyReference.cache

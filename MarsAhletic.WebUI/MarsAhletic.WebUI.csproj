@@ -3371,7 +3371,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mechsoft.ADServices\Mechsoft.ADServices.csproj">
+    <ProjectReference Include="..\..\mechsoft-ad-services\Mechsoft.ADServices\Mechsoft.ADServices.csproj">
       <Project>{62d34f0e-ceee-4aa2-99e8-a53c1af9966f}</Project>
       <Name>Mechsoft.ADServices</Name>
     </ProjectReference>
