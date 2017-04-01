@@ -78,6 +78,9 @@ namespace MarsAhletic.WebUI.Models
         public string MFilesId { get; set; }
         public int MFilesProcessId { get; set; }
         public int MFilesStateId { get; set; }
+        public string MFilesProcessName { get; set; }
+        public string MFilesStateName { get; set; }
+        public bool MFilesProcessEndedWithApproval { get; set; }
         public bool MFilesProcessEnded { get; set; }
 
         public virtual ICollection<PurchaseDetail> PurchaseDetails { get; set; }

@@ -82,10 +82,10 @@
                                 </li>*@
                         </ul>
 
-                        <form role="search" class="navbar-left app-search pull-left hidden-xs">
+                        @*<form role="search" class="navbar-left app-search pull-left hidden-xs">
                             <input type="text" placeholder="Arama..." class="form-control">
                             <a href=""><i class="fa fa-search"></i></a>
-                        </form>
+                        </form>*@
 
 
                         <ul class="nav navbar-nav navbar-right pull-right">
@@ -93,7 +93,7 @@
                                 <a href="#" id="btn-fullscreen" class="waves-effect waves-light"><i class="icon-size-fullscreen"></i></a>
                             </li>
                             <li class="dropdown top-menu-item-xs">
-                                <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><img src="@Url.Content("~/Assets/images/users/avatar-1.jpg")" alt="user-img" class="img-circle"> </a>
+                                <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><img src="@Url.Content("~/Assets/images/user.jpg")" alt="user-img" class="img-circle"> </a>
 
 
                                 <ul class="dropdown-menu">
@@ -132,7 +132,7 @@
                                 <ul class="list-unstyled">
                                     <li><a href="@Url.Action("CreateNewPurchaseOrder", "Dashboards")">Yeni Talep Oluştur</a></li>
 
-                                    <li><a href="@Url.Action("ListPurchaseOrders", "Home")">Satınalma Talepleri</a></li>
+                                    <li><a href="@Url.Action("AllPurchaseOrders", "Dashboards")">Talep Listesi</a></li>
                                     <li><a href="@Url.Action("Index", "Home")">Raporlar</a></li>
                                 </ul>
                             </li>
@@ -174,7 +174,7 @@
             </div> <!-- content -->
 
             <footer class="footer text-right">
-                © 2016. Bütün hakları saklıdır.
+                © 2017. Bütün hakları saklıdır.
             </footer>
 
         </div>
