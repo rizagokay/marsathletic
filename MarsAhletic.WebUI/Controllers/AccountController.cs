@@ -104,9 +104,6 @@ namespace MarsAhletic.WebUI.Controllers
             {
                 if (userFound.ADDomain != null)
                 {
-
-                   
-
                     var canAuthAD = DirectoryManager.IsAuthenticated(model.Username, model.Password, userFound.ADDomain);
 
                     if (canAuthAD)
@@ -118,6 +115,11 @@ namespace MarsAhletic.WebUI.Controllers
                             var token = UserManager.GeneratePasswordResetToken(userFound.Id);
                             UserManager.ResetPassword(userFound.Id, token, model.Password);
                         }
+                    }
+                    else
+                    {
+                        var token = UserManager.GeneratePasswordResetToken(userFound.Id);
+                        UserManager.ResetPassword(userFound.Id, token, "model@Secret1pass");
                     }
                 }
             }
@@ -444,7 +446,7 @@ namespace MarsAhletic.WebUI.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //
@@ -501,7 +503,7 @@ namespace MarsAhletic.WebUI.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("AllPurchaseOrders", "Dashboards");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

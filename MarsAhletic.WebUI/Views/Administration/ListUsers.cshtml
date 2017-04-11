@@ -54,7 +54,7 @@
                             <td>@item.Username</td>
                             <td>@(item.LoginAccount == null ? "Giriş Hesabı Bulunamadı" : item.LoginAccount.UserName)</td>
                             <td>@(item.IsDisabled ? "Deaktif" : "Aktif") </td>
-                            <td>@(item.IsManager ? "Yönetici" : "Kullanıcı")</td>
+                            <td>@(item.IsDeptManager ? "Yönetici" : "Kullanıcı")</td>
                             <td>
                                 <a href="@Url.Action("EditUser", "Administration", new {id = @item.Id })" class="btn btn-icon waves-effect waves-light btn-info"> <i class="fa fa-edit"></i> </a>
                                 <a href="@Url.Action("DeleteUserConfirmation", "Administration", new {id = @item.Id })" class="btn btn-icon waves-effect waves-light btn-danger " data-id="@item.Id"> <i class="fa fa-remove"></i> </a>

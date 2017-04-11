@@ -14,7 +14,8 @@ namespace MarsAhletic.WebUI.Models
         [Key]
         public int Id { get; set; }
         public bool IsDisabled { get; set; }
-        public bool IsManager { get; set; }
+        public bool IsDeptManager { get; set; }
+        public bool IsHighManager { get; set; }
         public bool IsDeleted { get; set; }
         public string Username { get; set; }
 
@@ -241,6 +242,7 @@ namespace MarsAhletic.WebUI.Models
     public class AccessControlList
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
 

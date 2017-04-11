@@ -28,7 +28,7 @@
     <div class="col-sm-12">
         <div class="card-box">
 
-            @using (Html.BeginForm("CreateNewAccessControlList", "Administration", FormMethod.Post, new { data_parsley_validate = "", id="finalform" }))
+            @using (Html.BeginForm("CreateNewAccessControlList", "Administration", FormMethod.Post, new { data_parsley_validate = "", id = "finalform" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="form-group">
@@ -46,7 +46,12 @@
                                 </td>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            @foreach (var item in Model.ApplicationUsers)
+                            {
+                                <tr><td>@item.Username</td><td><a href='javascript:void(0);' class='deleteitem'>Kaldır</a></td></tr>
+                            }
+                        </tbody>
                         <tfoot>
 
                         </tfoot>
@@ -73,7 +78,7 @@
 
             <div class="modal-body">
                 <form id="adduserform" data-parsley-validate novalidate>
-                   
+
                     <div class="form-group">
                         <label>Kullanıcı Seçiniz: </label>
                         @Html.DropDownList("Users", Model.Users, "", new { id = "users", @class = "form-control", required = true })
@@ -214,11 +219,11 @@
                     var username = $('#users').find(':selected').text();
 
                     var names = table
-                    .rows(function (idx, data, node) {
-                        return data[0] === username ?
-                            true : false;
-                    })
-                    .data();
+                        .rows(function (idx, data, node) {
+                            return data[0] === username ?
+                                true : false;
+                        })
+                        .data();
 
                     if (names.length == 0) {
                         table.row.add([username, "<a href='javascript:void(0);' class='deleteitem'>Kaldır</a>"]).draw(false);
@@ -235,7 +240,7 @@
                 var tbl = $('#datatable-users > tbody tr:has(td)').map(function (i, v) {
                     var $td = $('td', this);
                     return {
-                        Username: $td.eq(0).text()          
+                        Username: $td.eq(0).text()
                     }
                 }).get();
 

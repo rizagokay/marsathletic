@@ -151,6 +151,10 @@
                 $('#password').hide();
                 $('#password').val('');
                 $('#passwordlabel').hide();
+                $('#updatevalues').show();
+            }
+            else {
+                $('#updatevalues').hide();
             }
 
             $("#radio1, #radio2").change(function () {
@@ -158,10 +162,12 @@
                     $('#password').hide();
                     $('#password').val('');
                     $('#passwordlabel').hide();
+                    $('#updatevalues').show();
                 }
                 else {
                     $('#password').show();
                     $('#passwordlabel').show();
+                    $('#updatevalues').hide();
                 }
             });
 

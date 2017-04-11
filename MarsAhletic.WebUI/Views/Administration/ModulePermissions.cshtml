@@ -15,7 +15,7 @@
                 Modül İzinleri
             </li>
         </ol>
-        <p class="text-muted page-title-alt">Modüllere erişim yetkilerini belirlemek için bu sayfada ter alan panelleri düzenleyiniz.</p>
+        <p class="text-muted page-title-alt">Modüllere erişim yetkilerini burada düzenleyebilirsiniz.</p>
     </div>
 </div>
 
@@ -39,19 +39,20 @@
 
                             if (aclInUse != null)
                             {
-                                <a href="">@aclInUse.Name</a><br/><a href="">Değiştir</a>
+                                <p><b>@aclInUse.Name</b> İzin Listesi Kullanılmaktadır <a href="@Url.Action("EditModulePermissions", new { id = item.Id })">Değiştir</a></p>
                             }
                             else
                             {
-                                <a href="@Url.Action("CreateNewAccessControlList")">Yeni Yetki Listesi Tanımla</a>
+                                <p>Yetki Listesi Bulunmamaktadır.</p><a href="@Url.Action("EditModulePermissions", new { id = item.Id })">Tanımla</a>
                             }
                         }
 
 
-                     }
+                    }
                 </div>
             </div>
 
         </div>
-    }
+                        }
 </div>
+

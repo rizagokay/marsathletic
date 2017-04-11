@@ -7,6 +7,7 @@ using System.Security.Principal;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Migrations;
 
 namespace MarsAhletic.WebUI.Models
 {
@@ -47,11 +48,13 @@ namespace MarsAhletic.WebUI.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-
+            
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
+           
 
             modelBuilder.Entity<PurchaseOrder>()
                 .HasMany(p => p.Comments)

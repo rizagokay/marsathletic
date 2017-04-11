@@ -243,13 +243,9 @@
     <Compile Include="Migrations\201703100744189_AddedACLInfoOnModule.Designer.cs">
       <DependentUpon>201703100744189_AddedACLInfoOnModule.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704011500395_removeisinuse.cs" />
-    <Compile Include="Migrations\201704011500395_removeisinuse.Designer.cs">
-      <DependentUpon>201704011500395_removeisinuse.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704011251153_purchaseorderfields.cs" />
-    <Compile Include="Migrations\201704011251153_purchaseorderfields.Designer.cs">
-      <DependentUpon>201704011251153_purchaseorderfields.cs</DependentUpon>
+    <Compile Include="Migrations\201704071140075_FinalState.cs" />
+    <Compile Include="Migrations\201704071140075_FinalState.Designer.cs">
+      <DependentUpon>201704071140075_FinalState.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -3271,6 +3267,7 @@
     <Content Include="Assets\plugins\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Assets\plugins\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Assets\plugins\tinymce\themes\inlite\src\test\.eslintrc" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Local IIS Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -3285,7 +3282,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\dashboard_3.html" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -3339,6 +3338,10 @@
     <Content Include="Views\Dashboards\OnGoingPurchaseOrders.cshtml" />
     <Content Include="Views\Error\PageNotFound.cshtml" />
     <Content Include="Views\Error\CustomError.cshtml" />
+    <Content Include="Views\Administration\EditModulePermissions.cshtml" />
+    <Content Include="Views\Administration\AccessControlLists.cshtml" />
+    <Content Include="Views\Error\Forbidden.cshtml" />
+    <Content Include="Views\Dashboards\ReportsView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3392,11 +3395,8 @@
     <EmbeddedResource Include="Migrations\201703100744189_AddedACLInfoOnModule.resx">
       <DependentUpon>201703100744189_AddedACLInfoOnModule.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704011500395_removeisinuse.resx">
-      <DependentUpon>201704011500395_removeisinuse.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704011251153_purchaseorderfields.resx">
-      <DependentUpon>201704011251153_purchaseorderfields.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704071140075_FinalState.resx">
+      <DependentUpon>201704071140075_FinalState.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

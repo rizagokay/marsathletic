@@ -56,6 +56,7 @@ namespace MarsAhletic.WebUI.Controllers
             appDb = new ApplicationDbContext();
             appOps = new ApplicationOperations();
             directory = new DirectoryOperations();
+
         }
 
         public ActionResult Index()
@@ -111,7 +112,7 @@ namespace MarsAhletic.WebUI.Controllers
 
                 var loginAccount = appDb.Users.Where(u => u.Id == model.LoginAccountId).First();
 
-                var appUser = new ApplicationUser() { IsDisabled = model.IsDeactive, IsManager = model.IsManager, LoginAccount = loginAccount, Username = loginAccount.UserName };
+                var appUser = new ApplicationUser() { IsDisabled = model.IsDeactive, IsDeptManager = model.IsDeptManager, IsHighManager = model.IsHighManager, LoginAccount = loginAccount, Username = loginAccount.UserName };
 
                 var departmentList = new List<Department>();
 
@@ -188,7 +189,8 @@ namespace MarsAhletic.WebUI.Controllers
                 Username = user.Username,
                 OldLoginAccountId = user.LoginAccount != null ? user.LoginAccount.Id : "Bulunamadı",
                 IsDeactive = user.IsDisabled,
-                IsManager = user.IsManager,
+                IsDeptManager = user.IsDeptManager,
+                IsHighManager = user.IsHighManager,
                 Departments = new SelectList(appDb.Departments.ToList(), "Id", "Name", user.Departments.Select(d => d.Id).ToList().ToArray()),
                 SelectedDepartments = user.Departments.Select(d => d.Id).ToArray()
 
@@ -253,7 +255,8 @@ namespace MarsAhletic.WebUI.Controllers
 
 
             user.IsDisabled = model.IsDeactive;
-            user.IsManager = model.IsManager;
+            user.IsDeptManager = model.IsDeptManager;
+            user.IsHighManager = model.IsHighManager;
 
             appDb.Entry(user).State = System.Data.Entity.EntityState.Modified;
             try
@@ -326,10 +329,14 @@ namespace MarsAhletic.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddNewAccount(LoginAccountViewModel model)
         {
+            string DomainNameInDb = "";
 
             if (model.AccountType == 2)
             {
                 model.Password = "model@Secret1pass";
+
+                var domainKey = "DomainName";
+                DomainNameInDb = appOps.GetValue(domainKey);
             }
 
             ViewBag.DomainIntegration = appOps.ActiveDirectoryIntegrationIsEnabled();
@@ -349,7 +356,7 @@ namespace MarsAhletic.WebUI.Controllers
                     //Setup Administrators            
                     var roleIsAvailable = await RoleManager.RoleExistsAsync("Administrators");
 
-                    
+
                     IdentityResult roleCreateResult;
                     if (!roleIsAvailable)
                     {
@@ -377,10 +384,9 @@ namespace MarsAhletic.WebUI.Controllers
 
 
                 IdentityResult result;
-                if (model.Domain != null)
+                if (DomainNameInDb != "")
                 {
-                    appUser.ADDomain = model.Domain;
-                    appUser.UserName = model.Domain + "\\" + model.Username;
+                    appUser.ADDomain = DomainNameInDb;
                     result = await UserManager.CreateAsync(appUser, model.Password);
                 }
                 else
@@ -399,7 +405,7 @@ namespace MarsAhletic.WebUI.Controllers
                         {
                             IsDeleted = false,
                             IsDisabled = false,
-                            IsManager = false,
+                            IsDeptManager = false,
                             Username = appUser.UserName,
                             LoginAccountId = appUser.Id
 
@@ -429,10 +435,6 @@ namespace MarsAhletic.WebUI.Controllers
                 ModelState.AddModelError("", ex);
                 return View(model);
             }
-
-
-            return View(model);
-
 
         }
 
@@ -689,7 +691,7 @@ namespace MarsAhletic.WebUI.Controllers
             {
                 Response.StatusCode = (int)HttpStatusCode.ExpectationFailed;
                 return Json(new { Message = "Test bağlantısı başarısız." });
-            }     
+            }
         }
 
         #region AccessControlListOperations
@@ -701,10 +703,84 @@ namespace MarsAhletic.WebUI.Controllers
             return View(modules);
         }
 
-        public ActionResult CreateNewAccessControlList()
+        public ActionResult EditModulePermissions(int? id, string targetId)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var module = appDb.Modules.Find(id);
+
+            if (module == null)
+            {
+                return HttpNotFound("Modül bulunamadı.");
+            }
+
+            var model = new ModulePermissionsViewModel();
+            model.RelatedModule = module;
+
+
+            if (targetId != null)
+            {
+                model.AccessControlListId = Convert.ToInt32(targetId);
+            }
+            else
+            {
+                model.AccessControlListId = appDb.AccessControlLists.Where(acl => acl.ModuleId == module.Id).FirstOrDefault() != null ? appDb.AccessControlLists.Where(acl => acl.ModuleId == module.Id).FirstOrDefault().Id : 0;
+            }
+
+            model.AccessControlLists = new SelectList(appDb.AccessControlLists.ToList(), "Id", "Name");
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditModulePermissions(ModulePermissionsViewModel model)
+        {
+
+            if (model.RelatedModule == null || model.AccessControlListId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Geçersiz İstek.");
+            }
+
+            var module = appDb.Modules.Find(model.RelatedModule.Id);
+            var desiredAcl = appDb.AccessControlLists.Find(model.AccessControlListId);
+
+            if (module == null || desiredAcl == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Modül veya İzin Listesi Bulunamadı.");
+            }
+
+            var previousAcls = appDb.AccessControlLists.Where(m => m.ModuleId == module.Id).ToList();
+
+            foreach (var item in previousAcls)
+            {
+                item.ModuleId = null;
+                appDb.Entry(item).State = System.Data.Entity.EntityState.Modified;
+            }
+
+            desiredAcl.ModuleId = module.Id;
+
+            appDb.Entry(desiredAcl).State = System.Data.Entity.EntityState.Modified;
+
+            appDb.SaveChanges();
+
+            return RedirectToAction("ModulePermissions");
+        }
+
+        public ActionResult CreateNewAccessControlList(string returntomodules, string returnto)
         {
             var model = new AccessControlListViewModel();
-            model.Users = new MultiSelectList(appDb.AppUsers.ToList(), "Id", "Username");
+            model.Users = new MultiSelectList(appDb.AppUsers.Where(a => !a.IsDeleted).ToList(), "Id", "Username");
+
+            if (returntomodules == "true")
+            {
+                TempData["ReturnToModules"] = true;
+                TempData["ReturnId"] = returnto;
+            }
+
             return View(model);
         }
 
@@ -712,7 +788,53 @@ namespace MarsAhletic.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateNewAccessControlList(AccessControlListViewModel model)
         {
-            return View();
+            var selectedusers = new List<ApplicationUser>();
+
+            foreach (var item in model.ApplicationUsers)
+            {
+                var selectedUser = appDb.AppUsers.Where(au => au.Username == item.Username).FirstOrDefault();
+                if (selectedUser != null)
+                {
+                    selectedusers.Add(selectedUser);
+                }
+            }
+
+
+            model.ApplicationUsers = selectedusers;
+            model.Users = new MultiSelectList(appDb.AppUsers.Where(a => !a.IsDeleted).ToList(), "Id", "Username");
+
+            var willreturn = false;
+            var returnId = "0";
+            if (TempData.Keys.Contains("ReturnToModules") && TempData.Keys.Contains("ReturnId"))
+            {
+                willreturn = (bool)TempData["ReturnToModules"];
+                returnId = TempData["ReturnId"].ToString();
+
+            }
+
+            var accesslist = new AccessControlList();
+            accesslist.Name = model.Name;
+
+            appDb.AccessControlLists.Add(accesslist);
+            appDb.Entry(accesslist).State = System.Data.Entity.EntityState.Added;
+
+
+            foreach (var item in selectedusers)
+            {
+                var aclEntry = new ACLEntry() { CanAccessModule = true, User = item, ACL = accesslist };
+                appDb.ACLEntries.Add(aclEntry);
+                appDb.Entry(aclEntry).State = System.Data.Entity.EntityState.Added;
+
+            }
+
+            appDb.SaveChanges();
+
+            if (willreturn)
+            {
+                return RedirectToAction("EditModulePermissions", new { id = returnId, targetId = accesslist.Id });
+            }
+
+            return RedirectToAction("AccessControlLists");
         }
 
         public ActionResult ViewAccessControlList(int id)
@@ -746,6 +868,12 @@ namespace MarsAhletic.WebUI.Controllers
 
         public ActionResult AccessControlDeleted(int id)
         {
+            return View();
+        }
+
+        public ActionResult AccessControlLists()
+        {
+
             return View();
         }
 

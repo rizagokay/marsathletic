@@ -1,7 +1,9 @@
-﻿
-@{
-    ViewBag.Title = "Yeni Seyahat Planlama";
+﻿@{
+    ViewBag.Title = "M-Port | Yeni Seyahat Planlama";
 }
+@using MarsAhletic.WebUI.Models
+
+@model TravelPlanViewModel
 
 
 <div id="con-close-modal" class="modal-demo">
@@ -18,16 +20,24 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="expansetype" class="control-label">Masraf Türü</label>
-                                <select class="form-control" id="expansetype">
-                                    <option value="01">Konaklama</option>
-                                    <option value="02">Yemek</option>
-                                </select>
+
+                                @Html.DropDownList("ExpanseItems", Model.ExpanseItems, new { id = "expansetype", @class = "form-control" })
 
                             </div>
 
                             <div class="form-group">
                                 <label for="amount" class="control-label">Miktar</label>
-                                <input type="text" class="form-control" onkeypress='validate(event)' />
+                                <input type="text" class="form-control" onkeypress='validate(event)' id="amount" required="" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="unitprice" class="control-label">Birim Fiyat</label>
+                                <input type="text" disabled class="form-control" onkeypress='validate(event)' id="unitprice" required="" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="plannedprice" class="control-label">Planlanan Birim Fiyat</label>
+                                <input type="text" class="form-control" onkeypress='validate(event)' id="plannedprice" required="" />
                             </div>
 
                             <div class="form-group">
@@ -39,7 +49,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="cancelButton" class="btn btn-default waves-effect" data-dismiss="modal" onclick="Custombox.close();">İptal</button>
-                    <button type="submit" id="saveButton" class="ladda-button btn btn-success waves-effect waves-light" data-style="contract">Kaydet</button>
+                    <a id="saveButton" class="ladda-button btn btn-success waves-effect waves-light" data-style="contract">Kaydet</a>
                 </div>
             </form>
         </div>
@@ -61,7 +71,7 @@
         </div>
 
         <h4 class="page-title">Seyahat Planlama Formu</h4>
-        <p class="text-muted page-title-alt">Welcome to Ubold admin panel !</p>
+        <p class="text-muted page-title-alt"></p>
     </div>
 </div>
 
@@ -69,29 +79,28 @@
     <div class="col-sm-12">
         <div class="card-box">
             <div class="row">
-                <form class="">
+                <form class="" method="post" action="@Url.Action("CreateNewPlanning")" id="finalform">
+                    @Html.AntiForgeryToken()
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label" for="uniqueId">Tarih:</label>
-                            <input type="text" class="form-control datepicker-autoclose-currentdate" placeholder="gg/aa/yyyy" id="">
+                        <div class="form-
+                             group">
+                            <label class="control-label" for="traveldate">Tarih:</label>
+                            @Html.TextBoxFor(m => m.Date, new { @class = "form-control datepicker-autoclose-currentdate", placeholder = "gg/aa/yyyy", id = "traveldate" })
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="username">Adı Soyadı:</label>
-                            <input type="text" class="form-control" placeholder="Adı Soyadı" id="username">
+                            @Html.TextBoxFor(m => m.NameSurname, new { @class = "form-control", placeholder = "Adı Soyadı" })
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="expanselocation">Masraf Yeri:</label>
-                            <select class="form-control select2" id="expanselocation">
-                                <option value="01">Beşiktaş Şube</option>
-                                <option value="02">İstinye Şube</option>
-                            </select>
+                            @Html.DropDownListFor(m => m.ExpanseCenterId, Model.ExpanseCenters, new { id = "expanselocation", @class = "form-control select2" })
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <table class="table table-responsive">
                             <tr>
                                 <td><label>Seyahat No:</label></td>
-                                <td>#1232131312</td>
+                                <td>@Model.TravelId</td>
                             </tr>
                             <tr>
                                 <td><label>Seyahat Rotası:</label></td>
@@ -127,7 +136,8 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><button class="btn btn-success" id="addnewitem">Ekle</button></td>
+                                    <td></td>
+                                    <td><a href="javascript:void(0)" class="btn btn-success" id="addnewitem">Ekle</a></td>
                                 </tr>
                                 <tr>
                                     <td>Masraf Kalemi</td>
@@ -138,6 +148,7 @@
                                     <td>Planlanan Fiyat</td>
                                     <td>Planlanan Toplam Bütçe</td>
                                     <td>Fark</td>
+                                    <td>İşlem</td>
                                 </tr>
 
                             </thead>
@@ -148,7 +159,9 @@
                                 </tr>
                             </tfoot>
                         </table>
+                        <button class="btn btn-success">Kaydet</button>
                     </div>
+
                 </form>
             </div>
 
@@ -170,6 +183,10 @@
 @section midjslibs{
     <script src="@Url.Content("~/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
     <script src="@Url.Content("~/assets/plugins/select2/js/select2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/assets/plugins/notifyjs/js/notify.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/notifications/notify-metro.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/parsleyjs/parsley.min.js")"></script>
+    <script src="@Url.Content("~/assets/plugins/parsleyjs/parsley.tr.js")"></script>
 }
 
 @section finaljscodes{
@@ -178,8 +195,41 @@
     <script src="@Url.Content("~/assets/plugins/custombox/js/custombox.min.js")"></script>
     <script src="@Url.Content("~/assets/plugins/custombox/js/legacy.min.js")"></script>
 
+
     <!--Page Codes-->
     <script type="text/javascript">
+
+
+        function GetUnitPrice() {
+            var dataId = $('#expansetype').val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Dashboards/GetBudgetForExpanseItem",
+                data: JSON.stringify({ BudgetId: dataId }),
+                contentType: "application/json; charset=utf-8"
+            }).done(function (data) {
+                if (data != null) {
+                    if ($.isNumeric(data)) {
+                        $('#unitprice').val(data);
+                    }
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                //hide notification
+                notifyObject.trigger('notify-hide');
+                //Show notification
+                showError(errorThrown);
+            });
+
+        }
+
+        function showSuccess(message) {
+            $.Notification.notify('success', 'right bottom', 'İşlem Başarılı', message);
+        };
+
+        function showError(errorMessage) {
+            $.Notification.notify('error', 'right bottom', 'İşlem Başarısız', errorMessage);
+        }
 
         function validate(evt) {
             var theEvent = evt || window.event;
@@ -206,6 +256,44 @@
                 weekStart: 0
             };
 
+
+
+            $('#addnewitemform').on('submit', function (e) {
+                e.preventDefault();
+            });
+
+
+            $('#finalform').on('submit', function (e) {
+                e.preventDefault();
+            });
+
+
+            $('#expansetype').on('change', function (e) {
+                GetUnitPrice();
+            });
+
+            $('#saveButton').on('click', function (e) {
+
+                var valid = $('#addnewitemform').parsley().validate();
+
+                if (valid) {
+
+                    var amount = $('#amount').val();
+                    var unitprice = $('#unitprice').val();
+                    var plannedPrice = $('#plannedprice').val();
+                    var calculatedBudget = unitprice * amount;
+                    var calculatedPlannedBudget = plannedPrice * amount;
+                    var difference = calculatedBudget - calculatedPlannedBudget;
+                    var description = $('#description').val();
+
+                    Custombox.close();
+                }
+
+
+
+
+            });
+
             //Add click handler for add button
             $('#addnewitem').click(function (e) {
                 Custombox.open({
@@ -221,6 +309,9 @@
                 $("#expansetype").select2({
                     dropdownParent: $("#con-close-modal")
                 });
+
+                //Get Data
+                GetUnitPrice();
 
                 e.preventDefault();
             });
@@ -240,6 +331,8 @@
             });
 
             $(".select2").select2();
+
+            GetUnitPrice();
 
         });
     </script>

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -19,6 +20,7 @@ namespace MarsAhletic.WebUI.Controllers
         private ISynchroniseData syncData;
 
         private ApplicationDbContext appDb;
+
 
         protected override IAsyncResult BeginExecute(RequestContext requestContext, AsyncCallback callback, object state)
         {
@@ -67,6 +69,12 @@ namespace MarsAhletic.WebUI.Controllers
 
         public ActionResult CreateNewPurchaseOrder()
         {
+            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+            {
+                throw new HttpException(403, "Yetersiz Yetki");
+            }
+
+
             var model = new PurchaseOrderViewModel();
 
 
@@ -93,6 +101,7 @@ namespace MarsAhletic.WebUI.Controllers
         public ActionResult CreateNewPurchaseOrder(PurchaseOrderViewModel model)
         {
 
+
             model.Products = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
             model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name", new string[] { model.CompanyId });
             model.Currencies = new MultiSelectList(appDb.Currencies.ToList(), "ExternalId", "Name");
@@ -109,14 +118,14 @@ namespace MarsAhletic.WebUI.Controllers
 
                 if (user == null)
                 {
-                    return HttpNotFound("Mevcut kullanıcının giriş hesabı bulunamadı");
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
                 }
                 else
                 {
-                    appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
+                    appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled).FirstOrDefault();
                     if (appUser == null)
                     {
-                        return HttpNotFound("Mevcut kullanıcının kullanıcı hesabı bulunamadı.");
+                        return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
                     }
                 }
 
@@ -240,22 +249,22 @@ namespace MarsAhletic.WebUI.Controllers
         }
 
         [HttpPost]
-        public  ActionResult ViewPurchaseOrder(PurchaseOrderViewModel model)
+        public ActionResult ViewPurchaseOrder(PurchaseOrderViewModel model)
         {
             var user = appDb.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
 
             ApplicationUser appUser;
 
-            if (user == null)
+            if (user == null && !User.IsInRole("Administrators"))
             {
-                return HttpNotFound("Mevcut kullanıcının giriş hesabı bulunamadı");
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
             }
             else
             {
-                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
-                if (appUser == null)
+                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled).FirstOrDefault();
+                if (appUser == null && !User.IsInRole("Administrators"))
                 {
-                    return HttpNotFound("Mevcut kullanıcının kullanıcı hesabı bulunamadı.");
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
                 }
             }
 
@@ -288,6 +297,10 @@ namespace MarsAhletic.WebUI.Controllers
 
         public ActionResult ViewPurchaseOrder(int id)
         {
+            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+            {
+                throw new HttpException(403, "Yetersiz Yetki");
+            }
 
 
             var purchaseOrder = appDb.PurchaseOrders
@@ -319,54 +332,121 @@ namespace MarsAhletic.WebUI.Controllers
 
         public ActionResult AllPurchaseOrders()
         {
+            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+            {
+                throw new HttpException(403, "Yetersiz Yetki");
+            }
 
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
-            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
 
-            if (loginAccount != null)
+            if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                model.PurchaseOrders = purchaseOrders;
-                model.AllPurchaseCount = purchaseOrders.Count;
-                model.ApprovedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEndedWithApproval).Count();
-                model.RejectedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+            }
 
-                return View(model);
+            var purchaseOrders = new List<PurchaseOrder>();
+
+            //Check Role
+            if (User.IsInRole("Administrators") || loginAccount.IsHighManager)
+            {
+                purchaseOrders = appDb.PurchaseOrders.ToList();
+
+            }
+            else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
+            {
+                var currentusersDepts = loginAccount.Departments.ToList();
+
+                foreach (var item in currentusersDepts)
+                {
+                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
+
+                    foreach (var purchaseOrder in purchaseorderOfDepartments)
+                    {
+                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
+                        {
+                            purchaseOrders.Add(purchaseOrder);
+                        }
+                    }
+                }
+
             }
             else
             {
-                return View();
+                purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
             }
 
 
+            model.PurchaseOrders = purchaseOrders;
+            model.AllPurchaseCount = purchaseOrders.Count;
+            model.ApprovedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEndedWithApproval).Count();
+            model.RejectedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+
+            return View(model);
 
         }
 
         public ActionResult OnGoingPurchaseOrders()
         {
 
+            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+            {
+                throw new HttpException(403, "Yetersiz Yetki");
+            }
+
+
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
-            var purchaseOrdersCount = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
-            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id && !x.MFilesProcessEnded).ToList();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
 
-            if (loginAccount != null)
+
+            if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                model.PurchaseOrders = purchaseOrders;
-                model.AllPurchaseCount = purchaseOrdersCount.Count;
-                model.ApprovedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEndedWithApproval).Count();
-                model.RejectedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+            }
 
-                return View(model);
+            var purchaseOrders = new List<PurchaseOrder>();
+
+            //Check Role
+            if (User.IsInRole("Administrators") || loginAccount.IsHighManager)
+            {
+                purchaseOrders = appDb.PurchaseOrders.ToList();
+
+            }
+            else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
+            {
+                var currentusersDepts = loginAccount.Departments.ToList();
+
+                foreach (var item in currentusersDepts)
+                {
+                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
+
+                    foreach (var purchaseOrder in purchaseorderOfDepartments)
+                    {
+                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
+                        {
+                            purchaseOrders.Add(purchaseOrder);
+                        }
+                    }
+                }
+
             }
             else
             {
-                return View();
+                purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
             }
+
+
+            model.PurchaseOrders = purchaseOrders.Where(x => !x.MFilesProcessEnded).ToList();
+            model.AllPurchaseCount = purchaseOrders.Count;
+            model.ApprovedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEndedWithApproval).Count();
+            model.RejectedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+
+            return View(model);
+
 
 
 
@@ -375,59 +455,263 @@ namespace MarsAhletic.WebUI.Controllers
         public ActionResult ApprovedPurchaseOrders()
         {
 
+            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+            {
+                throw new HttpException(403, "Yetersiz Yetki");
+            }
+
+
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
-            var purchaseOrdersCount = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
 
-            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id && x.MFilesProcessEndedWithApproval).ToList();
-
-            if (loginAccount != null)
+            if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                model.PurchaseOrders = purchaseOrders;
-                model.AllPurchaseCount = purchaseOrdersCount.Count;
-                model.ApprovedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEndedWithApproval).Count();
-                model.RejectedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+            }
 
-                return View(model);
+            var purchaseOrders = new List<PurchaseOrder>();
+
+
+            if (User.IsInRole("Administrators") || loginAccount.IsHighManager)
+            {
+                purchaseOrders = appDb.PurchaseOrders.ToList();
+
+            }
+            else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
+            {
+                var currentusersDepts = loginAccount.Departments.ToList();
+
+                foreach (var item in currentusersDepts)
+                {
+                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
+
+                    foreach (var purchaseOrder in purchaseorderOfDepartments)
+                    {
+                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
+                        {
+                            purchaseOrders.Add(purchaseOrder);
+                        }
+                    }
+                }
+
             }
             else
             {
-                return View();
+                purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
             }
+
+
+            model.PurchaseOrders = purchaseOrders.Where(x => x.MFilesProcessEndedWithApproval).ToList();
+            model.AllPurchaseCount = purchaseOrders.Count;
+            model.ApprovedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEndedWithApproval).Count();
+            model.RejectedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+
+            return View(model);
+
 
         }
 
         public ActionResult RejectedPurchaseOrders()
         {
 
+            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+            {
+                throw new HttpException(403, "Yetersiz Yetki");
+            }
+
+
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId).FirstOrDefault();
-            var purchaseOrdersCount = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
 
-            var purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id && x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).ToList();
 
-            if (loginAccount != null)
+            if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                model.PurchaseOrders = purchaseOrders;
-                model.AllPurchaseCount = purchaseOrdersCount.Count;
-                model.ApprovedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEndedWithApproval).Count();
-                model.RejectedPurchaseCount = purchaseOrdersCount.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+            }
 
-                return View(model);
+
+            var purchaseOrders = new List<PurchaseOrder>();
+
+
+            if (User.IsInRole("Administrators") || loginAccount.IsHighManager)
+            {
+                purchaseOrders = appDb.PurchaseOrders.ToList();
+
+            }
+            else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
+            {
+                var currentusersDepts = loginAccount.Departments.ToList();
+
+                foreach (var item in currentusersDepts)
+                {
+                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
+
+                    foreach (var purchaseOrder in purchaseorderOfDepartments)
+                    {
+                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
+                        {
+                            purchaseOrders.Add(purchaseOrder);
+                        }
+                    }
+                }
+
             }
             else
             {
-                return View();
+                purchaseOrders = appDb.PurchaseOrders.Where(x => x.CreatedBy.Id == loginAccount.Id).ToList();
             }
+
+            model.PurchaseOrders = purchaseOrders.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).ToList();
+            model.AllPurchaseCount = purchaseOrders.Count;
+            model.ApprovedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEndedWithApproval).Count();
+            model.RejectedPurchaseCount = purchaseOrders.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).Count();
+
+            return View(model);
+
         }
 
         public ActionResult CreateNewGuestApproval()
         {
             return View();
+        }
+
+        public ActionResult ReportsView()
+        {
+            var model = new ReportsViewModel();
+
+            model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
+            model.ProductList = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
+            model.CoastCenters = new MultiSelectList(appDb.CostCenters.ToList(), "Id", "Name");
+            model.StateList = new MultiSelectList(new List<object>() { new { Id = 1, Name = "Onaylananlar" }, new { Id = 2, Name = "Reddedilenler" }, new { Id = 3, Name = "Onayda Bekleyenler" } }, "Id", "Name");
+
+            return View(model);
+
+
+
+        }
+
+        [HttpPost]
+        public ActionResult ReportsView(ReportsViewModel model)
+        {
+            var user = appDb.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+
+            ApplicationUser appUser;
+
+            if (user == null)
+            {
+                return HttpNotFound("Mevcut kullanıcının giriş hesabı bulunamadı");
+            }
+            else
+            {
+                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
+                if (appUser == null)
+                {
+                    return HttpNotFound("Mevcut kullanıcının kullanıcı hesabı bulunamadı.");
+                }
+            }
+
+            var PurchaseOrders = new List<PurchaseOrder>();
+
+            PurchaseOrders = appDb.PurchaseOrders.Where(x => x.OrderDate >= model.firstDate && x.OrderDate <= model.secondDate).ToList();
+            var PurchaseOrders2 = new List<PurchaseOrder>();
+            var PurchaseOrders3 = new List<PurchaseOrder>();
+            var PurchaseOrders4 = new List<PurchaseOrder>();
+            var PurchaseOrders5 = new List<PurchaseOrder>();
+            if (model.Company != null)
+            {
+                foreach (var item in model.Company)
+                {
+
+                    var po = PurchaseOrders.Where(x => x.Company.Id == item).FirstOrDefault();
+
+                    if (po != null)
+                    {
+                        if (!PurchaseOrders2.Select(p => p.Id).Contains(po.Id))
+                        {
+                            PurchaseOrders2.Add(po);
+                        }
+                    }
+                }
+            }
+
+            if (model.CostCenter != null)
+            {
+                foreach (var item in model.CostCenter)
+                {
+                    var po = PurchaseOrders2.Where(x => x.CostCenter.Id == item).FirstOrDefault();
+
+                    if (po != null)
+                    {
+                        if (!PurchaseOrders3.Select(p => p.Id).Contains(po.Id))
+                        {
+                            PurchaseOrders3.Add(po);
+                        }
+                    }
+                }
+            }
+
+            if (model.Products != null)
+            {
+
+
+                foreach (var item in model.Products)
+                {
+                    var po = PurchaseOrders3.Where(x => x.PurchaseDetails.Any(p => p.Product.Id == item)).FirstOrDefault();
+
+                    if (po != null)
+                    {
+                        if (!PurchaseOrders4.Select(p => p.Id).Contains(po.Id))
+                        {
+                            PurchaseOrders4.Add(po);
+                        }
+                    }
+                }
+            }
+
+            if (model.States != null)
+            {
+                foreach (var item in model.States)
+                {
+                    PurchaseOrder po = null;
+
+                    //Onaylananlar
+                    if (item == 1)
+                    {
+                        po = PurchaseOrders4.Where(x => x.MFilesProcessEnded).FirstOrDefault();
+
+                    } //Reddedilenler
+                    else if (item == 2)
+                    {
+                        po = PurchaseOrders4.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).FirstOrDefault();
+                    }//Onayda Bekleyenler
+                    else
+                    {
+                        po = PurchaseOrders4.Where(x => !x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).FirstOrDefault();
+
+                    }
+
+                    if (po != null)
+                    {
+                        if (!PurchaseOrders5.Select(p => p.Id).Contains(po.Id))
+                        {
+                            PurchaseOrders5.Add(po);
+                        }
+                    }
+                }
+            }
+
+            model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
+            model.ProductList = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
+            model.CoastCenters = new MultiSelectList(appDb.CostCenters.ToList(), "Id", "Name");
+            model.StateList = new MultiSelectList(new List<object>() { new { Id = 1, Name = "Onaylananlar" }, new { Id = 2, Name = "Reddedlenler" }, new { Id = 3, Name = "Onayda Bekleyenler" } }, "Id", "Name");
+
+
+            model.Result = PurchaseOrders5;
+            return View(model);
         }
 
         [HttpPost]
@@ -549,7 +833,7 @@ namespace MarsAhletic.WebUI.Controllers
                 throw new HttpException(404, "Doküman bulunamadı");
             }
 
-            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/uploads/attachments/purchaseorders/"+ document.StoredName));
+            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/uploads/attachments/purchaseorders/" + document.StoredName));
             string fileName = document.FullName;
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
 

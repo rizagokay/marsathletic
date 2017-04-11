@@ -3,9 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
-
-    <link rel="shortcut icon" href="assets/images/favicon_1.ico">
+    <meta name="description" content="M-Port">
 
     <title>@ViewBag.Title</title>
 
@@ -46,8 +44,6 @@
             <!-- LOGO -->
             <div class="topbar-left">
                 <div class="text-center">
-                    @*<a href="index.html" class="logo"><i class="icon-magnet icon-c-logo"></i><span>Ub<i class="md md-album"></i>ld</span></a>*@
-                    <!-- Image Logo here -->
                     <a href="index.html" class="logo">
                         <i class="icon-c-logo">M</i>
                         <span>M-PORT</span>
@@ -55,7 +51,6 @@
                 </div>
             </div>
 
-            <!-- Button mobile view to collapse sidebar menu -->
             <div class="navbar navbar-default" role="navigation">
                 <div class="container">
                     <div class="">
@@ -66,28 +61,6 @@
                             <span class="clearfix"></span>
                         </div>
 
-                        <ul class="nav navbar-nav hidden-xs">
-                            @*<li><a href="#" class="waves-effect waves-light">Files</a></li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
-                                       role="button" aria-haspopup="true" aria-expanded="false">
-                                        Dropdown <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Action</a></li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
-                                        <li><a href="#">Separated link</a></li>
-                                    </ul>
-                                </li>*@
-                        </ul>
-
-                        @*<form role="search" class="navbar-left app-search pull-left hidden-xs">
-                            <input type="text" placeholder="Arama..." class="form-control">
-                            <a href=""><i class="fa fa-search"></i></a>
-                        </form>*@
-
-
                         <ul class="nav navbar-nav navbar-right pull-right">
                             <li class="hidden-xs">
                                 <a href="#" id="btn-fullscreen" class="waves-effect waves-light"><i class="icon-size-fullscreen"></i></a>
@@ -97,7 +70,7 @@
 
 
                                 <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0)"><i class="ti-user m-r-10 text-custom"></i> Profil</a></li>
+                                    <li><a href="javascript:void(0)"><i class="ti-user m-r-10 text-custom"></i> @User.Identity.Name</a></li>
                                     <li class="divider"></li>
                                     <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="ti-power-off m-r-10 text-danger"></i> Çıkış Yap</a></li>
                                 </ul>
@@ -133,22 +106,24 @@
                                     <li><a href="@Url.Action("CreateNewPurchaseOrder", "Dashboards")">Yeni Talep Oluştur</a></li>
 
                                     <li><a href="@Url.Action("AllPurchaseOrders", "Dashboards")">Talep Listesi</a></li>
-                                    <li><a href="@Url.Action("Index", "Home")">Raporlar</a></li>
+                                    <li><a href="@Url.Action("ReportsView", "Dashboards")">Raporlar</a></li>
                                 </ul>
                             </li>
                         }
 
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="ti-settings"></i> <span>Ayarlar</span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
+                        @if (User.IsInRole("Administrators"))
+                        {
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-settings"></i> <span>Ayarlar</span> <span class="menu-arrow"></span> </a>
+                                <ul class="list-unstyled">
 
-                                <li><a href="@Url.Action("ListUsers", "Administration")"><i class="ti-user"></i>Kullanıcılar</a></li>
-                                <li><a href="@Url.Action("ListAccounts", "Administration")"><i class="ti-user"></i>Giriş Hesapları</a></li>
-                                <li><a href="@Url.Action("DomainIntegration", "Administration")"><i class="ti-plug"></i>Domain Entegrasyonu</a></li>
-
-                            </ul>
-                        </li>
-
+                                    <li><a href="@Url.Action("ListUsers", "Administration")"><i class="ti-user"></i>Kullanıcılar</a></li>
+                                    <li><a href="@Url.Action("ListAccounts", "Administration")"><i class="ti-user"></i>Giriş Hesapları</a></li>
+                                    <li><a href="@Url.Action("DomainIntegration", "Administration")"><i class="ti-plug"></i>Domain Entegrasyonu</a></li>
+                                    <li><a href="@Url.Action("ModulePermissions", "Administration")"><i class="ti-info"></i>İzin Yönetimi</a></li>
+                                </ul>
+                            </li>
+                        }
 
                         <!--Sample For Muted Title-->
                         <!--<li class="text-muted menu-title">Ayarlar</li>-->

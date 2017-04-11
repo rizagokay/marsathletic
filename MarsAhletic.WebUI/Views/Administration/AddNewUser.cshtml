@@ -34,15 +34,24 @@
                 </div>
                 <div class="form-group">
                     <label>Departman:</label>
-                    @Html.ListBox("SelectedDepartments", Model.Departments, new { id = "SelectedDepartment", @class = "form-control select2"})
-                   
+                    @Html.ListBox("SelectedDepartments", Model.Departments, new { id = "SelectedDepartment", @class = "form-control select2" })
+
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
-                        <input id="IsManager" name="IsManager" type="checkbox" value="true" @(Model.IsManager ? "checked=\"checked\"" : "")>
+                        <input id="IsDeptManager" name="IsDeptManager" type="checkbox" value="true" @(Model.IsDeptManager ? "checked=\"checked\"" : "")>
 
-                        <label for="IsManager">
+                        <label for="IsDeptManager">
                             Departman Yöneticisi
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input id="IsHighManager" name="IsHighManager" type="checkbox" value="true" @(Model.IsDeptManager ? "checked=\"checked\"" : "")>
+
+                        <label for="IsHighManager">
+                            Üst Yönetici
                         </label>
                     </div>
                 </div>
@@ -80,6 +89,23 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".select2").select2();
+
+
+            $('#IsHighManager').change(function () {
+                if ($("#IsHighManager").is(":checked")) {
+                    if ($("#IsDeptManager").is(":checked")) {
+                        $('#IsDeptManager').prop('checked', false);
+                    }
+                }
+            });
+
+            $('#IsDeptManager').change(function () {
+                if ($("#IsDeptManager").is(":checked")) {
+                    if ($("#IsHighManager").is(":checked")) {
+                        $('#IsHighManager').prop('checked', false);
+                    }
+                }
+            });
         });
     </script>
 }

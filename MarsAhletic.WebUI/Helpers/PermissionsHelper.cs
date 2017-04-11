@@ -18,6 +18,8 @@ namespace MarsAhletic.WebUI.Helpers
             {
                 var user = db.Users.Where(x => x.UserName == UserId).FirstOrDefault();
 
+                
+
                 if (user != null)
                 {
                     //Check Roles

@@ -31,6 +31,20 @@ namespace MarsAhletic.WebUI.Controllers
 
         }
 
+        public ActionResult Forbidden()
+        {
+
+            if (ViewData.Model != null)
+            {
+                var model = (HandleErrorInfo)ViewData.Model;
+                logger.Error("Yetki yetersiz.", model.Exception);
+            }
+
+            Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            return View();
+
+        }
+
         public ActionResult CustomError()
         {
 

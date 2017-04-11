@@ -48,7 +48,7 @@ namespace MarsAhletic.WebUI.Models
 
     public class DomainIntegrationViewModel
     {
-        [Display(Name ="Domain Adı")]
+        [Display(Name = "Domain Adı")]
         public string DomainName { get; set; }
         [Display(Name = "Kullanıcı Adı")]
         public string DomainAdministratorAccount { get; set; }
@@ -139,12 +139,47 @@ namespace MarsAhletic.WebUI.Models
         public List<ApplicationUser> ApplicationUsers { get; set; }
     }
 
+    public class ModulePermissionsViewModel
+    {
+        public Module RelatedModule { get; set; }
+        public int AccessControlListId { get; set; }
+        public MultiSelectList AccessControlLists { get; set; }
+    }
+
+    public class ReportsViewModel
+    {
+        public ReportsViewModel()
+        {
+            Result = new List<PurchaseOrder>();
+        }
+
+        public DateTime firstDate { get; set; }
+        public DateTime secondDate { get; set; }
+        public int[] Products { get; set; }
+        public int[] CostCenter { get; set; }
+        public int[] Company { get; set; }
+        public int[] States { get; set; }
+        public IEnumerable<PurchaseOrder> Result { get; set; }
+
+
+        public MultiSelectList Companies { get; set; }
+        public MultiSelectList ProductList { get; set; }
+        public MultiSelectList CoastCenters { get; set; }
+        public MultiSelectList StateList { get; set; }
+
+
+
+    }
+
+
+
     public class AddNewUserViewModel
     {
         public string LoginAccountId { get; set; }
         public int[] SelectedDepartments { get; set; }
         public bool IsDeactive { get; set; }
-        public bool IsManager { get; set; }
+        public bool IsDeptManager { get; set; }
+        public bool IsHighManager { get; set; }
 
         public MultiSelectList LoginAccounts { get; set; }
         public MultiSelectList Departments { get; set; }
@@ -158,7 +193,8 @@ namespace MarsAhletic.WebUI.Models
         public string LoginAccountId { get; set; }
         public int[] SelectedDepartments { get; set; }
         public bool IsDeactive { get; set; }
-        public bool IsManager { get; set; }
+        public bool IsDeptManager { get; set; }
+        public bool IsHighManager { get; set; }
 
         public MultiSelectList LoginAccounts { get; set; }
         public MultiSelectList Departments { get; set; }
