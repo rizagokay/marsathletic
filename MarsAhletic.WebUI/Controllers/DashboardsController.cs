@@ -21,7 +21,6 @@ namespace MarsAhletic.WebUI.Controllers
 
         private ApplicationDbContext appDb;
 
-
         protected override IAsyncResult BeginExecute(RequestContext requestContext, AsyncCallback callback, object state)
         {
             //Sync Database
@@ -118,14 +117,14 @@ namespace MarsAhletic.WebUI.Controllers
 
                 if (user == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+                    throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
                 }
                 else
                 {
                     appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled).FirstOrDefault();
                     if (appUser == null)
                     {
-                        return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+                        throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
                     }
                 }
 
@@ -257,14 +256,15 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null && !User.IsInRole("Administrators"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+
+                throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
             }
             else
             {
                 appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled).FirstOrDefault();
                 if (appUser == null && !User.IsInRole("Administrators"))
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+                    throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
                 }
             }
 
@@ -309,7 +309,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (purchaseOrder == null)
             {
-                return HttpNotFound("Aranılan satınalma talebi veritabanında bulunamadı.");
+                throw new HttpException(404, "Satınalma Talebi Bulunamadı.");
             }
 
             var purchaseOrderVM = new PurchaseOrderViewModel();
@@ -344,7 +344,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+                throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
             }
 
             var purchaseOrders = new List<PurchaseOrder>();
@@ -405,7 +405,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+                throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
             }
 
             var purchaseOrders = new List<PurchaseOrder>();
@@ -468,7 +468,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+                throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
             }
 
             var purchaseOrders = new List<PurchaseOrder>();
@@ -530,7 +530,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+                throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
             }
 
 
@@ -603,14 +603,14 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound("Mevcut kullanıcının giriş hesabı bulunamadı");
+                throw new HttpException(404, "Mevcut kullanıcının giriş hesabı bulunamadı.");
             }
             else
             {
                 appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
                 if (appUser == null)
                 {
-                    return HttpNotFound("Mevcut kullanıcının kullanıcı hesabı bulunamadı.");
+                    throw new HttpException(404, "Mevcut kullanıcının hesabı bulunamadı.");
                 }
             }
 
@@ -740,7 +740,7 @@ namespace MarsAhletic.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetProduct(int ProductId)
+        public JsonResult GetProduct(int ProductId)
         {
 
             var product = appDb.Products
@@ -749,7 +749,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (product == null)
             {
-                return HttpNotFound("Ürün bulunamadı");
+                throw new HttpException(404, "Ürün bulunamadı.");
             }
 
             var productEx = new ProductEx()

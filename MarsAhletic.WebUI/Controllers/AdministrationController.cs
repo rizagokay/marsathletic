@@ -156,7 +156,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound("Kullanıcı bulunamadı.");
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
 
@@ -217,7 +217,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound("Kullanıcı bulunamadı");
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
 
@@ -279,7 +279,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
             return View(user);
@@ -295,7 +295,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
             user.IsDeleted = true;
@@ -445,7 +445,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
             return View(user);
@@ -459,7 +459,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
             return View(model);
@@ -479,7 +479,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
             return View(user);
@@ -495,7 +495,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (user == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Kullanıcı Bulunamadı.");
             }
 
             var users = appDb.AppUsers.Where(u => u.LoginAccountId == user.Id).ToList();
@@ -707,14 +707,14 @@ namespace MarsAhletic.WebUI.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Geçersiz istek.");
             }
 
             var module = appDb.Modules.Find(id);
 
             if (module == null)
             {
-                return HttpNotFound("Modül bulunamadı.");
+                throw new HttpException(404, "Modül Bulunamadı.");
             }
 
             var model = new ModulePermissionsViewModel();
@@ -740,9 +740,9 @@ namespace MarsAhletic.WebUI.Controllers
         public ActionResult EditModulePermissions(ModulePermissionsViewModel model)
         {
 
-            if (model.RelatedModule == null || model.AccessControlListId == null)
+            if (model == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Geçersiz İstek.");
+                throw new HttpException(400, "Geçersiz İstek.");
             }
 
             var module = appDb.Modules.Find(model.RelatedModule.Id);
@@ -750,7 +750,7 @@ namespace MarsAhletic.WebUI.Controllers
 
             if (module == null || desiredAcl == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Modül veya İzin Listesi Bulunamadı.");
+                throw new HttpException(404, "Modül veya İzin Listesi Bulunamadı.");
             }
 
             var previousAcls = appDb.AccessControlLists.Where(m => m.ModuleId == module.Id).ToList();
