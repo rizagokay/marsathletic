@@ -26,7 +26,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card-box">
-            <form method="post" id="addnewuser" action="@Url.Action("AddNewUser", "Administration")">
+            <form method="post" id="addnewuser" action="@Url.Action("AddNewUser", "Administration")" data-parsley-validate>
                 @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label>Giriş Hesabı:</label>
@@ -34,8 +34,17 @@
                 </div>
                 <div class="form-group">
                     <label>Departman:</label>
-                    @Html.ListBox("SelectedDepartments", Model.Departments, new { id = "SelectedDepartment", @class = "form-control select2" })
-
+                    @Html.TextBoxFor(m => m.DepartmentText, new { id = "DepartmentText", @class = "form-control", style = "display:none;", @readonly = true })
+                    <div id="DepartmentBox">
+                        @Html.DropDownListFor(m => m.Department, Model.Departments, "Bir departman seçiniz..", new { id = "Department", @class = "form-control select2", required = true })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Şube/Ofis/İşyeri:</label>
+                    @Html.TextBoxFor(m => m.DepartmentText, new { id = "OfficeText", @class = "form-control", style = "display:none;", @readonly = true })
+                    <div id="OfficeBox">
+                        @Html.DropDownListFor(m => m.Office, Model.Offices, "Bir şube seçiniz..", new { id = "Office", @class = "form-control select2", required = true })
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
@@ -48,7 +57,7 @@
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
-                        <input id="IsHighManager" name="IsHighManager" type="checkbox" value="true" @(Model.IsDeptManager ? "checked=\"checked\"" : "")>
+                        <input id="IsHighManager" name="IsHighManager" type="checkbox" value="true" @(Model.IsHighManager ? "checked=\"checked\"" : "")>
 
                         <label for="IsHighManager">
                             Üst Yönetici
@@ -86,6 +95,8 @@
 }
 
 @section finaljscodes{
+    <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $(".select2").select2();
@@ -106,6 +117,95 @@
                     }
                 }
             });
+
+            $("#LoginAccountId").on('change', function (e) {
+
+                var loginAccountId = $("#LoginAccountId").val();
+
+                if (loginAccountId != "" && loginAccountId !=null) {
+                    FindAndSetDepartmentAndOffice(loginAccountId);
+                }
+                
+
+            });
+
+
         });
+
+        function FindAndSetDepartmentAndOffice(userId) {
+            $.ajax({
+                type: "POST",
+                async: false,
+                beforeSend: function () {
+                    $.LoadingOverlay("show");
+                },
+                url: "/Administration/GetLoginAccountInfo",
+                data: JSON.stringify({ UserId: userId }),
+                contentType: "application/json; charset=utf-8"
+            }).done(FindAndSetDepartmentAndOfficeHandler)
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                    $.LoadingOverlay("hide");
+                });
+
+        }
+
+        function FindAndSetDepartmentAndOfficeHandler(data) {
+            if (data.External) {
+                SetDepartmentAndOffice(data.Name);
+            }
+            else {
+                $.LoadingOverlay("hide");
+            }
+        }
+
+        function SetDepartmentAndOffice(username) {
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/Administration/GetDepartmentAndOffice",
+                data: JSON.stringify({ Username: username }),
+                contentType: "application/json; charset=utf-8"
+            }).done(SetDepartmentAndOfficeHandler)
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                    $.LoadingOverlay("hide");
+                });
+
+        }
+
+        function SetDepartmentAndOfficeHandler(data) {
+
+            if (data.Department != "" && data.Office != "") {
+                $("#DepartmentText").show();
+                $("#DepartmentText").val(data.Department);
+                $("#DepartmentBox").hide();
+                $("#Department").removeAttr("required");
+
+                $("#OfficeText").show();
+                $("#OfficeText").val(data.Office);
+                $("#OfficeBox").hide();
+                $("#Office").removeAttr("required");
+            }
+            else {
+                $("#DepartmentText").hide();
+                $("#DepartmentText").val('');
+                $("#DepartmentBox").show();
+                $("#Department").val('').trigger('change');
+                $("#Department").attr("required", "true");
+
+                $("#OfficeText").hide();
+                $("#OfficeText").val('');
+                $("#OfficeBox").show();
+                $("#Office").val('').trigger('change');
+                $("#Office").attr("required", "true");
+            }
+
+            $.LoadingOverlay("hide");
+
+        }
+
+
+
     </script>
 }

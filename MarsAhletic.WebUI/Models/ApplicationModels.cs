@@ -18,17 +18,30 @@ namespace MarsAhletic.WebUI.Models
         public bool IsHighManager { get; set; }
         public bool IsDeleted { get; set; }
         public string Username { get; set; }
+        public int? DepartmentId { get; set; }
+        public int? OfficeId { get; set; }
 
         public string LoginAccountId { get; set; }
 
         [ForeignKey("LoginAccountId")]
         public virtual LoginAccount LoginAccount { get; set; }
+        [ForeignKey("DepartmentId")]
+        public virtual Department Department { get; set; }
+        [ForeignKey("OfficeId")]
+        public virtual Office Office { get; set; }
+
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
-        public virtual ICollection<Department> Departments { get; set; }
         public virtual ICollection<TravelPlan> TravelPlans { get; set; }
     }
 
+    public class Office
+    {
+        [Key]
+        public int Id { get; set; }
+        public string ExternalId { get; set; }
+        public string Name { get; set; }
+    }
 
 
     public class Configuration
@@ -101,6 +114,7 @@ namespace MarsAhletic.WebUI.Models
         public decimal ValueLocal { get; set; }
         public bool IncludedInBudget { get; set; }
         public decimal BudgetCost { get; set; }
+        public int Discount { get; set; }
 
         public virtual Currency Currency { get; set; }
         public virtual BudgetType BudgetType { get; set; }
@@ -139,6 +153,8 @@ namespace MarsAhletic.WebUI.Models
         public string Name { get; set; }
         public decimal UnitPrice { get; set; }
         public long VATPercentage { get; set; }
+        public string AccountCode { get; set; }
+        public string AccountName { get; set; }
 
         public virtual Currency Currency { get; set; }
         public virtual Company Company { get; set; }
@@ -160,6 +176,18 @@ namespace MarsAhletic.WebUI.Models
         public int Id { get; set; }
         public string ExternalId { get; set; }
         public string Name { get; set; }
+    }
+
+    public class CurrencyValues
+    {
+        [Key]
+        public int Id { get; set; }
+        public int CurrencyId { get; set; }
+        public DateTime Date { get; set; }
+        public decimal Value { get; set; }
+
+        [ForeignKey("CurrencyId")]
+        public Currency Currency { get; set; }
     }
 
     public class TravelPlan
@@ -236,7 +264,6 @@ namespace MarsAhletic.WebUI.Models
         public string FullName { get; set; }
 
         public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
-
     }
 
     public class AccessControlList
@@ -270,6 +297,18 @@ namespace MarsAhletic.WebUI.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+    }
+
+    public class DefinedList
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int? RelatedDocumentId { get; set; }
+
+        [ForeignKey("RelatedDocumentId")]
+        public virtual Document RelatedDocument { get; set; }
+
     }
 
 

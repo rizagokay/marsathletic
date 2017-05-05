@@ -2,12 +2,14 @@
 using MarsAhletic.WebUI.Interfaces;
 using MarsAhletic.WebUI.Models;
 using Mechsoft.ADServices.Helpers;
+using Mechsoft.ADServices.Helpers.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -55,7 +57,22 @@ namespace MarsAhletic.WebUI.Controllers
         {
             appDb = new ApplicationDbContext();
             appOps = new ApplicationOperations();
-            directory = new DirectoryOperations();
+
+            var domainAccountKey = "DomainAccountName";
+            var domainKey = "DomainName";
+            var domainPasswordKey = "DomainPassword";
+
+            var username = appOps.GetValue(domainAccountKey);
+            var password = appOps.GetValue(domainPasswordKey);
+            var domainname = appOps.GetValue(domainKey);
+
+            var authInfo = new ADAuthInfo();
+            authInfo.DomainName = domainname;
+            authInfo.Username = username;
+            authInfo.Password = password;
+
+
+            directory = new DirectoryOperations(authInfo);
 
         }
 
@@ -68,8 +85,6 @@ namespace MarsAhletic.WebUI.Controllers
         {
 
             var model = new AddNewUserViewModel();
-
-            model.Departments = new MultiSelectList(appDb.Departments.ToList(), "Id", "Name");
 
 
             var userList = new List<LoginAccount>();
@@ -84,6 +99,8 @@ namespace MarsAhletic.WebUI.Controllers
             }
 
             model.LoginAccounts = new MultiSelectList(userList, "Id", "UserName");
+            model.Departments = new SelectList(appDb.Departments.ToList(), "Id", "Name");
+            model.Offices = new SelectList(appDb.Offices.ToList(), "Id", "Name");
 
             return View(model);
         }
@@ -104,7 +121,7 @@ namespace MarsAhletic.WebUI.Controllers
                 }
             }
 
-            model.Departments = new MultiSelectList(appDb.Departments.ToList(), "Id", "Name");
+
             model.LoginAccounts = new MultiSelectList(userList, "Id", "UserName", appDb.Users.Where(x => x.Id == model.LoginAccountId).ToList());
 
             if (ModelState.IsValid)
@@ -112,20 +129,16 @@ namespace MarsAhletic.WebUI.Controllers
 
                 var loginAccount = appDb.Users.Where(u => u.Id == model.LoginAccountId).First();
 
+                var domainUser = directory.GetUser(loginAccount.UserName);
+
                 var appUser = new ApplicationUser() { IsDisabled = model.IsDeactive, IsDeptManager = model.IsDeptManager, IsHighManager = model.IsHighManager, LoginAccount = loginAccount, Username = loginAccount.UserName };
 
                 var departmentList = new List<Department>();
 
-                foreach (var item in model.SelectedDepartments)
-                {
-                    var foundDepartment = appDb.Departments.Find(item);
-                    if (foundDepartment != null)
-                    {
-                        departmentList.Add(foundDepartment);
-                    }
-                }
+                //TODO: Fix Selected Department
+                var foundDepartment = appDb.Departments.Find(model.Department);
 
-                appUser.Departments = departmentList;
+                appUser.Department = foundDepartment;
 
                 appDb.AppUsers.Add(appUser);
                 appDb.SaveChanges();
@@ -191,9 +204,8 @@ namespace MarsAhletic.WebUI.Controllers
                 IsDeactive = user.IsDisabled,
                 IsDeptManager = user.IsDeptManager,
                 IsHighManager = user.IsHighManager,
-                Departments = new SelectList(appDb.Departments.ToList(), "Id", "Name", user.Departments.Select(d => d.Id).ToList().ToArray()),
-                SelectedDepartments = user.Departments.Select(d => d.Id).ToArray()
-
+                Department = user.DepartmentId,
+                Departments = new SelectList(appDb.Departments.ToList(), "Id", "Name")
             };
 
             if (user.LoginAccount != null)
@@ -229,36 +241,18 @@ namespace MarsAhletic.WebUI.Controllers
 
             var departmentList = new List<Department>();
 
-            foreach (var item in model.SelectedDepartments)
-            {
-                var foundDepartment = appDb.Departments.Find(item);
-                if (foundDepartment != null)
-                {
-                    departmentList.Add(foundDepartment);
-                }
-            }
 
-            var departments = user.Departments;
+            //TODO Fix Selected Department
+            var foundDepartment = appDb.Departments.Find(model.Department);
 
-            var addedDepartments = departmentList.Except(departments).ToList();
-            var deletedDepartments = departments.Except(departmentList).ToList();
-
-            foreach (var item in deletedDepartments)
-            {
-                user.Departments.Remove(item);
-            }
-
-            foreach (var item in addedDepartments)
-            {
-                user.Departments.Add(item);
-            }
-
+            user.Department = foundDepartment;
 
             user.IsDisabled = model.IsDeactive;
             user.IsDeptManager = model.IsDeptManager;
             user.IsHighManager = model.IsHighManager;
 
             appDb.Entry(user).State = System.Data.Entity.EntityState.Modified;
+
             try
             {
                 appDb.SaveChanges();
@@ -318,8 +312,8 @@ namespace MarsAhletic.WebUI.Controllers
         {
 
             var model = new LoginAccountViewModel();
-
             ViewBag.DomainIntegration = appOps.ActiveDirectoryIntegrationIsEnabled();
+
 
 
             return View(model);
@@ -513,6 +507,213 @@ namespace MarsAhletic.WebUI.Controllers
             return RedirectToAction("ListAccounts", "Administration");
         }
 
+        public ActionResult PredefinedLists()
+        {
+            var lists = appDb.Lists.ToList();
+
+            var model = new ListViewModel();
+
+            foreach (var item in lists)
+            {
+                var documentItem = new DocumentViewModel();
+                documentItem.Name = item.Name;
+                documentItem.ListId = item.Id;
+
+                if (item.RelatedDocument != null)
+                {
+                    documentItem.FileId = item.RelatedDocument.Id;
+                }
+
+                model.DefinedLists.Add(documentItem);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PredefinedLists(ListViewModel model)
+        {
+            foreach (var item in model.DefinedLists)
+            {
+                var itemInDB = appDb.Lists.Find(item.ListId);
+
+                if (itemInDB != null)
+                {
+                    //Update Name
+                    if (itemInDB.Name != item.Name)
+                    {
+                        itemInDB.Name = item.Name;
+                        appDb.Entry(itemInDB).State = System.Data.Entity.EntityState.Modified;
+
+                        appDb.SaveChanges();
+
+                    }
+
+                    //Update Document
+                    if (item.FilePath != null)
+                    {
+                        //Save New Document
+                        var attachmentPath = Server.MapPath("~/uploads/attachments/");
+                        var filename = Guid.NewGuid().ToString() + ".bin";
+                        var targetPath = Path.Combine(attachmentPath, filename);
+
+                        if (!Directory.Exists(attachmentPath))
+                            Directory.CreateDirectory(attachmentPath);
+
+                        item.FilePath.SaveAs(targetPath);
+
+                        int oldDocumentId = 0;
+                        //Get Old Document Id for Deleting
+                        if (itemInDB.RelatedDocument != null)
+                        {
+                            oldDocumentId = itemInDB.RelatedDocument.Id;
+                        }
+
+                        //Create and Attach New Document
+                        var document = new Document()
+                        {
+                            Extension = Path.GetExtension(item.FilePath.FileName),
+                            FullName = item.FilePath.FileName,
+                            StoredName = filename
+                        };
+
+                        appDb.Documents.Add(document);
+
+                        itemInDB.RelatedDocument = document;
+
+                        appDb.Entry(itemInDB).State = System.Data.Entity.EntityState.Modified;
+
+                        //Save List & Document
+                        appDb.SaveChanges();
+
+                        //Delete Old Document
+                        var oldDocument = appDb.Documents.Find(oldDocumentId);
+
+                        if (oldDocument != null)
+                        {
+                            var deletePath = Path.Combine(attachmentPath, oldDocument.StoredName);
+
+                            var fi = new FileInfo(deletePath);
+
+                            if (fi.Exists)
+                            {
+                                fi.Delete();
+                            }
+
+                            appDb.Documents.Remove(oldDocument);
+                            appDb.SaveChanges();
+                        }
+
+                    }
+                }
+
+            }
+
+            return RedirectToAction("PredefinedLists");
+        }
+
+        public ActionResult AddNewList()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddNewList(AddNewListViewModel model)
+        {
+
+            var attachmentPath = Server.MapPath("~/uploads/attachments/");
+            var filename = Guid.NewGuid().ToString() + ".bin";
+            var targetPath = Path.Combine(attachmentPath, filename);
+
+            if (!Directory.Exists(attachmentPath))
+                Directory.CreateDirectory(attachmentPath);
+
+            try
+            {
+                model.FilePath.SaveAs(targetPath);
+
+                var document = new Document()
+                {
+                    Extension = Path.GetExtension(model.FilePath.FileName),
+                    FullName = model.FilePath.FileName,
+                    StoredName = filename
+                };
+
+                appDb.Documents.Add(document);
+
+                var list = new DefinedList() { Name = model.Name, RelatedDocument = document };
+
+                appDb.Lists.Add(list);
+
+                appDb.SaveChanges();
+
+            }
+            catch (Exception Ex)
+            {
+                ModelState.AddModelError("", "Doküman kaydedilirken problem ile karşılaşıldı.");
+                return View(model);
+            }
+
+
+            return RedirectToAction("PredefinedLists");
+        }
+
+
+        public ActionResult DeleteListConfirmation(int id)
+        {
+
+            var list = appDb.Lists.Find(id);
+
+            if (list == null)
+            {
+                throw new HttpException(404, "Aradığınız liste bulunamadı.");
+            }
+
+            return View(list);
+
+        }
+
+        [HttpPost]
+        [ActionName("DeleteListConfirmation")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteList(int id)
+        {
+
+            var list = appDb.Lists.Find(id);
+
+            if (list == null)
+            {
+                throw new HttpException(404, "Aradığınız liste bulunamadı.");
+            }
+
+            //Delete Document
+            if (list.RelatedDocument != null)
+            {
+                //Save New Document
+                var attachmentPath = Server.MapPath("~/uploads/attachments/");
+                var targetPath = Path.Combine(attachmentPath, list.RelatedDocument.StoredName);
+
+                var fi = new FileInfo(targetPath);
+
+                if (fi.Exists)
+                {
+                    fi.Delete();
+                }
+
+                appDb.Documents.Remove(list.RelatedDocument);
+
+            }
+
+            //Remove List
+            appDb.Lists.Remove(list);
+            appDb.SaveChanges();
+
+            return RedirectToAction("PredefinedLists");
+        }
+
 
         public ActionResult DomainIntegration()
 
@@ -692,6 +893,29 @@ namespace MarsAhletic.WebUI.Controllers
                 Response.StatusCode = (int)HttpStatusCode.ExpectationFailed;
                 return Json(new { Message = "Test bağlantısı başarısız." });
             }
+        }
+
+        [HttpPost]
+        public JsonResult GetLoginAccountInfo(string UserId)
+        {
+            var user = appDb.Users.Find(UserId);
+
+            if (user == null)
+            {
+                throw new HttpException(404, "Kullanıcı bulunamadı.");
+            }
+
+
+            return Json(new { External = user.IsExternal, Name = user.UserName });
+        }
+
+
+        public JsonResult GetDepartmentAndOffice(string Username)
+        {
+            var aduser = directory.GetUser(Username);
+
+            return Json(new { Office = aduser.Office, Department = aduser.Department });
+
         }
 
         #region AccessControlListOperations

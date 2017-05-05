@@ -47,6 +47,8 @@ namespace MarsAhletic.WebUI.Models
         public string CurrencyId { get; set; }
         public long VATPercantage { get; set; }
         public decimal CurrencyValue { get; set; }
+        public string AccountCode { get; set; }
+        public string AccountName { get; set; }
 
         public CurrencyEx Currency { get; set; }
     }

@@ -86,3 +86,9 @@ C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\b
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.dll
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.pdb
 C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.FinalState.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.DefinedList.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.addedfields.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.DepartmentFixed.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.OfficeAdded.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.CurrencyValues.resources
+C:\Users\MechSoft-Asus2393190\Documents\mars-sportif-web-api\MarsAhletic.WebUI\obj\Debug\MarsAhletic.WebUI.Migrations.IsExternalAdded.resources

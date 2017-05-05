@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "M-Port | Tanımlı Liste Silme Onayı";
+}
+
+@using MarsAhletic.WebUI.Models
+@model DefinedList
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Liste Silme Onayı</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="javascript:void(0);">Ayarlar</a>
+            </li>
+            <li>
+                <a href="@Url.Action("PredefinedLists", "Administration")">Tanımlı Listeler</a>
+            </li>
+            <li>
+                Liste Silme Onayı
+            </li>
+            <li class="active">
+                @Model.Name
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <div class="panel panel-color panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Uyarı!</h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <b> @Model.Name </b> listesi sistemden tamamen kaldırılacaktır. Bu işlemi geri almak mümkün olmayacaktır. Silme işlemini onaylıyor musunuz?
+                    </p>
+                </div>
+                <div class="panel-footer text-right">
+                    <form action="@Url.Action("DeleteListConfirmation")" method="post">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        <button class="btn btn-default">Evet</button>
+                        <a href="@Url.Action("PredefinedLists", "Administration")" class="btn btn-danger">İptal</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
