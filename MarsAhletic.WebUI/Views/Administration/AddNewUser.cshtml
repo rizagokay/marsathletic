@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-group">
                     <label>Şube/Ofis/İşyeri:</label>
-                    @Html.TextBoxFor(m => m.DepartmentText, new { id = "OfficeText", @class = "form-control", style = "display:none;", @readonly = true })
+                    @Html.TextBoxFor(m => m.OfficeText, new { id = "OfficeText", @class = "form-control", style = "display:none;", @readonly = true })
                     <div id="OfficeBox">
                         @Html.DropDownListFor(m => m.Office, Model.Offices, "Bir şube seçiniz..", new { id = "Office", @class = "form-control select2", required = true })
                     </div>
@@ -155,6 +155,20 @@
                 SetDepartmentAndOffice(data.Name);
             }
             else {
+               
+
+                $("#DepartmentText").hide();
+                $("#DepartmentText").val('');
+                $("#DepartmentBox").show();
+                $("#Department").val('').trigger('change');
+                $("#Department").attr("required", "true");
+
+                $("#OfficeText").hide();
+                $("#OfficeText").val('');
+                $("#OfficeBox").show();
+                $("#Office").val('').trigger('change');
+                $("#Office").attr("required", "true");
+
                 $.LoadingOverlay("hide");
             }
         }

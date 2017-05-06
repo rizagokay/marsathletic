@@ -91,7 +91,7 @@ namespace MarsAhletic.WebUI.Controllers
             model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
             model.Currencies = new MultiSelectList(appDb.Currencies.ToList(), "ExternalId", "Name");
             model.BudgetTypes = new MultiSelectList(appDb.BudgetTypes.ToList(), "Id", "Name");
-
+            
 
             if (User != null)
             {

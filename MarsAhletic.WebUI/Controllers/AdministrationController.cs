@@ -77,7 +77,7 @@ namespace MarsAhletic.WebUI.Controllers
         }
 
         public ActionResult Index()
-        {
+        {          
             return View();
         }
 
@@ -129,16 +129,58 @@ namespace MarsAhletic.WebUI.Controllers
 
                 var loginAccount = appDb.Users.Where(u => u.Id == model.LoginAccountId).First();
 
-                var domainUser = directory.GetUser(loginAccount.UserName);
+
 
                 var appUser = new ApplicationUser() { IsDisabled = model.IsDeactive, IsDeptManager = model.IsDeptManager, IsHighManager = model.IsHighManager, LoginAccount = loginAccount, Username = loginAccount.UserName };
 
-                var departmentList = new List<Department>();
+                //Model Has DepartmentInfo as Object
+                if (model.Department != null && model.Office != null)
+                {
 
-                //TODO: Fix Selected Department
-                var foundDepartment = appDb.Departments.Find(model.Department);
+                    var foundDepartment = appDb.Departments.Find(model.Department);
 
-                appUser.Department = foundDepartment;
+                    appUser.Department = foundDepartment;
+
+                    var foundOffice = appDb.Offices.Find(model.Office);
+
+                    appUser.Office = foundOffice;
+                }
+                //Model Has DepartmentInfo as Text
+                else
+                {
+                    var deptText = model.DepartmentText;
+                    var officeText = model.OfficeText;
+
+                    var officeFound = appDb.Offices.Where(o => o.Name == officeText).ToList().FirstOrDefault();
+                    var deptFound = appDb.Departments.Where(o => o.Name == deptText).ToList().FirstOrDefault();
+
+                    //Create New Dept
+                    if (deptFound == null)
+                    {
+                        var dept = new Department() { Name = deptText };
+                        appDb.Departments.Add(dept);
+                        appUser.Department = dept;
+                    }
+                    else
+                    {
+                        appUser.Department = deptFound;
+                    }
+
+                    //Create New Office
+                    if (officeFound == null)
+                    {
+                        var office = new Office() { Name = officeText };
+                        appDb.Offices.Add(office);
+                        appUser.Office = office;
+                    }
+                    else
+                    {
+                        appUser.Office = officeFound;
+                    }
+
+                }
+
+
 
                 appDb.AppUsers.Add(appUser);
                 appDb.SaveChanges();
@@ -205,7 +247,10 @@ namespace MarsAhletic.WebUI.Controllers
                 IsDeptManager = user.IsDeptManager,
                 IsHighManager = user.IsHighManager,
                 Department = user.DepartmentId,
-                Departments = new SelectList(appDb.Departments.ToList(), "Id", "Name")
+                Departments = new SelectList(appDb.Departments.ToList(), "Id", "Name"),
+                Office = user.OfficeId,
+                Offices = new SelectList(appDb.Offices.ToList(), "Id", "Name"),
+                LoginAccount = user.LoginAccount ?? user.LoginAccount
             };
 
             if (user.LoginAccount != null)
@@ -239,13 +284,53 @@ namespace MarsAhletic.WebUI.Controllers
                 user.Username = appDb.Users.Find(model.LoginAccountId).UserName;
             }
 
-            var departmentList = new List<Department>();
 
+            //Model Has DepartmentInfo as Object
+            if (model.Department != null && model.Office != null)
+            {
 
-            //TODO Fix Selected Department
-            var foundDepartment = appDb.Departments.Find(model.Department);
+                var foundDepartment = appDb.Departments.Find(model.Department);
 
-            user.Department = foundDepartment;
+                user.Department = foundDepartment;
+
+                var foundOffice = appDb.Offices.Find(model.Office);
+
+                user.Office = foundOffice;
+            }
+            //Model Has DepartmentInfo as Text
+            else
+            {
+                var deptText = model.DepartmentText;
+                var officeText = model.OfficeText;
+
+                var officeFound = appDb.Offices.Where(o => o.Name == officeText).ToList().FirstOrDefault();
+                var deptFound = appDb.Departments.Where(o => o.Name == deptText).ToList().FirstOrDefault();
+
+                //Create New Dept
+                if (deptFound == null)
+                {
+                    var dept = new Department() { Name = deptText };
+                    appDb.Departments.Add(dept);
+                    user.Department = dept;
+                }
+                else
+                {
+                    user.Department = deptFound;
+                }
+
+                //Create New Office
+                if (officeFound == null)
+                {
+                    var office = new Office() { Name = officeText };
+                    appDb.Offices.Add(office);
+                    user.Office = office;
+                }
+                else
+                {
+                    user.Office = officeFound;
+                }
+
+            }
 
             user.IsDisabled = model.IsDeactive;
             user.IsDeptManager = model.IsDeptManager;

@@ -137,6 +137,9 @@ namespace MarsAhletic.WebUI.Models
         public int MFilesProcessId { get; set; }
         public int MFilesStateId { get; set; }
         public bool MFilesProcessEnded { get; set; }
+        public int Office { get; set; }
+        public int Department { get; set; }
+
 
         public List<Document> Documents { get; set; }
         public List<HttpPostedFileBase> Files { get; set; }
@@ -228,6 +231,7 @@ namespace MarsAhletic.WebUI.Models
         public bool IsDeactive { get; set; }
         public bool IsDeptManager { get; set; }
         public bool IsHighManager { get; set; }
+        public LoginAccount LoginAccount { get; set; }
 
         public MultiSelectList LoginAccounts { get; set; }
         public MultiSelectList Departments { get; set; }
