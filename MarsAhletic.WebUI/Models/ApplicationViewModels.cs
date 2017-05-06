@@ -137,8 +137,8 @@ namespace MarsAhletic.WebUI.Models
         public int MFilesProcessId { get; set; }
         public int MFilesStateId { get; set; }
         public bool MFilesProcessEnded { get; set; }
-        public int Office { get; set; }
-        public int Department { get; set; }
+        public Office Office { get; set; }
+        public Department Department { get; set; }
 
 
         public List<Document> Documents { get; set; }

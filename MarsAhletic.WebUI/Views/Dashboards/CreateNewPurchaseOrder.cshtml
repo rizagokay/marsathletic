@@ -73,11 +73,33 @@
                             </tr>
                             <tr>
                                 <td><label>Kulüp Adı:</label></td>
-                                <td><input type="text" class="form-control" id="clubname"></td>
+                                <td>
+                                    @if (Model.Office != null)
+                                    {
+                                        @Html.HiddenFor(m => m.Office.Id)
+                                        @Html.DisplayFor(m => m.Office.Name, new { @class = "form-control", required = true, @readonly = true })
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" id="clubname" required readonly>
+                                    }
+
+                                </td>
                             </tr>
                             <tr>
                                 <td><label>Departman:</label></td>
-                                <td><input type="text" class="form-control" id="departmentid"></td>
+                                <td>
+                                    @if (Model.Department != null)
+                                    {
+                                        @Html.HiddenFor(m => m.Department.Id)
+                                        @Html.DisplayFor(m => m.Department.Name, new { @class = "form-control", required = true, @readonly=true })
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" id="departmentid" required readonly>
+                                    }
+                                
+                                </td>
                             </tr>
                             <tr>
                                 <td><label>Kulüp Adres Bilgisi:</label></td>

@@ -15,6 +15,7 @@ using System.Dynamic;
 using Microsoft.Reporting.WebForms;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
+using log4net;
 
 namespace MarsAhletic.WebUI.Controllers
 {
@@ -27,17 +28,29 @@ namespace MarsAhletic.WebUI.Controllers
 
         private IExternalSystemOperations exOps;
 
+        private ILog logger;
+
         protected override IAsyncResult BeginExecute(RequestContext requestContext, AsyncCallback callback, object state)
         {
 
             //Bind ApplicationDb
             appDb = new ApplicationDbContext();
 
+            //Looger
+            logger = LogManager.GetLogger(typeof(DashboardsController));
+
             //Sync Database
-            syncData = new SynchroniseData();
-            syncData.SyncCompanyData();
-            syncData.SyncCurrencies();
-            syncData.SyncProducts();
+            try
+            {
+                syncData = new SynchroniseData();
+                syncData.SyncCompanyData();
+                syncData.SyncCurrencies();
+                syncData.SyncProducts();
+            }
+            catch (Exception Ex)
+            {
+                logger.Error("Veri senkronize edilemedi.", Ex);
+            }
 
             //External Operations
             exOps = new ExternalSystemOperations();
@@ -84,9 +97,27 @@ namespace MarsAhletic.WebUI.Controllers
                 throw new HttpException(403, "Yetersiz Yetki");
             }
 
+            var user = appDb.AppUsers
+                .Include("Department")
+                .Include("Office")
+                .Where(u => u.LoginAccount.UserName == User.Identity.Name && !u.IsDeleted && !u.IsDisabled)
+                .FirstOrDefault();
+
 
             var model = new PurchaseOrderViewModel();
 
+            if (user != null)
+            {
+                if (user.Department != null)
+                {
+                    model.Department = user.Department;
+                }
+
+                if (user.Office != null)
+                {
+                    model.Office = user.Office;
+                }
+            }
 
             model.Date = DateTime.Today;
             model.PurchaseOrderId = "#" + Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 8).ToUpper();
@@ -95,8 +126,9 @@ namespace MarsAhletic.WebUI.Controllers
             model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
             model.Currencies = new MultiSelectList(appDb.Currencies.ToList(), "ExternalId", "Name");
             model.BudgetTypes = new MultiSelectList(appDb.BudgetTypes.ToList(), "Id", "Name");
-            
 
+            
+           
             if (User != null)
             {
                 model.NameSurname = User.Identity.GetName();
@@ -134,7 +166,7 @@ namespace MarsAhletic.WebUI.Controllers
                 }
                 else
                 {
-                    appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled).FirstOrDefault();
+                    appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled && !x.IsDeleted).FirstOrDefault();
                     if (appUser == null)
                     {
                         throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
@@ -325,7 +357,7 @@ namespace MarsAhletic.WebUI.Controllers
             }
             else
             {
-                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled).FirstOrDefault();
+                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled && !x.IsDeleted).FirstOrDefault();
                 if (appUser == null && !User.IsInRole("Administrators"))
                 {
                     throw new HttpException(403, "Mevcut kullanıcının giriş hesabı bulunamadı.");
@@ -369,7 +401,7 @@ namespace MarsAhletic.WebUI.Controllers
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled && !a.IsDeleted).FirstOrDefault();
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
             {
@@ -416,7 +448,7 @@ namespace MarsAhletic.WebUI.Controllers
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled && !a.IsDeleted).FirstOrDefault();
 
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
@@ -467,7 +499,7 @@ namespace MarsAhletic.WebUI.Controllers
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled && !a.IsDeleted).FirstOrDefault();
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
             {
@@ -515,7 +547,7 @@ namespace MarsAhletic.WebUI.Controllers
             var model = new PurchaseListViewModel();
 
             var appuserId = User.Identity.GetUserId();
-            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled).FirstOrDefault();
+            var loginAccount = appDb.AppUsers.Where(a => a.LoginAccountId == appuserId && !a.IsDisabled && !a.IsDeleted).FirstOrDefault();
 
 
             if (loginAccount == null && !User.IsInRole("Administrators"))
@@ -616,7 +648,7 @@ namespace MarsAhletic.WebUI.Controllers
             }
             else
             {
-                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
+                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDeleted && !x.IsDisabled).FirstOrDefault();
                 if (appUser == null)
                 {
                     throw new HttpException(404, "Mevcut kullanıcının hesabı bulunamadı.");
@@ -741,7 +773,7 @@ namespace MarsAhletic.WebUI.Controllers
             }
             else
             {
-                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
+                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id && !x.IsDisabled && !x.IsDeleted).FirstOrDefault();
                 if (appUser == null)
                 {
                     throw new HttpException(404, "Mevcut kullanıcının hesabı bulunamadı.");
