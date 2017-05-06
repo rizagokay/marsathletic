@@ -28,7 +28,7 @@ namespace MarsAhletic.WebUI.Models
 
     public class ProductEx : IProduct
     {
-        public override string Id
+        public override Int32 Id
         {
             get; set;
         }
@@ -47,7 +47,9 @@ namespace MarsAhletic.WebUI.Models
         public string CurrencyId { get; set; }
         public long VATPercantage { get; set; }
         public decimal CurrencyValue { get; set; }
-
+        public string ProducerCode{ get; set; }
+        public string Specode { get; set; }
+        public string CyphCode { get; set; }
         public CurrencyEx Currency { get; set; }
     }
 }

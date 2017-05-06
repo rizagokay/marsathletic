@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://prius.local" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="PURCHASE_ORDER" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://prius.local" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://prius.local">
+      <s:import namespace="PURCHASE_ORDER" />
+      <s:element name="getCustomerList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateDate" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="code" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCustomerListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCustomerListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getItemList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateDate" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="code" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getItemListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getItemListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCenterList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateDate" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="code" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCenterListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCenterListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getPuchaseServicesList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateDate" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="code" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getPuchaseServicesListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getPuchaseServicesListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCurrencyRates">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="currencyDate" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="curCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCurrencyRatesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCurrencyRatesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="loginTest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="logoPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="logoFrmNr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="logoFrmPeriod" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="loginTestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loginTestResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="createPurchaseOrderInLogo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="orderList" type="tns:ArrayOfPURCHASE_ORDER" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPURCHASE_ORDER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PURCHASE_ORDER" nillable="true" type="tns:PURCHASE_ORDER" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PURCHASE_ORDER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CLIENT_INTERNAL_NUMBER" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NUMBER" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DOC_TRACK_NR" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DATE" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="TIME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DOC_NUMBER" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AUXIL_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AUTH_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ARP_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ARP_CODE_SHPM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SHIPLOC_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GL_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SOURCE_WH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SOURCE_COST_GRP" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_DISCOUNTS" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL_DISCOUNTS" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL_DISCOUNTED" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL_VAT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL_GROSS" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL_NET" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="RC_RATE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="RC_NET" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="CURRSEL_TOTAL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NOTES1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NOTES2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NOTES3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NOTES4" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PAYMENT_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DIVISION" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DEPARTMENT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ORDER_STATUS" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SALESMAN_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SHIPMENT_TYPE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SHIPPING_AGENT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CURRSEL_DETAILS" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TRADING_GRP" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DATA_REFERENCE" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="FACTORY" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ITEXT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CUST_ORD_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DOC_TRACKING_NR" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CURR_TRANSACTIN" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROJECT_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AFFECT_RISK" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GUID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TC_RATE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TC_NET" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCHINFO_ADD_DISCOUNTS" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCHINFO_TOTAL_DISCOUNTS" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCHINFO_TOTAL_DISCOUNTED" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCHINFO_TOTAL_VAT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCHINFO_GROSS_TOTAL" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="WITH_PAYMENT" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CREATE_INVOICE" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="TRANSACTIONS_" type="tns:ArrayOfTRANSACTIONS_PURCHASE_ORDER" />
+          <s:element minOccurs="0" maxOccurs="1" name="PAYMENT_LIST_" type="tns:ArrayOfPAYMENT_LIST_PURCHASE_ORDER" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTRANSACTIONS_PURCHASE_ORDER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TRANSACTIONS_PURCHASE_ORDER" nillable="true" type="s1:TRANSACTIONS_PURCHASE_ORDER" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPAYMENT_LIST_PURCHASE_ORDER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PAYMENT_LIST_PURCHASE_ORDER" nillable="true" type="s1:PAYMENT_LIST_PURCHASE_ORDER" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="createPurchaseOrderInLogoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="createPurchaseOrderInLogoResult" type="tns:ArrayOfRESULT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfRESULT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RESULT" nillable="true" type="tns:RESULT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RESULT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="LOGO_FICHE_NUMBER" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CLIENT_INTERNAL_NUMBER" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="LOGO_REFERENCE" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LOGO_FIRM_NUMBER" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LOGO_FIRM_PERIOD" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="RESULT_STRING" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RESULT_XML" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IS_SUCCESS" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="LOGO_RECORD_GUID" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DataTable" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+            <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="PURCHASE_ORDER">
+      <s:complexType name="TRANSACTIONS_PURCHASE_ORDER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="_ADD_TAX_CODE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="_ADD_TAX_RATE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="_ADD_TAX_CONVFACT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="_ADD_TAX_AMOUNT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="_ADD_TAX_VAT_MATRAH" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="_ADD_TAX_DISC_AMOUNT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="_ADD_TAX_AMNTISUPD" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="_ADD_TAX_EFFECT_KDV" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="TYPE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MASTER_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GL_CODE1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GL_CODE2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OHP_CODE1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OHP_CODE2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DELVRY_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AUXIL_CODE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="QUANTITY" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PRICE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="DETAIL_LEVEL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CALC_TYPE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DISCOUNT_RATE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="COST_DISTR" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="DISCOUNT_DISTR" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="VAT_RATE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="VAT_AMOUNT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="VAT_BASE" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="UNIT_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UNIT_CONV1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UNIT_CONV2" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DUE_DATE" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="RC_XRATE" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="SOURCE_WH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SOURCE_COST_GRP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DIVISION" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DEPARTMENT" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL_NET" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="DATA_REFERENCE" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SALESMAN_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FACTORY" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROJECT_CODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CURR_TRANSACTIN" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCLINE_PRICE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCLINE_TOTAL" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCLINE_DIST_COST" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCLINE_DIST_DISC" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCLINE_VAT_AMOUNT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCLINE_VAT_MATRAH" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EXCLINE_LINE_NET" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EDT_PRICE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EDT_CURR" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ORG_DUE_DATE" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ORG_QUANTITY" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ORG_PRICE" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="AUXIL_CODE2" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PC_PRICE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="VAT_INCLUDED" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DEDUCTION_PART1" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DEDUCTION_PART2" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="TRANS_DESCRIPTION" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CURR_PRICE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PR_RATE" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="ADD_TAX_CODE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_TAX_RATE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_TAX_CONVFACT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_TAX_AMOUNT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_TAX_VAT_MATRAH" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_TAX_DISC_AMOUNT" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_TAX_AMNTISUPD" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ADD_TAX_EFFECT_KDV" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PAYMENT_LIST_PURCHASE_ORDER">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="DATE" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="MODULENR" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TRCODE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TOTAL" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PROCDATE" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="REPORTRATE" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="DATA_REFERENCE" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DISCOUNT_DUEDATE" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="PAY_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OP_STATUS" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SIGN" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="getCustomerListSoapIn">
+    <wsdl:part name="parameters" element="tns:getCustomerList" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerListSoapOut">
+    <wsdl:part name="parameters" element="tns:getCustomerListResponse" />
+  </wsdl:message>
+  <wsdl:message name="getItemListSoapIn">
+    <wsdl:part name="parameters" element="tns:getItemList" />
+  </wsdl:message>
+  <wsdl:message name="getItemListSoapOut">
+    <wsdl:part name="parameters" element="tns:getItemListResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCenterListSoapIn">
+    <wsdl:part name="parameters" element="tns:getCenterList" />
+  </wsdl:message>
+  <wsdl:message name="getCenterListSoapOut">
+    <wsdl:part name="parameters" element="tns:getCenterListResponse" />
+  </wsdl:message>
+  <wsdl:message name="getPuchaseServicesListSoapIn">
+    <wsdl:part name="parameters" element="tns:getPuchaseServicesList" />
+  </wsdl:message>
+  <wsdl:message name="getPuchaseServicesListSoapOut">
+    <wsdl:part name="parameters" element="tns:getPuchaseServicesListResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyRatesSoapIn">
+    <wsdl:part name="parameters" element="tns:getCurrencyRates" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyRatesSoapOut">
+    <wsdl:part name="parameters" element="tns:getCurrencyRatesResponse" />
+  </wsdl:message>
+  <wsdl:message name="loginTestSoapIn">
+    <wsdl:part name="parameters" element="tns:loginTest" />
+  </wsdl:message>
+  <wsdl:message name="loginTestSoapOut">
+    <wsdl:part name="parameters" element="tns:loginTestResponse" />
+  </wsdl:message>
+  <wsdl:message name="createPurchaseOrderInLogoSoapIn">
+    <wsdl:part name="parameters" element="tns:createPurchaseOrderInLogo" />
+  </wsdl:message>
+  <wsdl:message name="createPurchaseOrderInLogoSoapOut">
+    <wsdl:part name="parameters" element="tns:createPurchaseOrderInLogoResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerListHttpGetIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerListHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getItemListHttpGetIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getItemListHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getCenterListHttpGetIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getCenterListHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getPuchaseServicesListHttpGetIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getPuchaseServicesListHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyRatesHttpGetIn">
+    <wsdl:part name="currencyDate" type="s:string" />
+    <wsdl:part name="curCode" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyRatesHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="loginTestHttpGetIn">
+    <wsdl:part name="logoUserName" type="s:string" />
+    <wsdl:part name="logoPassword" type="s:string" />
+    <wsdl:part name="logoFrmNr" type="s:string" />
+    <wsdl:part name="logoFrmPeriod" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="loginTestHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerListHttpPostIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerListHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getItemListHttpPostIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getItemListHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getCenterListHttpPostIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getCenterListHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getPuchaseServicesListHttpPostIn">
+    <wsdl:part name="UpdateDate" type="s:string" />
+    <wsdl:part name="code" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getPuchaseServicesListHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyRatesHttpPostIn">
+    <wsdl:part name="currencyDate" type="s:string" />
+    <wsdl:part name="curCode" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getCurrencyRatesHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="loginTestHttpPostIn">
+    <wsdl:part name="logoUserName" type="s:string" />
+    <wsdl:part name="logoPassword" type="s:string" />
+    <wsdl:part name="logoFrmNr" type="s:string" />
+    <wsdl:part name="logoFrmPeriod" type="s:string" />
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="loginTestHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="Prius_x0020_Web_x0020_ServiceSoap">
+    <wsdl:operation name="getCustomerList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Müşterileri listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCustomerListSoapIn" />
+      <wsdl:output message="tns:getCustomerListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getItemList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Malzemeleri listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getItemListSoapIn" />
+      <wsdl:output message="tns:getItemListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCenterList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Masraf merkezlerini listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCenterListSoapIn" />
+      <wsdl:output message="tns:getCenterListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getPuchaseServicesList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Alınan hizmet kartlarını listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getPuchaseServicesListSoapIn" />
+      <wsdl:output message="tns:getPuchaseServicesListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyRates">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Döviz kurlarını listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCurrencyRatesSoapIn" />
+      <wsdl:output message="tns:getCurrencyRatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="loginTest">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Kullanıcı Girişi</wsdl:documentation>
+      <wsdl:input message="tns:loginTestSoapIn" />
+      <wsdl:output message="tns:loginTestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="createPurchaseOrderInLogo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Satınalma siparişi oluşturma</wsdl:documentation>
+      <wsdl:input message="tns:createPurchaseOrderInLogoSoapIn" />
+      <wsdl:output message="tns:createPurchaseOrderInLogoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="Prius_x0020_Web_x0020_ServiceHttpGet">
+    <wsdl:operation name="getCustomerList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Müşterileri listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCustomerListHttpGetIn" />
+      <wsdl:output message="tns:getCustomerListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getItemList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Malzemeleri listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getItemListHttpGetIn" />
+      <wsdl:output message="tns:getItemListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCenterList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Masraf merkezlerini listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCenterListHttpGetIn" />
+      <wsdl:output message="tns:getCenterListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getPuchaseServicesList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Alınan hizmet kartlarını listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getPuchaseServicesListHttpGetIn" />
+      <wsdl:output message="tns:getPuchaseServicesListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyRates">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Döviz kurlarını listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCurrencyRatesHttpGetIn" />
+      <wsdl:output message="tns:getCurrencyRatesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="loginTest">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Kullanıcı Girişi</wsdl:documentation>
+      <wsdl:input message="tns:loginTestHttpGetIn" />
+      <wsdl:output message="tns:loginTestHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="Prius_x0020_Web_x0020_ServiceHttpPost">
+    <wsdl:operation name="getCustomerList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Müşterileri listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCustomerListHttpPostIn" />
+      <wsdl:output message="tns:getCustomerListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getItemList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Malzemeleri listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getItemListHttpPostIn" />
+      <wsdl:output message="tns:getItemListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCenterList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Masraf merkezlerini listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCenterListHttpPostIn" />
+      <wsdl:output message="tns:getCenterListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getPuchaseServicesList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Alınan hizmet kartlarını listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getPuchaseServicesListHttpPostIn" />
+      <wsdl:output message="tns:getPuchaseServicesListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyRates">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Döviz kurlarını listeler.</wsdl:documentation>
+      <wsdl:input message="tns:getCurrencyRatesHttpPostIn" />
+      <wsdl:output message="tns:getCurrencyRatesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="loginTest">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">- Kullanıcı Girişi</wsdl:documentation>
+      <wsdl:input message="tns:loginTestHttpPostIn" />
+      <wsdl:output message="tns:loginTestHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Prius_x0020_Web_x0020_ServiceSoap" type="tns:Prius_x0020_Web_x0020_ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getCustomerList">
+      <soap:operation soapAction="http://prius.local/getCustomerList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getItemList">
+      <soap:operation soapAction="http://prius.local/getItemList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCenterList">
+      <soap:operation soapAction="http://prius.local/getCenterList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPuchaseServicesList">
+      <soap:operation soapAction="http://prius.local/getPuchaseServicesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyRates">
+      <soap:operation soapAction="http://prius.local/getCurrencyRates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="loginTest">
+      <soap:operation soapAction="http://prius.local/loginTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createPurchaseOrderInLogo">
+      <soap:operation soapAction="http://prius.local/createPurchaseOrderInLogo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Prius_x0020_Web_x0020_ServiceSoap12" type="tns:Prius_x0020_Web_x0020_ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getCustomerList">
+      <soap12:operation soapAction="http://prius.local/getCustomerList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getItemList">
+      <soap12:operation soapAction="http://prius.local/getItemList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCenterList">
+      <soap12:operation soapAction="http://prius.local/getCenterList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPuchaseServicesList">
+      <soap12:operation soapAction="http://prius.local/getPuchaseServicesList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyRates">
+      <soap12:operation soapAction="http://prius.local/getCurrencyRates" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="loginTest">
+      <soap12:operation soapAction="http://prius.local/loginTest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createPurchaseOrderInLogo">
+      <soap12:operation soapAction="http://prius.local/createPurchaseOrderInLogo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Prius_x0020_Web_x0020_ServiceHttpGet" type="tns:Prius_x0020_Web_x0020_ServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="getCustomerList">
+      <http:operation location="/getCustomerList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getItemList">
+      <http:operation location="/getItemList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCenterList">
+      <http:operation location="/getCenterList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPuchaseServicesList">
+      <http:operation location="/getPuchaseServicesList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyRates">
+      <http:operation location="/getCurrencyRates" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="loginTest">
+      <http:operation location="/loginTest" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Prius_x0020_Web_x0020_ServiceHttpPost" type="tns:Prius_x0020_Web_x0020_ServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="getCustomerList">
+      <http:operation location="/getCustomerList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getItemList">
+      <http:operation location="/getItemList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCenterList">
+      <http:operation location="/getCenterList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPuchaseServicesList">
+      <http:operation location="/getPuchaseServicesList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCurrencyRates">
+      <http:operation location="/getCurrencyRates" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="loginTest">
+      <http:operation location="/loginTest" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Prius_x0020_Web_x0020_Service">
+    <wsdl:port name="Prius_x0020_Web_x0020_ServiceSoap" binding="tns:Prius_x0020_Web_x0020_ServiceSoap">
+      <soap:address location="http://10.10.100.20:8081/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Prius_x0020_Web_x0020_ServiceSoap12" binding="tns:Prius_x0020_Web_x0020_ServiceSoap12">
+      <soap12:address location="http://10.10.100.20:8081/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Prius_x0020_Web_x0020_ServiceHttpGet" binding="tns:Prius_x0020_Web_x0020_ServiceHttpGet">
+      <http:address location="http://10.10.100.20:8081/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Prius_x0020_Web_x0020_ServiceHttpPost" binding="tns:Prius_x0020_Web_x0020_ServiceHttpPost">
+      <http:address location="http://10.10.100.20:8081/service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

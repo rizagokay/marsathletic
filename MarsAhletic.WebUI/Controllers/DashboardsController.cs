@@ -11,6 +11,10 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Dynamic;
+using Microsoft.Reporting.WebForms;
+using System.Web.UI.WebControls;
+using System.Data.SqlClient;
 
 namespace MarsAhletic.WebUI.Controllers
 {
@@ -579,23 +583,55 @@ namespace MarsAhletic.WebUI.Controllers
             return View();
         }
 
-        public ActionResult ReportsView()
+        //public ActionResult RequestReportView()
+        //{
+        //    var model = new ReportViewModel();
+
+        //    model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
+        //    model.ProductList = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
+        //    model.CoastCenters = new MultiSelectList(appDb.CostCenters.ToList(), "Id", "Name");
+        //    model.StateList = new MultiSelectList(new List<object>() { new { Id = 1, Name = "Onaylananlar" }, new { Id = 2, Name = "Reddedilenler" }, new { Id = 3, Name = "Onayda Bekleyenler" } }, "Id", "Name");
+        //    return View(model);
+        //}
+
+        public ActionResult RequestReportView()
         {
-            var model = new ReportsViewModel();
 
-            model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
-            model.ProductList = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
-            model.CoastCenters = new MultiSelectList(appDb.CostCenters.ToList(), "Id", "Name");
-            model.StateList = new MultiSelectList(new List<object>() { new { Id = 1, Name = "Onaylananlar" }, new { Id = 2, Name = "Reddedilenler" }, new { Id = 3, Name = "Onayda Bekleyenler" } }, "Id", "Name");
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
 
-            return View(model);
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"ProductReport.rdlc";
 
+            var appDbSource = appDb.PurchaseOrders.ToList();
 
+            MPortDbDataSet dbSet = new MPortDbDataSet();
 
+            ReportParameter rp1 = new ReportParameter("Sube", "1");
+            // ReportParameter rp2 = new ReportParameter("Parameter2");
+
+            var c1 = new SqlParameter("@CompanyIDs", 1);
+            var c2 = new SqlParameter("@ProductIDs", 3);
+            var c3 = new SqlParameter("@CostCenterIDs", 1);
+            var c4 = new SqlParameter("@firstDate", "2010-12-12");
+            var c5 = new SqlParameter("@secondDate", "2019-12-12");
+
+            var result = appDb.Database
+                .SqlQuery<PurchaseDetailReportItem>("GetReportData @CompanyIDs, @ProductIDs, @CostCenterIDs, @firstDate, @secondDate", c1, c2, c3, c4, c5)
+                .ToList();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("MainDataset", result));
+
+            reportViewer.SizeToReportContent = true;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            ViewBag.ReportViewer = reportViewer;
+
+            return View();
         }
 
         [HttpPost]
-        public ActionResult ReportsView(ReportsViewModel model)
+        public ActionResult RequestReportView(ReportViewModel model)
         {
             var user = appDb.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
 
@@ -614,19 +650,40 @@ namespace MarsAhletic.WebUI.Controllers
                 }
             }
 
+            if (model.AllProducts)
+            {
+                model.Products = appDb.PurchaseDetails.Select(s => s.Product.Id).ToArray();
+            }
+
+            if (model.AllCompanies)
+            {
+                model.Company = appDb.PurchaseDetails.Select(s => s.PurchaseOrder.Company.Id).ToArray();
+            }
+
+            if (model.AllCostCenter)
+            {
+                model.CostCenter = appDb.PurchaseDetails.Select(s => s.PurchaseOrder.CostCenter.Id).ToArray();
+            }
+
+            if (model.AllStates)
+            {
+                model.States = null;
+            }
+
             var PurchaseOrders = new List<PurchaseOrder>();
 
-            PurchaseOrders = appDb.PurchaseOrders.Where(x => x.OrderDate >= model.firstDate && x.OrderDate <= model.secondDate).ToList();
+            PurchaseOrders = appDb.PurchaseOrders.Where(x => x.OrderDate >= model.firstDate && x.OrderDate <= model.secondDate)
+                .Where(x => model.CostCenter.Contains(x.CostCenter.Id))
+                .Where(x => model.Company.Contains(x.Company.Id))
+                .ToList();
             var PurchaseOrders2 = new List<PurchaseOrder>();
             var PurchaseOrders3 = new List<PurchaseOrder>();
-            var PurchaseOrders4 = new List<PurchaseOrder>();
-            var PurchaseOrders5 = new List<PurchaseOrder>();
-            if (model.Company != null)
-            {
-                foreach (var item in model.Company)
-                {
 
-                    var po = PurchaseOrders.Where(x => x.Company.Id == item).FirstOrDefault();
+            if (model.Products != null)
+            {
+                foreach (var item in model.Products)
+                {
+                    var po = PurchaseOrders.Where(x => x.PurchaseDetails.Any(p => p.Product.Id == item)).FirstOrDefault();
 
                     if (po != null)
                     {
@@ -638,68 +695,33 @@ namespace MarsAhletic.WebUI.Controllers
                 }
             }
 
-            if (model.CostCenter != null)
-            {
-                foreach (var item in model.CostCenter)
-                {
-                    var po = PurchaseOrders2.Where(x => x.CostCenter.Id == item).FirstOrDefault();
 
-                    if (po != null)
-                    {
-                        if (!PurchaseOrders3.Select(p => p.Id).Contains(po.Id))
-                        {
-                            PurchaseOrders3.Add(po);
-                        }
-                    }
-                }
-            }
-
-            if (model.Products != null)
-            {
-
-
-                foreach (var item in model.Products)
-                {
-                    var po = PurchaseOrders3.Where(x => x.PurchaseDetails.Any(p => p.Product.Id == item)).FirstOrDefault();
-
-                    if (po != null)
-                    {
-                        if (!PurchaseOrders4.Select(p => p.Id).Contains(po.Id))
-                        {
-                            PurchaseOrders4.Add(po);
-                        }
-                    }
-                }
-            }
-
+            List<PurchaseOrder> pos = null;
             if (model.States != null)
             {
                 foreach (var item in model.States)
                 {
-                    PurchaseOrder po = null;
+
 
                     //Onaylananlar
                     if (item == 1)
                     {
-                        po = PurchaseOrders4.Where(x => x.MFilesProcessEnded).FirstOrDefault();
+                        pos = PurchaseOrders2.Where(x => x.MFilesProcessEnded).ToList();
 
                     } //Reddedilenler
                     else if (item == 2)
                     {
-                        po = PurchaseOrders4.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).FirstOrDefault();
+                        pos = PurchaseOrders2.Where(x => x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).ToList();
                     }//Onayda Bekleyenler
                     else
                     {
-                        po = PurchaseOrders4.Where(x => !x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).FirstOrDefault();
+                        pos = PurchaseOrders2.Where(x => !x.MFilesProcessEnded && !x.MFilesProcessEndedWithApproval).ToList();
 
                     }
 
-                    if (po != null)
+                    if (pos != null)
                     {
-                        if (!PurchaseOrders5.Select(p => p.Id).Contains(po.Id))
-                        {
-                            PurchaseOrders5.Add(po);
-                        }
+                        PurchaseOrders3 = PurchaseOrders3.Union(pos).ToList();
                     }
                 }
             }
@@ -709,8 +731,143 @@ namespace MarsAhletic.WebUI.Controllers
             model.CoastCenters = new MultiSelectList(appDb.CostCenters.ToList(), "Id", "Name");
             model.StateList = new MultiSelectList(new List<object>() { new { Id = 1, Name = "Onaylananlar" }, new { Id = 2, Name = "Reddedlenler" }, new { Id = 3, Name = "Onayda Bekleyenler" } }, "Id", "Name");
 
+            if (model.States != null)
+            {
+                model.Result = PurchaseOrders3;
+            }
+            else
+            {
+                model.Result = PurchaseOrders2;
+            }
+            return View(model);
+        }
 
-            model.Result = PurchaseOrders5;
+        public ActionResult ProductReportView()
+        {
+            var model = new ReportViewModel();
+
+            model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
+            model.ProductList = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
+            model.CoastCenters = new MultiSelectList(appDb.CostCenters.ToList(), "Id", "Name");
+            model.StateList = new MultiSelectList(new List<object>() { new { Id = 1, Name = "Onaylananlar" }, new { Id = 2, Name = "Reddedilenler" }, new { Id = 3, Name = "Onayda Bekleyenler" } }, "Id", "Name");
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        public ActionResult ProductReportView(ReportViewModel model)
+        {
+            var user = appDb.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+
+            ApplicationUser appUser;
+
+            if (user == null)
+            {
+                throw new HttpException(404, "Mevcut kullanıcının giriş hesabı bulunamadı.");
+            }
+            else
+            {
+                appUser = appDb.AppUsers.Where(x => x.LoginAccount.Id == user.Id).FirstOrDefault();
+                if (appUser == null)
+                {
+                    throw new HttpException(404, "Mevcut kullanıcının hesabı bulunamadı.");
+                }
+            }
+
+            if (model.AllProducts)
+            {
+                model.Products = appDb.PurchaseDetails.Select(s => s.Product.Id).ToArray();
+            }
+
+            if (model.AllCompanies)
+            {
+                model.Company = appDb.PurchaseDetails.Select(s => s.PurchaseOrder.Company.Id).ToArray();
+            }
+
+            if (model.AllCostCenter)
+            {
+                model.CostCenter = appDb.PurchaseDetails.Select(s => s.PurchaseOrder.CostCenter.Id).ToArray();
+            }
+
+            if (model.AllStates)
+            {
+                model.States = null;
+            }
+
+            var PurchaseDetails = new List<PurchaseDetail>();
+
+            PurchaseDetails = appDb.PurchaseDetails
+                .Where(x => x.PurchaseOrder.OrderDate >= model.firstDate && x.PurchaseOrder.OrderDate <= model.secondDate)
+                .Where(m => model.Products.Contains(m.Product.Id))
+                .Where(m => model.CostCenter.Contains(m.PurchaseOrder.CostCenter.Id))
+                .Where(m => model.Company.Contains(m.PurchaseOrder.Company.Id))
+                .ToList();
+
+
+            var PurchaseDetails2 = new List<PurchaseDetail>();
+            var po = new List<PurchaseDetail>();
+
+            if (model.States != null)
+            {
+                foreach (var item in model.States)
+                {
+
+
+                    //Onaylananlar
+                    if (item == 1)
+                    {
+                        po = PurchaseDetails.Where(x => x.PurchaseOrder.MFilesProcessEnded).ToList();
+
+                    } //Reddedilenler
+                    else if (item == 2)
+                    {
+                        po = PurchaseDetails.Where(x => x.PurchaseOrder.MFilesProcessEnded && !x.PurchaseOrder.MFilesProcessEndedWithApproval).ToList();
+                    }//Onayda Bekleyenler
+                    else
+                    {
+                        po = PurchaseDetails.Where(x => !x.PurchaseOrder.MFilesProcessEnded && !x.PurchaseOrder.MFilesProcessEndedWithApproval).ToList();
+                    }
+
+                    if (po != null)
+                    {
+                        PurchaseDetails2 = PurchaseDetails2.Union(po).ToList();
+                    }
+                }
+            }
+            //appDb.Database.SqlQuery<PurchaseDetail>("");
+
+            model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
+            model.ProductList = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
+            model.CoastCenters = new MultiSelectList(appDb.CostCenters.ToList(), "Id", "Name");
+            model.StateList = new MultiSelectList(new List<object>() { new { Id = 1, Name = "Onaylananlar" }, new { Id = 2, Name = "Reddedlenler" }, new { Id = 3, Name = "Onayda Bekleyenler" } }, "Id", "Name");
+
+            if (model.States != null)
+            {
+                model.ResultDetails = PurchaseDetails2;
+            }
+            else
+            {
+                model.ResultDetails = PurchaseDetails;
+            }
+
+
+
+            var grouped = PurchaseDetails
+                .GroupBy(p => new { p.Product, p.PurchaseOrder.CostCenter })
+                .Select(g =>
+                {
+                    dynamic o = new ExpandoObject();
+                    o.FirstProperty = g.Key.CostCenter.Name;
+                    o.SecondProperty = g.Key.Product.Name;
+                    o.ThirdProperty = g.Sum(p => p.Amount);
+                    o.FourthProperty = g.Sum(p => p.ValueLocal);
+                    return o;
+                });
+
+            model.ColumnNames = new List<string>() { "Masraf Merkezi", "Ürün Adı", "Adet", "Toplam" };
+            model.Results = grouped;
+
             return View(model);
         }
 

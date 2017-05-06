@@ -1,0 +1,79 @@
+﻿@using MarsAhletic.WebUI.Models
+@model ReportViewModel
+<div class="col-sm-12">
+    <form method="post" action="@Url.Action("ProductReportView")">
+        <div class="col-sm-4">
+
+            <div class="form-group">
+                <label>İlk Tarih:</label>
+                @Html.TextBoxFor(m => m.firstDate, new { @class = "form-control datepicker-autoclose-currentdate", placeholder = "dd/gg/yyyy", id = "purchaseorderdate", required = true })
+            </div>
+
+
+            <div class="form-group">
+                <label>Firma:</label>
+                @Html.ListBox("Company", Model.Companies, new { id = "cmpny", @class = "form-control select2", required = true })
+                <div class="checkbox">
+                    <input id="AllCompanies" name="AllCompanies" type="checkbox" value="true" @(Model.AllCompanies ? "checked=\"checked\"" : "")>
+
+                    <label for="AllCompanies">
+                        Tümü
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ürün:</label>
+                @Html.ListBox("Products", Model.ProductList, new { id = "product", @class = "form-control select2", required = true })
+
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <input id="AllProducts" name="AllProducts" type="checkbox" value="true" @(Model.AllProducts ? "checked=\"checked\"" : "")>
+
+                    <label for="AllProducts">
+                        Tümü
+                    </label>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label>Son Tarih:</label>
+                @Html.TextBoxFor(m => m.secondDate, new { @class = "form-control datepicker-autoclose-currentdate", placeholder = "dd/gg/yyyy", id = "purchaseorderdate", required = true })
+            </div>
+            <div class="form-group">
+                <label>Durum:</label>
+                @Html.ListBox("States", Model.StateList, new { id = "states", @class = "form-control select2", required = true })
+
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <input id="AllStates" name="AllStates" type="checkbox" value="true" @(Model.AllStates ? "checked=\"checked\"" : "")>
+
+                    <label for="AllStates">
+                        Tümü
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Şube:</label>
+                @Html.ListBox("CostCenter", Model.CoastCenters, new { id = "CostCenter", @class = "form-control select2", required = true })
+
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <input id="AllCostCenter" name="AllCostCenter" type="checkbox" value="true" @(Model.AllCostCenter ? "checked=\"checked\"" : "")>
+
+                    <label for="AllCostCenter">
+                        Tümü
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-default pull-right" id="getList">Görüntüle</button>
+    </form>
+
+</div>

@@ -34,6 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,6 +54,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\MicosoftReportViewerWebForms_v11.1.0.1\lib\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReportViewerForMvc, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReportViewerForMvc.1.0.1\lib\net45\ReportViewerForMvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -254,6 +263,12 @@
     <Compile Include="Models\ExternalModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ReportModels.cs" />
+    <Compile Include="MPortDbDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MPortDbDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -3025,6 +3040,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="ReportViewerWebForm.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Assets\css\bootstrap.min.css.map" />
@@ -3267,6 +3283,17 @@
     <Content Include="Assets\plugins\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Assets\plugins\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Assets\plugins\tinymce\themes\inlite\src\test\.eslintrc" />
+    <Content Include="MPortDbDataSet.xsc">
+      <DependentUpon>MPortDbDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="MPortDbDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MPortDbDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MPortDbDataSet.xss">
+      <DependentUpon>MPortDbDataSet.xsd</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Local IIS Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -3281,7 +3308,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Views\dashboard_3.html" />
+    <Content Include="Views\dashboard_2.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -3341,7 +3368,9 @@
     <Content Include="Views\Administration\EditModulePermissions.cshtml" />
     <Content Include="Views\Administration\AccessControlLists.cshtml" />
     <Content Include="Views\Error\Forbidden.cshtml" />
-    <Content Include="Views\Dashboards\ReportsView.cshtml" />
+    <Content Include="Views\Dashboards\RequestReportView.cshtml" />
+    <Content Include="Views\Dashboards\ProductReportView.cshtml" />
+    <Content Include="Views\Shared\ReportsFilterView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3398,6 +3427,7 @@
     <EmbeddedResource Include="Migrations\201704071140075_FinalState.resx">
       <DependentUpon>201704071140075_FinalState.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProductReport.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\mechsoft-ad-services\Mechsoft.ADServices\Mechsoft.ADServices.csproj">

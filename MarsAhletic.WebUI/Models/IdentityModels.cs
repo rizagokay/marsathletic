@@ -158,6 +158,7 @@ namespace MarsAhletic.WebUI.Models
         public DbSet<Product> Products { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<PurchaseDetail> PurchaseDetails { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Document> Documents { get; set; }

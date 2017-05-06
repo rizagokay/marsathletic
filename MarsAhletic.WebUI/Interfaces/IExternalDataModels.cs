@@ -8,7 +8,7 @@ namespace MarsAhletic.WebUI.Interfaces
 {
     public abstract class IProduct
     {
-        public abstract string Id { get; set; }
+        public abstract Int32 Id { get; set; }
         public abstract string Name { get; set; }
         public abstract decimal UnitPrice { get; set; }
     }

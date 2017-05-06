@@ -146,11 +146,12 @@ namespace MarsAhletic.WebUI.Models
         public MultiSelectList AccessControlLists { get; set; }
     }
 
-    public class ReportsViewModel
+    public class ReportViewModel
     {
-        public ReportsViewModel()
+        public ReportViewModel()
         {
             Result = new List<PurchaseOrder>();
+            ResultDetails = new List<PurchaseDetail>();
         }
 
         public DateTime firstDate { get; set; }
@@ -160,6 +161,14 @@ namespace MarsAhletic.WebUI.Models
         public int[] Company { get; set; }
         public int[] States { get; set; }
         public IEnumerable<PurchaseOrder> Result { get; set; }
+        public IEnumerable<PurchaseDetail> ResultDetails { get; set; }
+        public bool AllProducts { get; set; }
+        public bool AllCostCenter { get; set; }
+        public bool AllCompanies { get; set; }
+        public bool AllStates { get; set; }
+        public IEnumerable<dynamic> Results { get; set; }
+        public IEnumerable<string> ColumnNames { get; set; }
+
 
 
         public MultiSelectList Companies { get; set; }
@@ -170,8 +179,6 @@ namespace MarsAhletic.WebUI.Models
 
 
     }
-
-
 
     public class AddNewUserViewModel
     {
