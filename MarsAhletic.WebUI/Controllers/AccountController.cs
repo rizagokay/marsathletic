@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using MarsAhletic.WebUI.Models;
 using Mechsoft.ADServices.Helpers;
 using MarsAhletic.WebUI.Helpers;
+using Mechsoft.ADServices.Helpers.Models;
 
 namespace MarsAhletic.WebUI.Controllers
 {
@@ -20,16 +21,18 @@ namespace MarsAhletic.WebUI.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private IDirectoryOperations _directoryManager;
+        private ApplicationOperations appOps;
 
         public AccountController()
         {
-
+            appOps = new ApplicationOperations();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            appOps = new ApplicationOperations();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IDirectoryOperations directoryOperations)
@@ -37,6 +40,7 @@ namespace MarsAhletic.WebUI.Controllers
             UserManager = userManager;
             SignInManager = signInManager;
             DirectoryManager = directoryOperations;
+            appOps = new ApplicationOperations();
 
         }
 
@@ -68,7 +72,21 @@ namespace MarsAhletic.WebUI.Controllers
         {
             get
             {
-                return _directoryManager ?? new DirectoryOperations();
+
+                var domainAccountKey = "DomainAccountName";
+                var domainKey = "DomainName";
+                var domainPasswordKey = "DomainPassword";
+
+                var username = appOps.GetValue(domainAccountKey);
+                var password = appOps.GetValue(domainPasswordKey);
+                var domainname = appOps.GetValue(domainKey);
+
+                var authInfo = new ADAuthInfo();
+                authInfo.DomainName = domainname;
+                authInfo.Username = username;
+                authInfo.Password = password;
+
+                return _directoryManager ?? new DirectoryOperations(authInfo);
             }
             set
             {

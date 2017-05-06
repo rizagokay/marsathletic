@@ -150,9 +150,18 @@
                                             @Html.DisplayFor(x => x.PurchaseDetails[i].ValueLocal)
                                             @Html.HiddenFor(x => x.PurchaseDetails[i].ValueLocal)
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>
+                                            @(Model.PurchaseDetails[i].IncludedInBudget ? "Evet" : "Hayır")
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].IncludedInBudget)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].BudgetCost)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].BudgetCost)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(x => x.PurchaseDetails[i].BudgetType.Name)
+                                            @Html.HiddenFor(x => x.PurchaseDetails[i].BudgetType.Name)
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

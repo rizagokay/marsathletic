@@ -28,6 +28,7 @@ namespace MarsAhletic.WebUI.Models
         public string Name { get; set; }
         public string ADUserId { get; set; }
         public string ADDomain { get; set; }
+        public bool IsExternal { get; set; }
 
         public virtual ICollection<ApplicationUser> AppUsers { get; set; }
 
@@ -48,13 +49,13 @@ namespace MarsAhletic.WebUI.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            
+
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 
-           
+
 
             modelBuilder.Entity<PurchaseOrder>()
                 .HasMany(p => p.Comments)
@@ -82,15 +83,6 @@ namespace MarsAhletic.WebUI.Models
                     pd.ToTable("PurchaseOrderDocuments");
                 });
 
-            modelBuilder.Entity<Department>()
-                .HasMany(d => d.Users)
-                .WithMany(u => u.Departments)
-                .Map(du =>
-                {
-                    du.MapLeftKey("DeptId");
-                    du.MapRightKey("UserId");
-                    du.ToTable("DepartmentsUsers");
-                });
 
             //Cascade Rule for Purchase order and Purchase Details
             modelBuilder.Entity<PurchaseOrder>()
@@ -146,10 +138,15 @@ namespace MarsAhletic.WebUI.Models
                 .WithMany()
                 .WillCascadeOnDelete(true);
 
+            modelBuilder.Entity<DefinedList>()
+                .HasOptional(p => p.RelatedDocument);
+
+
             base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<BudgetType> BudgetTypes { get; set; }
         public DbSet<TravelPlan> TravelPlans { get; set; }
         public DbSet<TravelPlanDetail> TravelPlanDetails { get; set; }
         public DbSet<CostCenter> CostCenters { get; set; }
@@ -167,6 +164,9 @@ namespace MarsAhletic.WebUI.Models
         public DbSet<Module> Modules { get; set; }
         public DbSet<ApplicationUser> AppUsers { get; set; }
         public DbSet<Configuration> Configs { get; set; }
+        public DbSet<DefinedList> Lists { get; set; }
+        public DbSet<CurrencyValues> CurrencyValues { get; set; }
+        public DbSet<Office> Offices { get; set; }
 
         public static ApplicationDbContext Create()
         {

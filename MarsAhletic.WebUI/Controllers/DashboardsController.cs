@@ -25,16 +25,24 @@ namespace MarsAhletic.WebUI.Controllers
 
         private ApplicationDbContext appDb;
 
+        private IExternalSystemOperations exOps;
+
         protected override IAsyncResult BeginExecute(RequestContext requestContext, AsyncCallback callback, object state)
         {
+
+            //Bind ApplicationDb
+            appDb = new ApplicationDbContext();
+
             //Sync Database
             syncData = new SynchroniseData();
             syncData.SyncCompanyData();
             syncData.SyncCurrencies();
             syncData.SyncProducts();
 
-            //Bind ApplicationDb
-            appDb = new ApplicationDbContext();
+            //External Operations
+            exOps = new ExternalSystemOperations();
+
+
             return base.BeginExecute(requestContext, callback, state);
         }
 
@@ -44,7 +52,6 @@ namespace MarsAhletic.WebUI.Controllers
             base.Dispose(disposing);
         }
 
-        // GET: Dashboards
         public ActionResult CreateNewPlanning()
         {
 
@@ -81,13 +88,14 @@ namespace MarsAhletic.WebUI.Controllers
             var model = new PurchaseOrderViewModel();
 
 
-
+            model.Date = DateTime.Today;
             model.PurchaseOrderId = "#" + Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 8).ToUpper();
 
             model.Products = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
             model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name");
             model.Currencies = new MultiSelectList(appDb.Currencies.ToList(), "ExternalId", "Name");
-
+            model.BudgetTypes = new MultiSelectList(appDb.BudgetTypes.ToList(), "Id", "Name");
+            
 
             if (User != null)
             {
@@ -108,6 +116,7 @@ namespace MarsAhletic.WebUI.Controllers
             model.Products = new MultiSelectList(appDb.Products.ToList(), "Id", "Name");
             model.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name", new string[] { model.CompanyId });
             model.Currencies = new MultiSelectList(appDb.Currencies.ToList(), "ExternalId", "Name");
+            model.BudgetTypes = new MultiSelectList(appDb.BudgetTypes.ToList(), "Id", "Name");
 
             ViewBag.IsPostBack = true;
 
@@ -186,6 +195,21 @@ namespace MarsAhletic.WebUI.Controllers
                     purchaseDetail.Value = item.Value;
                     purchaseDetail.ValueLocal = item.ValueLocal;
 
+                    //Budget Operations
+                    if (item.IncludedInBudget)
+                    {
+                        var opexOrCapex = item.BudgetType.Name;
+                        var foundType = appDb.BudgetTypes.Where(x => x.Name == opexOrCapex).FirstOrDefault();
+
+                        if (foundType != null)
+                        {
+                            purchaseDetail.BudgetType = foundType;
+                        }
+
+                        purchaseDetail.BudgetCost = item.BudgetCost;
+                        purchaseDetail.IncludedInBudget = item.IncludedInBudget;
+                    }
+
                     //Add Currency
                     var currency = appDb.Currencies.Where(c => c.Name == item.Currency.Name).FirstOrDefault();
                     if (currency == null)
@@ -206,7 +230,7 @@ namespace MarsAhletic.WebUI.Controllers
                 {
                     if (item != null)
                     {
-                        var targetFolder = Server.MapPath("~/uploads/attachments/purchaseorders/");
+                        var targetFolder = Server.MapPath("~/uploads/attachments/");
 
                         if (!Directory.Exists(targetFolder))
                             Directory.CreateDirectory(targetFolder);
@@ -251,7 +275,43 @@ namespace MarsAhletic.WebUI.Controllers
 
         }
 
+        public ActionResult ViewPurchaseOrder(int id)
+        {
+            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
+            {
+                throw new HttpException(403, "Yetersiz Yetki");
+            }
+
+
+            var purchaseOrder = appDb.PurchaseOrders
+                .Where(po => po.Id == id)
+                .FirstOrDefault();
+
+            if (purchaseOrder == null)
+            {
+                throw new HttpException(404, "Satınalma Talebi Bulunamadı.");
+            }
+
+            var purchaseOrderVM = new PurchaseOrderViewModel();
+            purchaseOrderVM.Comments = purchaseOrder.Comments.ToList();
+            purchaseOrderVM.PurchaseDetails = purchaseOrder.PurchaseDetails.ToList();
+            purchaseOrderVM.Date = purchaseOrder.OrderDate;
+            purchaseOrderVM.CompanyCode = purchaseOrder.Company.Code;
+            purchaseOrderVM.NameSurname = purchaseOrder.CreatedBy.LoginAccount.Name;
+            purchaseOrderVM.PurchaseOrderId = purchaseOrder.PurchaseOrderCode;
+            purchaseOrderVM.TotalValue = purchaseOrder.TotalValue;
+            purchaseOrderVM.TotalValueWithoutVAT = purchaseOrder.TotalValueWithoutVAT;
+            purchaseOrderVM.TotalValueWithVAT = purchaseOrder.TotalValueWithVAT;
+            purchaseOrderVM.Documents = purchaseOrder.Documents.ToList();
+
+            purchaseOrderVM.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name", new int[] { purchaseOrder.Company.Id });
+
+            return View(purchaseOrderVM);
+
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ViewPurchaseOrder(PurchaseOrderViewModel model)
         {
             var user = appDb.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
@@ -299,41 +359,6 @@ namespace MarsAhletic.WebUI.Controllers
 
         }
 
-        public ActionResult ViewPurchaseOrder(int id)
-        {
-            if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
-            {
-                throw new HttpException(403, "Yetersiz Yetki");
-            }
-
-
-            var purchaseOrder = appDb.PurchaseOrders
-                .Where(po => po.Id == id)
-                .FirstOrDefault();
-
-            if (purchaseOrder == null)
-            {
-                throw new HttpException(404, "Satınalma Talebi Bulunamadı.");
-            }
-
-            var purchaseOrderVM = new PurchaseOrderViewModel();
-            purchaseOrderVM.Comments = purchaseOrder.Comments.ToList();
-            purchaseOrderVM.PurchaseDetails = purchaseOrder.PurchaseDetails.ToList();
-            purchaseOrderVM.Date = purchaseOrder.OrderDate;
-            purchaseOrderVM.CompanyCode = purchaseOrder.Company.Code;
-            purchaseOrderVM.NameSurname = purchaseOrder.CreatedBy.LoginAccount.Name;
-            purchaseOrderVM.PurchaseOrderId = purchaseOrder.PurchaseOrderCode;
-            purchaseOrderVM.TotalValue = purchaseOrder.TotalValue;
-            purchaseOrderVM.TotalValueWithoutVAT = purchaseOrder.TotalValueWithoutVAT;
-            purchaseOrderVM.TotalValueWithVAT = purchaseOrder.TotalValueWithVAT;
-            purchaseOrderVM.Documents = purchaseOrder.Documents.ToList();
-
-            purchaseOrderVM.Companies = new MultiSelectList(appDb.Companies.ToList(), "Id", "Name", new int[] { purchaseOrder.Company.Id });
-
-            return View(purchaseOrderVM);
-
-        }
-
         public ActionResult AllPurchaseOrders()
         {
             if (!PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
@@ -361,20 +386,7 @@ namespace MarsAhletic.WebUI.Controllers
             }
             else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
             {
-                var currentusersDepts = loginAccount.Departments.ToList();
-
-                foreach (var item in currentusersDepts)
-                {
-                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
-
-                    foreach (var purchaseOrder in purchaseorderOfDepartments)
-                    {
-                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
-                        {
-                            purchaseOrders.Add(purchaseOrder);
-                        }
-                    }
-                }
+                //TODO: Dept Manager Purchase Orders
 
             }
             else
@@ -422,20 +434,7 @@ namespace MarsAhletic.WebUI.Controllers
             }
             else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
             {
-                var currentusersDepts = loginAccount.Departments.ToList();
-
-                foreach (var item in currentusersDepts)
-                {
-                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
-
-                    foreach (var purchaseOrder in purchaseorderOfDepartments)
-                    {
-                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
-                        {
-                            purchaseOrders.Add(purchaseOrder);
-                        }
-                    }
-                }
+                //TODO: Dept Manager Purchase Orders
 
             }
             else
@@ -485,20 +484,7 @@ namespace MarsAhletic.WebUI.Controllers
             }
             else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
             {
-                var currentusersDepts = loginAccount.Departments.ToList();
-
-                foreach (var item in currentusersDepts)
-                {
-                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
-
-                    foreach (var purchaseOrder in purchaseorderOfDepartments)
-                    {
-                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
-                        {
-                            purchaseOrders.Add(purchaseOrder);
-                        }
-                    }
-                }
+                //TODO: Dept Manager Purchase Orders
 
             }
             else
@@ -548,20 +534,7 @@ namespace MarsAhletic.WebUI.Controllers
             }
             else if (loginAccount.IsDeptManager && !User.IsInRole("Administrators"))
             {
-                var currentusersDepts = loginAccount.Departments.ToList();
-
-                foreach (var item in currentusersDepts)
-                {
-                    var purchaseorderOfDepartments = appDb.PurchaseOrders.Where(x => x.CreatedBy.Departments.Any(d => d.Id == item.Id)).ToList();
-
-                    foreach (var purchaseOrder in purchaseorderOfDepartments)
-                    {
-                        if (!purchaseOrders.Select(p => p.Id).Contains(purchaseOrder.Id))
-                        {
-                            purchaseOrders.Add(purchaseOrder);
-                        }
-                    }
-                }
+                //TODO: Dept Manager Purchase Orders
 
             }
             else
@@ -888,9 +861,8 @@ namespace MarsAhletic.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCurrencyValue(string CurrencyId)
+        public JsonResult GetCurrencyValue(string CurrencyId)
         {
-            var exOps = new ExternalSystemOperations();
             var currencyValue = exOps.GetCurrencyValue(CurrencyId);
 
             return Json(currencyValue);
@@ -902,7 +874,6 @@ namespace MarsAhletic.WebUI.Controllers
 
             var product = appDb.Products
                 .Where(x => x.Id == ProductId).FirstOrDefault();
-            var exops = new ExternalSystemOperations();
 
             if (product == null)
             {
@@ -917,7 +888,9 @@ namespace MarsAhletic.WebUI.Controllers
                 UnitPrice = product.UnitPrice,
                 CompanyId = product.Company != null ? product.Company.Id.ToString() : "",
                 Name = product.Name,
-                VATPercantage = product.VATPercentage
+                VATPercantage = product.VATPercentage,
+                AccountCode = product.AccountCode,
+                AccountName = product.AccountName
             };
 
             if (product.Currency != null)
@@ -990,7 +963,7 @@ namespace MarsAhletic.WebUI.Controllers
                 throw new HttpException(404, "Doküman bulunamadı");
             }
 
-            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/uploads/attachments/purchaseorders/" + document.StoredName));
+            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/uploads/attachments/" + document.StoredName));
             string fileName = document.FullName;
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
 

@@ -1,0 +1,19 @@
+﻿
+@using MarsAhletic.WebUI.Models
+@model DocumentViewModel
+
+<div class="row">
+    <div class="card-box">
+        @Html.HiddenFor(m => m.ListId)
+        <div class="form-group">
+            <label>Liste İsmi:</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", required=true })
+        </div>
+        <div class="form-group">
+            <label>Doküman: <span class="label label-danger">@(Model.FileId != null ? "" : "Doküman Bulunmamaktadır.")</span></label>
+            @Html.TextBoxFor(m => m.FilePath, new { @class = "filestyle", @data_size = "sm", type = "file" })
+        </div>
+        <input type="submit" class="btn btn-primary" value="Güncelle" />
+        <a href="@Url.Action("DeleteListConfirmation", new { id = Model.ListId })" class="btn btn-danger">Kaldır</a>
+    </div>
+</div>

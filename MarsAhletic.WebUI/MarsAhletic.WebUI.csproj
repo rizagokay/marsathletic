@@ -256,6 +256,30 @@
     <Compile Include="Migrations\201704071140075_FinalState.Designer.cs">
       <DependentUpon>201704071140075_FinalState.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704280859231_DefinedList.cs" />
+    <Compile Include="Migrations\201704280859231_DefinedList.Designer.cs">
+      <DependentUpon>201704280859231_DefinedList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704291454432_addedfields.cs" />
+    <Compile Include="Migrations\201704291454432_addedfields.Designer.cs">
+      <DependentUpon>201704291454432_addedfields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705031441002_DepartmentFixed.cs" />
+    <Compile Include="Migrations\201705031441002_DepartmentFixed.Designer.cs">
+      <DependentUpon>201705031441002_DepartmentFixed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705051121049_OfficeAdded.cs" />
+    <Compile Include="Migrations\201705051121049_OfficeAdded.Designer.cs">
+      <DependentUpon>201705051121049_OfficeAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705051138534_CurrencyValues.cs" />
+    <Compile Include="Migrations\201705051138534_CurrencyValues.Designer.cs">
+      <DependentUpon>201705051138534_CurrencyValues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705051205535_IsExternalAdded.cs" />
+    <Compile Include="Migrations\201705051205535_IsExternalAdded.Designer.cs">
+      <DependentUpon>201705051205535_IsExternalAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels.cs" />
@@ -3368,6 +3392,11 @@
     <Content Include="Views\Administration\EditModulePermissions.cshtml" />
     <Content Include="Views\Administration\AccessControlLists.cshtml" />
     <Content Include="Views\Error\Forbidden.cshtml" />
+    <Content Include="Views\Dashboards\ReportsView.cshtml" />
+    <Content Include="Views\Administration\PredefinedLists.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DocumentViewModel.cshtml" />
+    <Content Include="Views\Administration\AddNewList.cshtml" />
+    <Content Include="Views\Administration\DeleteListConfirmation.cshtml" />
     <Content Include="Views\Dashboards\RequestReportView.cshtml" />
     <Content Include="Views\Dashboards\ProductReportView.cshtml" />
     <Content Include="Views\Shared\ReportsFilterView.cshtml" />
@@ -3426,6 +3455,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704071140075_FinalState.resx">
       <DependentUpon>201704071140075_FinalState.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704280859231_DefinedList.resx">
+      <DependentUpon>201704280859231_DefinedList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704291454432_addedfields.resx">
+      <DependentUpon>201704291454432_addedfields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705031441002_DepartmentFixed.resx">
+      <DependentUpon>201705031441002_DepartmentFixed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705051121049_OfficeAdded.resx">
+      <DependentUpon>201705051121049_OfficeAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705051138534_CurrencyValues.resx">
+      <DependentUpon>201705051138534_CurrencyValues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705051205535_IsExternalAdded.resx">
+      <DependentUpon>201705051205535_IsExternalAdded.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductReport.rdlc" />
   </ItemGroup>

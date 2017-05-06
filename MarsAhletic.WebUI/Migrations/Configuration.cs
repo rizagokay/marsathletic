@@ -16,7 +16,7 @@ namespace MarsAhletic.WebUI.Migrations
 
         protected override void Seed(MarsAhletic.WebUI.Models.ApplicationDbContext context)
         {
-
+            //Create Administrators Role
             if (!context.Roles.Any(r => r.Name == "Administrators"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole() { Name = "Administrators" };
@@ -25,7 +25,7 @@ namespace MarsAhletic.WebUI.Migrations
 
                 var created = manager.CreateAsync(role).Result;
             }
-
+            //Create Admin
             if (!context.Users.Any(u => u.UserName == "admin"))
             {
                 var LoginAccount = new LoginAccount();
@@ -54,6 +54,7 @@ namespace MarsAhletic.WebUI.Migrations
 
             }
 
+            //Create Default Modules
             if (!context.Modules.Any(r => r.Name == "PurchaseOrders"))
             {
                 var module = new Module() { Name = "PurchaseOrders" };

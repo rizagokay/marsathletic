@@ -23,6 +23,7 @@
                     {
                         <input type="hidden" id="postbackdata" value="true" />
                         <input type="hidden" id="postbackdate" value="@Model.Date" />
+
                     }
                     <div class="col-sm-6">
                         <table class="table table-responsive">
@@ -67,7 +68,7 @@
                             <tr>
                                 <td><label>Talep Tarihi:</label></td>
                                 <td>
-                                    @Html.TextBoxFor(m => m.Date, new { @class = "form-control datepicker-autoclose-currentdate", placeholder = "dd/gg/yyyy", id = "purchaseorderdate" })
+                                    @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", id = "purchaseorderdate", @readonly = true, @type = "date" })
                                 </td>
                             </tr>
                             <tr>
@@ -96,6 +97,8 @@
                                 <thead>
                                     <tr>
                                         <td><strong>Kodu</strong></td>
+                                        <td><strong>Muhasebe Adı</strong></td>
+                                        <td><strong>Muhasebe Kodu</strong></td>
                                         <td><strong>Malzeme Adı</strong></td>
                                         <td><strong>Grup Kodu</strong></td>
                                         <td><strong>Miktar</strong></td>
@@ -104,9 +107,10 @@
                                         <td><strong>Para Birimi</strong></td>
                                         <td><strong>Tutar</strong></td>
                                         <td><strong>TL Tutar</strong></td>
-                                        <td><strong>Bütçe Durumu</strong></td>
+                                        <td><strong>Bütçeye Dahil</strong></td>
                                         <td><strong>Bütçe Rakamı</strong></td>
                                         <td><strong>Bütçe Türü</strong></td>
+                                        <td><strong>İndirim (%)</strong></td>
                                         <td>
                                             <strong>İşlem</strong>
                                         </td>
@@ -120,6 +124,15 @@
                                                 @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Code)
                                                 @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Code)
                                             </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.AccountName)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.AccountName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].Product.AccountCode)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].Product.AccountCode)
+                                            </td>
+                                            <td></td>
                                             <td>
                                                 @Html.DisplayFor(x => x.PurchaseDetails[i].Product.Name)
                                                 @Html.HiddenFor(x => x.PurchaseDetails[i].Product.Name)
@@ -152,9 +165,18 @@
                                                 @Html.DisplayFor(x => x.PurchaseDetails[i].ValueLocal)
                                                 @Html.HiddenFor(x => x.PurchaseDetails[i].ValueLocal)
                                             </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>
+                                                @(Model.PurchaseDetails[i].IncludedInBudget ? "Evet" : "Hayır")
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].IncludedInBudget)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].BudgetCost)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].BudgetCost)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(x => x.PurchaseDetails[i].BudgetType.Name)
+                                                @Html.HiddenFor(x => x.PurchaseDetails[i].BudgetType.Name)
+                                            </td>
                                             <td><a href="javascript:void(0);" class="deleteitem">Sil</a></td>
                                         </tr>
                                     }
@@ -198,7 +220,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="description">Açıklama Ekle:</label>
-                            @Html.TextAreaFor(m => m.AddedComment, 5, 5, new { @class = "form-control", id = "description" })
+                            @Html.TextAreaFor(m => m.AddedComment, 5, 5, new { @class = "form-control", id = "description", required = true })
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -248,6 +270,14 @@
                                 <label for="code" class="control-label">Kodu</label>
                                 <input type="text" disabled class="form-control" id="code" />
                             </div>
+                            <div class="form-group">
+                                <label for="accountname" class="control-label">Muhasebe Adı</label>
+                                <input type="text" disabled class="form-control" id="accountname" />
+                            </div>
+                            <div class="form-group">
+                                <label for="accountcode" class="control-label">Muhasebe Kodu</label>
+                                <input type="text" disabled class="form-control" id="accountcode" />
+                            </div>
 
                             <div class="form-group">
                                 <label for="groupcode" class="control-label">Grup Kodu</label>
@@ -264,11 +294,30 @@
                             </div>
                             <div class="form-group">
                                 <label for="vat" class="control-label">KDV Oranı</label>
-                                <input type="text" disabled class="form-control" id="vat" />
+                                <input type="text" class="form-control" id="vat" />
+                            </div>
+                            <div class="form-group">
+                                <label for="discount" class="control-label">İskonto (%)</label>
+                                <input type="text" class="form-control" id="discount" value="0" />
                             </div>
                             <div class="form-group">
                                 <label for="currency" class="control-label">Para Birimi</label>
-                                @Html.DropDownList("Currencies", Model.Currencies, "", new { id = "currencyitem", @class = "form-control", required = true, disabled = true })
+                                @Html.DropDownList("Currencies", Model.Currencies, "", new { id = "currencyitem", @class = "form-control", required = true })
+                            </div>
+                            <div class="form-group">
+                                <label for="includedinbudget" class="control-label">Bütçeye Dahil</label>
+                                <select id="includedinbudget" class="form-control">
+                                    <option value="0">Hayır</option>
+                                    <option value="1">Evet</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="budgettype" class="control-label">Bütçe Kalemi</label>
+                                @Html.DropDownList("BudgetTypes", Model.BudgetTypes, "", new { id = "budgettype", @class = "form-control", disabled = true })
+                            </div>
+                            <div class="form-group">
+                                <label for="budgetcost" class="control-label">Bütçe Tutarı</label>
+                                <input type="text" disabled class="form-control" id="budgetcost" />
                             </div>
                             <div class="form-group">
                                 <label for="currencyvalue" class="control-label">Kur Değeri</label>
@@ -448,6 +497,19 @@
                     $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Value' id='val_Value_" + i + "' value='" + selectedItem.Total + "' />");
                     $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].ValueLocal' id='val_Local_" + i + "' value='" + selectedItem.LocalTotal + "' />");
                     $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].Currency.Name' id='val_Currency_Name_" + i + "' value='" + selectedItem.Currency + "' />");
+                    $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].BudgetType.Name' id='val_BudgetType_Name_" + i + "' value='" + selectedItem.BudgetType + "' />");
+                    if (selectedItem.BudgetValue == "") {
+                        $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].BudgetCost' id='val_BudgetCost_" + i + "' value=" + 0 + " />");
+                    }
+                    else {
+                        $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].BudgetCost' id='val_BudgetCost_" + i + "' value=" + selectedItem.BudgetValue + " />");
+                    }
+                    if (selectedItem.BudgetStatus == "Evet") {
+                        $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].IncludedInBudget' id='val_IncludedInBudget_" + i + "' value=" + true + " />");
+                    }
+                    else {
+                        $('#finalform').append("<input type='hidden' name='PurchaseDetails[" + i.toString() + "].IncludedInBudget' id='val_IncludedInBudget_" + i + "' value=" + false + " />");
+                    }
                 }
 
 
@@ -521,14 +583,60 @@
                 }).done(function (currency) {
                     $('#currencyvalue').val(currency);
                 })
-                  .fail(function (jqXHR, textStatus, errorThrown) {
-                      alert("Kur değeri alınamadı.");
-                  });
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Kur değeri alınamadı.");
+                    });
+            });
+
+            $("#includedinbudget").on('change', function (e) {
+
+                var included = $("#includedinbudget").val();
+
+                if (included == 1) {
+                    $("#budgettype").prop('disabled', false);
+                    $("#budgettype").attr('required', "true");
+                }
+                else {
+                    $('#budgettype').val(null).trigger("change");
+                    $("#budgettype")
+                        .select2({
+                            dropdownParent: $("#con-close-modal"),
+                            placeholder: 'Bütçe türü seçiniz..',
+                            allowClear: true
+                        });
+
+                    $("#budgettype").prop('disabled', true);
+                    $("#budgettype").removeAttr('required');
+
+
+                    $("#budgetcost").val('');
+                    $("#budgetcost").prop('disabled', true);
+                    $("#budgetcost").removeAttr('required');
+                }
+
+            });
+
+            $("#budgettype").on('change', function (e) {
+
+                var budgettype = $("#budgettype option:selected").text();
+
+                if (budgettype == "CAPEX") {
+                    $("#budgetcost").prop('disabled', false);
+                    $("#budgetcost").attr('required', "true");
+                }
+                else {
+                    $("#budgetcost").val('');
+                    $("#budgetcost").prop('disabled', true);
+                    $("#budgetcost").removeAttr('required');
+                }
+
             });
 
             $('#productitem')
                 .on('change', function (e) {
                     var productData = $('#productitem').val();
+                    $('#amount').val('');
+                    $('#amount').trigger('change');
 
                     if (productData != "" && productData != null) {
                         $.ajax({
@@ -540,6 +648,8 @@
                             if (product != null) {
                                 $('#code').val(product.Code);
                                 $('#groupcode').val(product.GroupCode);
+                                $('#accountcode').val(product.AccountCode);
+                                $('#accountname').val(product.AccountName);
                                 $('#unitprice').val(product.UnitPrice);
 
                                 if (product.UnitPrice == "" || product.UnitPrice == 0) {
@@ -549,7 +659,7 @@
                                     $("#unitprice").prop('disabled', true);
                                 }
 
-                                $('#vat').val(product.VATPercantage);
+                                //$('#vat').val(product.VATPercantage);
 
                                 if (product.Currency != null) {
                                     $('#currencyitem').val(product.Currency.Id).trigger('change');
@@ -624,6 +734,12 @@
                             $("#currencyitem").select2({
                                 dropdownParent: $("#con-close-modal"),
                                 placeholder: 'Para birimi seçiniz..',
+                                allowClear: true
+                            });
+
+                            $("#budgettype").select2({
+                                dropdownParent: $("#con-close-modal"),
+                                placeholder: 'Bütçe türü seçiniz..',
                                 allowClear: true
                             });
 
@@ -731,6 +847,8 @@
 
                     //Get Product Values
                     var productCode = $('#code').val();
+                    var accountCode = $('#accountcode').val();
+                    var accountName = $('#accountname').val();
                     var groupCode = $('#groupcode').val();
                     var productName = $("#productitem option:selected").text();
                     var productId = $("#productitem").val();
@@ -739,7 +857,11 @@
                     var vat = $('#vat').val();
                     var total = $('#total').val();
                     var currencyName = $('#currencyitem option:selected').text();
+                    var includedInBudget = $('#includedinbudget option:selected').text();
+                    var budgetType = $('#budgettype option:selected').text();
+                    var budgetcost = $('#budgetcost').val();
                     var totalLocal = $('#totallocal').val();
+                    var discount = $('#discount').val();
 
 
                     //BeforAdd
@@ -817,6 +939,8 @@
                     $("#productitemstable > tbody")
                         .append("<tr>" +
                         "<td>" + productCode + "</td>" +
+                        "<td>" + accountName + "</td>" +
+                        "<td>" + accountCode + "</td>" +
                         "<td>" + productName + "</td>" +
                         "<td>" + groupCode + "</td>" +
                         "<td>" + amount + "</td>" +
@@ -825,9 +949,10 @@
                         "<td>" + currencyName + "</td>" +
                         "<td>" + total + "</td>" +
                         "<td>" + totalLocal + "</td>" +
-                        "<td></td>" +
-                        "<td></td>" +
-                        "<td></td>" +
+                        "<td>" + includedInBudget + "</td>" +
+                        "<td>" + budgetcost + "</td>" +
+                        "<td>" + budgetType + "</td>" +
+                        "<td>" + discount + "</td>" +
                         "<td><a href='javascript:void(0);' class='deleteitem'>Sil</a></td>" +
                         "</tr>");
 
@@ -852,17 +977,20 @@
                     var $td = $('td', this);
                     return {
                         Code: $td.eq(0).text(),
-                        Name: $td.eq(1).text(),
-                        GroupCode: $td.eq(2).text(),
-                        Amount: $td.eq(3).text(),
-                        UnitPrice: $td.eq(4).text(),
-                        Vat: $td.eq(5).text(),
-                        Currency: $td.eq(6).text(),
-                        Total: $td.eq(7).text(),
-                        LocalTotal: $td.eq(8).text(),
-                        BudgetStatus: $td.eq(9).text(),
-                        BudgetValue: $td.eq(10).text(),
-                        BudgetType: $td.eq(11).text()
+                        AccountName: $td.eq(1).text(),
+                        AccountCode: $td.eq(2).text(),
+                        Name: $td.eq(3).text(),
+                        GroupCode: $td.eq(4).text(),
+                        Amount: $td.eq(5).text(),
+                        UnitPrice: $td.eq(6).text(),
+                        Vat: $td.eq(7).text(),
+                        Currency: $td.eq(8).text(),
+                        Total: $td.eq(9).text(),
+                        LocalTotal: $td.eq(10).text(),
+                        BudgetStatus: $td.eq(11).text(),
+                        BudgetValue: $td.eq(12).text(),
+                        BudgetType: $td.eq(13).text(),
+                        Discount: $td.eq(14).text()
                     }
                 }).get();
 
@@ -872,14 +1000,25 @@
 
                 for (var i = 0; i < tbl.length; i++) {
                     var selectedItem = tbl[i];
+
+                    if (selectedItem.Discount != 0 && selectedItem.Discount != "") {
+                        var discount = parseFloat(selectedItem.Discount / 100);
+
+                        selectedItem.LocalTotal = selectedItem.LocalTotal - (selectedItem.LocalTotal * discount);
+                    }
+
                     totalWithoutVat = totalWithoutVat + parseFloat(selectedItem.LocalTotal);
-                    console.log("For' a girdi.");
+
                     if (selectedItem.Vat != 0 && selectedItem.Vat != "") {
                         console.log("If' e girdi.")
                         var percantage = parseFloat(selectedItem.Vat / 100);
                         console.log(percantage);
-                        var vatTotal = parseFloat(vatTotal + (parseFloat(selectedItem.LocalTotal) * percantage));
+
+                        vatTotal = parseFloat(vatTotal + (parseFloat(selectedItem.LocalTotal) * percantage));
+
                     }
+
+
                 }
 
                 console.log(totalWithoutVat);
@@ -952,13 +1091,13 @@
                 var purchaseOrderDate = $('#postbackdate').val();
 
                 $('.datepicker-autoclose-currentdate')
-                .datepicker({
-                    autoclose: true,
-                    todayHighlight: true,
-                    format: 'dd/mm/yyyy',
-                    language: 'tr'
-                })
-                .datepicker("setDate", Date.parse(purchaseOrderDate));
+                    .datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        language: 'tr'
+                    })
+                    .datepicker("setDate", Date.parse(purchaseOrderDate));
 
                 $('#productitemstable').trigger('rowAddOrRemove');
             }

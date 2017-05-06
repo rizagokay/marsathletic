@@ -101,10 +101,12 @@
                         @if (MarsAhletic.WebUI.Helpers.PermissionsHelper.CanAccessPurchasingModule(User.Identity.Name))
                         {
                             <li class="has_sub">
-                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-money"></i> <span> Satınalma Talepleri </span> <span class="menu-arrow"></span></a>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-money"></i> <span> Satınalma</span> <span class="menu-arrow"></span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="@Url.Action("CreateNewPurchaseOrder", "Dashboards")">Yeni Talep Oluştur</a></li>
 
+                                    <li><a href="@Url.Action("AllPurchaseOrders", "Dashboards")">Talepler</a></li>
+                                    <li><a href="@Url.Action("ReportsView", "Dashboards")">Raporlar</a></li>
                                     <li><a href="@Url.Action("AllPurchaseOrders", "Dashboards")">Talep Listesi</a></li>
                                     <li class="has_sub">
                                         <a href="javascript:void(0);" class="waves-effect"><span>Raporlar</span>  <span class="menu-arrow"></span></a>
@@ -115,11 +117,31 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-list"></i> <span> Listeler </span> <span class="menu-arrow"></span></a>
+                                <ul>
+                                    @using MarsAhletic.WebUI.Models
+                                    @{
+                                        using (var db = new ApplicationDbContext())
+                                        {
+                                            foreach (var item in db.Lists.Include("RelatedDocument"))
+                                            {
+                                                if (item.RelatedDocument != null)
+                                                {
+                                                    <li><a href="@Url.Action("Download", "Dashboards", new { id = item.RelatedDocument.Id })">@item.Name</a></li>
+                                                }
+
+                                            }
 
                            
 
 
                         }
+                                    }
+
+                                </ul>
+                            </li>
+                                        }
 
                         @if (User.IsInRole("Administrators"))
                         {
@@ -131,6 +153,7 @@
                                     <li><a href="@Url.Action("ListAccounts", "Administration")"><i class="ti-user"></i>Giriş Hesapları</a></li>
                                     <li><a href="@Url.Action("DomainIntegration", "Administration")"><i class="ti-plug"></i>Domain Entegrasyonu</a></li>
                                     <li><a href="@Url.Action("ModulePermissions", "Administration")"><i class="ti-info"></i>İzin Yönetimi</a></li>
+                                    <li><a href="@Url.Action("PredefinedLists", "Administration")"><i class="ti-view-list"></i>Tanımlı Listeler</a></li>
                                 </ul>
                             </li>
                         }

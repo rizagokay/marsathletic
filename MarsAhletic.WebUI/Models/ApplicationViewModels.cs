@@ -30,6 +30,31 @@ namespace MarsAhletic.WebUI.Models
 
     }
 
+    public class ListViewModel
+    {
+
+        public ListViewModel()
+        {
+            DefinedLists = new List<DocumentViewModel>();
+        }
+
+        public List<DocumentViewModel> DefinedLists { get; set; }
+    }
+
+    public class DocumentViewModel
+    {
+        public string Name { get; set; }
+        public int ListId { get; set; }
+        public int? FileId { get; set; }
+        public HttpPostedFileBase FilePath { get; set; }
+    }
+
+    public class AddNewListViewModel
+    {
+        public string Name { get; set; }
+        public HttpPostedFileBase FilePath { get; set; }
+    }
+
     public class PurchaseListViewModel
     {
 
@@ -112,6 +137,9 @@ namespace MarsAhletic.WebUI.Models
         public int MFilesProcessId { get; set; }
         public int MFilesStateId { get; set; }
         public bool MFilesProcessEnded { get; set; }
+        public int Office { get; set; }
+        public int Department { get; set; }
+
 
         public List<Document> Documents { get; set; }
         public List<HttpPostedFileBase> Files { get; set; }
@@ -120,6 +148,7 @@ namespace MarsAhletic.WebUI.Models
         public MultiSelectList Companies { get; set; }
         public MultiSelectList Products { get; set; }
         public MultiSelectList Currencies { get; set; }
+        public MultiSelectList BudgetTypes { get; set; }
 
     }
 
@@ -183,13 +212,17 @@ namespace MarsAhletic.WebUI.Models
     public class AddNewUserViewModel
     {
         public string LoginAccountId { get; set; }
-        public int[] SelectedDepartments { get; set; }
+        public int? Department { get; set; }
+        public string DepartmentText { get; set; }
+        public int? Office { get; set; }
+        public string OfficeText { get; set; }
         public bool IsDeactive { get; set; }
         public bool IsDeptManager { get; set; }
         public bool IsHighManager { get; set; }
 
         public MultiSelectList LoginAccounts { get; set; }
         public MultiSelectList Departments { get; set; }
+        public MultiSelectList Offices { get; set; }
     }
 
     public class EditUserViewModel
@@ -198,13 +231,18 @@ namespace MarsAhletic.WebUI.Models
         public string Username { get; set; }
         public string OldLoginAccountId { get; set; }
         public string LoginAccountId { get; set; }
-        public int[] SelectedDepartments { get; set; }
+        public int? Department { get; set; }
+        public string DepartmentText { get; set; }
+        public string OfficeText { get; set; }
+        public int? Office { get; set; }
         public bool IsDeactive { get; set; }
         public bool IsDeptManager { get; set; }
         public bool IsHighManager { get; set; }
+        public LoginAccount LoginAccount { get; set; }
 
         public MultiSelectList LoginAccounts { get; set; }
         public MultiSelectList Departments { get; set; }
+        public MultiSelectList Offices { get; set; }
     }
 
 }
