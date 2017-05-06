@@ -884,7 +884,7 @@ namespace MarsAhletic.WebUI.Controllers
             {
                 Code = product.Code,
                 GroupCode = product.GroupCode,
-                Id = product.ExternalId,
+                Id = Convert.ToInt32( product.ExternalId),
                 UnitPrice = product.UnitPrice,
                 CompanyId = product.Company != null ? product.Company.Id.ToString() : "",
                 Name = product.Name,
@@ -941,7 +941,7 @@ namespace MarsAhletic.WebUI.Controllers
         [HttpPost]
         public JsonResult GetProducts(int CompanyId)
         {
-            var products = appDb.Products.Where(p => p.Company.Id == CompanyId).Select(c => new ProductEx { Name = c.Name, Id = c.Id.ToString() }).ToList();
+            var products = appDb.Products.Where(p => p.Company.Id == CompanyId).Select(c => new ProductEx { Name = c.Name, Id = c.Id }).ToList();
 
             return Json(products);
         }
@@ -949,7 +949,7 @@ namespace MarsAhletic.WebUI.Controllers
         [HttpPost]
         public JsonResult GetAllProducts()
         {
-            var products = appDb.Products.Select(c => new ProductEx { Name = c.Name, Id = c.Id.ToString() }).ToList();
+            var products = appDb.Products.Select(c => new ProductEx { Name = c.Name, Id = c.Id }).ToList();
             return Json(products);
         }
 

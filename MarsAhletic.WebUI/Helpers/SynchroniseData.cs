@@ -94,7 +94,7 @@ namespace MarsAhletic.WebUI.Helpers
             foreach (var item in products)
             {
                 var productEx = item as ProductEx;
-                var productInDb = db.Products.Include("Company").Where(p => p.ExternalId == productEx.Id).FirstOrDefault();
+                var productInDb = db.Products.Include("Company").Where(p => p.ExternalId == productEx.Id.ToString()).FirstOrDefault();
                 var currency = db.Currencies.Where(c => c.ExternalId == productEx.CurrencyId).FirstOrDefault();
 
 
@@ -106,7 +106,7 @@ namespace MarsAhletic.WebUI.Helpers
                         company = db.Companies.Where(c => c.ExternalId == productEx.CompanyId).FirstOrDefault();
                     }
 
-                    db.Products.Add(new Product() { ExternalId = productEx.Id, Name = productEx.Name, UnitPrice = productEx.UnitPrice, GroupCode = productEx.GroupCode, Code = productEx.Code, Currency = currency != null ? currency : null, Company = company, VATPercentage = productEx.VATPercantage });
+                    db.Products.Add(new Product() { ExternalId = productEx.Id.ToString(), Name = productEx.Name, UnitPrice = productEx.UnitPrice, GroupCode = productEx.GroupCode, Code = productEx.Code, Currency = currency != null ? currency : null, Company = company, VATPercentage = productEx.VATPercantage });
                 }
                 else
                 {
